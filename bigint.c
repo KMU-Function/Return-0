@@ -6,7 +6,7 @@
 #include "bigint.h"
 #include "array.h"
 
-//todo shift, reduction
+//todo shift, reduction, show_bin/dec
 
 
 void bi_delete(bigint** x){
@@ -89,7 +89,7 @@ void bi_set_one(bigint** x){
     (*x)->a[0] = 0x1;
 }
 
-void bi_set_one(bigint** x){
+void bi_set_zero(bigint** x){
     bi_new(x, 1);
     (*x)->sign = NONNEGATIVE;
     (*x)->a[0] = 0x0;

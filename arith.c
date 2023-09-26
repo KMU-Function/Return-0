@@ -2,6 +2,8 @@
 #include "array.h"
 #include "bigint.h"
 
+//todo addc, multi-precision add, final add, sub
+
 void bi_add_sigleword(word* dst, word x, word y, int* carry){
     *carry = 0;
     *dst = x + y;
@@ -9,6 +11,7 @@ void bi_add_sigleword(word* dst, word x, word y, int* carry){
         *carry = 1;
 }
 
-void bi_add(bigint* dst, bigint* x, bigint* y, int* carry){
+void bi_addc(bigint* dst, bigint* x, bigint* y, int* carry){
+    carry = 0;
     
 }
