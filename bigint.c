@@ -24,7 +24,11 @@ void bi_delete(bigint** x){
 
 void bi_new(bigint** x, int wordlen){
     if(*x != NULL)
+<<<<<<< HEAD
         bi_delete(x);
+=======
+        bn_delete(x);
+>>>>>>> c1eda3d0dfd7374430e5e74694168e35156d3c0a
 
     *x = (bigint*)calloc(1, sizeof(bigint));
     (*x)->sign = NONNEGATIVE;
@@ -56,12 +60,22 @@ void bi_refine(bigint* x){
             break;
         new_wordlen--;
     }
+<<<<<<< HEAD
     if(x->wordlen != new_wordlen){
         x->wordlen = new_wordlen;
         x->a = (word*)realloc(x->a, sizeof(word) * new_wordlen);
     }
 
     if((x->wordlen == 1) && (x->a[0] == 0x00))
+=======
+
+    if(x->wordlen != new_wordlen){
+        x->wordlen = new_wordlen;
+        x->a = (word*)realloc(x->a, sizeof(word)*new_wordlen);
+    }
+
+    if((x->wordlen == 1) && (x->a[0] = 0x00))
+>>>>>>> c1eda3d0dfd7374430e5e74694168e35156d3c0a
         x->sign = NONNEGATIVE;
 }
 
@@ -75,6 +89,7 @@ void bi_assign(bigint** y, bigint* x){
     copy_array((*y)->a, x->a, x->wordlen);
 }
 
+<<<<<<< HEAD
 // zero expansion
 void bi_expand(bigint* x, int new_wordlen){
     if(x->wordlen >= new_wordlen){
@@ -96,6 +111,12 @@ void bi_gen_rand(bigint** x, int sign, int wordlen){
     bi_new(x, wordlen);
     (*x)->sign = sign;
     gen_rand_array((*x)->a, (*x)->wordlen);
+=======
+void bi_gen_rand(bigint** x, int sign, int wordlen){
+    bi_new(x, wordlen);
+    (*x)->sign = sign;
+    get_rand_array((*x)->a, (*x)->wordlen);
+>>>>>>> c1eda3d0dfd7374430e5e74694168e35156d3c0a
     bi_refine(*x);
 }
 
@@ -111,7 +132,11 @@ void bi_set_zero(bigint** x){
     (*x)->a[0] = 0x0;
 }
 
+<<<<<<< HEAD
 int bi_is_one(bigint* x){
+=======
+void bi_is_one(bigint* x){
+>>>>>>> c1eda3d0dfd7374430e5e74694168e35156d3c0a
     if(x->sign != NONNEGATIVE || x->a[0] != 1)
         return false;
     for(int i = 0; i < x->wordlen - 1; i++){
@@ -121,7 +146,11 @@ int bi_is_one(bigint* x){
     return true;
 }
 
+<<<<<<< HEAD
 int bi_is_zero(bigint* x){
+=======
+void bi_is_zero(bigint* x){
+>>>>>>> c1eda3d0dfd7374430e5e74694168e35156d3c0a
     if(x->sign != NONNEGATIVE || x->a[0] != 0)
         return false;
     for(int i = 0; i < x->wordlen - 1; i++){
@@ -173,7 +202,11 @@ int get_bitlen(bigint* x){
 }
 
 int get_ith_bit(bigint* x, int i){
+<<<<<<< HEAD
     return (x->a[i>>3] >> (i - (i>>3))) & 0x1;
+=======
+    return (x->a[i>>3] >> (i - i>>3)) & 0x1;
+>>>>>>> c1eda3d0dfd7374430e5e74694168e35156d3c0a
 }
 
 int get_sign(bigint* x){
@@ -192,10 +225,13 @@ void bi_show_hex(bigint* x){
     for(int i = 0; i < x->wordlen; i++){
         printf("%08x ", x->a[i]);
     }printf("\n");
+<<<<<<< HEAD
 }
 
 void bi_show_hex_inorder(bigint* x){
     for(int i = x->wordlen - 1; i >= 0; i--){
         printf("%08x ", x->a[i]);
     }printf("\n");
+=======
+>>>>>>> c1eda3d0dfd7374430e5e74694168e35156d3c0a
 }
