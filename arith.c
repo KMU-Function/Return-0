@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -39,22 +38,4 @@ void bi_addc(bigint* dst, bigint* x, bigint* y){
     }
 
     bi_refine(dst);
-=======
-#include <stdint.h>
-#include "array.h"
-#include "bigint.h"
-
-//todo addc, multi-precision add, final add, sub
-
-void bi_add_sigleword(word* dst, word x, word y, int* carry){
-    *carry = 0;
-    *dst = x + y;
-    if(*dst < x)
-        *carry = 1;
-}
-
-void bi_addc(bigint* dst, bigint* x, bigint* y, int* carry){
-    carry = 0;
-    
->>>>>>> c1eda3d0dfd7374430e5e74694168e35156d3c0a
 }
