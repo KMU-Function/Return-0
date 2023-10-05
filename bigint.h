@@ -11,41 +11,25 @@ typedef uint32_t word;
 typedef struct _BIGINT{
     int sign ;      // NEGATIVE or NONNEGATIVE
     int wordlen ;   // wordlen >= 0
-<<<<<<< HEAD
     word* a;        // address for big integer
 } bigint;
 
 void bi_delete(bigint** x);
 void bi_new(bigint** x, int wordlen);
-=======
-    word * a;       // address for big integer
-} bigint;
-
-void bn_delete(bigint** x);
-void bn_new(bigint** x, int wordlen);
->>>>>>> c1eda3d0dfd7374430e5e74694168e35156d3c0a
 
 int bi_set_by_array(bigint** x, int sign, word* a, int wordlen);
 int bi_set_by_string(bigint** x, int sign, char* str, int base);
 
 void bi_refine(bigint* x);
 void bi_assign(bigint** y, bigint* x);
-<<<<<<< HEAD
 void bi_expand(bigint* x, int new_wordlen);
 void bi_expand_oneblock(bigint* x);
-=======
->>>>>>> c1eda3d0dfd7374430e5e74694168e35156d3c0a
 
 void bi_gen_rand(bigint** x, int sign, int wordlen);
 void bi_set_one(bigint** x);
 void bi_set_zero(bigint** x);
-<<<<<<< HEAD
 int bi_is_one(bigint* x);
 int bi_is_zero(bigint* x);
-=======
-void bi_is_one(bigint* x);
-void bi_is_zero(bigint* x);
->>>>>>> c1eda3d0dfd7374430e5e74694168e35156d3c0a
 
 int compare_abs(bigint* x, bigint* y);
 int compare(bigint* x, bigint* y);
@@ -57,9 +41,6 @@ int get_sign(bigint* x);
 int get_filped_sign(bigint* x);
 
 void bi_show_hex(bigint* x);
-<<<<<<< HEAD
 void bi_show_hex_inorder(bigint* x);
 
-=======
->>>>>>> c1eda3d0dfd7374430e5e74694168e35156d3c0a
 #endif
