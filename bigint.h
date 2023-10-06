@@ -33,6 +33,7 @@ int bi_is_zero(bigint* x);
 
 int compare_abs(bigint* x, bigint* y);
 int compare(bigint* x, bigint* y);
+void bi_flip_sign(bigint* x);
 
 int get_wordlen(bigint* x);
 int get_bitlen(bigint* x);

@@ -56,10 +56,7 @@ void bi_subc(bigint* dst, bigint* x, bigint* y){
         dst->a[i] = x->a[i] - y->a[i] - borrow;
 
         // check borrow
-        if(x->a[i] < y->a[i]){
-            borrow = 1;
-        }
-        else if((x->a[i] == y->a[i]) && (borrow == 1)){
+        if(x->a[i] < y->a[i] || ((x->a[i] == y->a[i]) && (borrow == 1))){
             borrow = 1;
         }
         else{
@@ -67,9 +64,102 @@ void bi_subc(bigint* dst, bigint* x, bigint* y){
         }
     }
 
-    if(borrow == 1){
-        
+    bi_refine(dst);
+}
+
+// Big Number Addition
+// Performs dst <- x + y independent to the sign of x and y.
+void bi_add(bigint* dst, bigint* x, bigint* y){
+#ifdef ZERO_OPTIMIZE
+    // check whether x == 0 or y == 0
+    if(bi_is_zero(x)){
+        bi_assign(&dst, y);
+        return;
+    }
+    if(bi_is_zero(y)){
+        bi_assign(&dst, x);
+        return;
+    }
+#endif
+    
+    if((x->sign == NONNEGATIVE) && (y->sign == NEGATIVE)){
+        // if x >= y, then dst <- x - y (non-negative)
+        // if x < y, then dst <- y - x (negative because y is negative)
+        if(compare_abs(x, y) >= 0){
+            bi_subc(dst, x, y);
+            dst->sign = NONNEGATIVE;
+        }
+        else{
+            bi_subc(dst, y, x);
+            dst->sign = NEGATIVE;
+        }
+    }
+    else if((x->sign == NEGATIVE) && (y->sign == NONNEGATIVE)){
+        // if x >= y, then dst <- x - y (negative because x is negative)
+        // if x < y, then dst <- y - x (non-negative)
+        if(compare_abs(x, y) >= 0){
+            bi_subc(dst, x, y);
+            dst->sign = NEGATIVE;
+        }
+        else{
+            bi_subc(dst, y, x);
+            dst->sign = NONNEGATIVE;
+        }
+    }
+    else if(x->wordlen >= y->wordlen){
+        bi_addc(dst, x, y);
+    }
+    else{
+        bi_addc(dst, y, x);
     }
 
-    bi_refine(dst);
+    return;
+}
+
+// Big Number Subtraction
+// Performs dst <- x - y independent to the sign of x and y.
+void bi_add(bigint* dst, bigint* x, bigint* y){
+#ifdef ZERO_OPTIMIZE
+    // if x == 0, then return -y
+    if(bi_is_zero(x)){
+        bi_assign(&dst, y);
+        bi_flip_sign(dst);
+        return;
+    }
+    // if y == 0, then return -x
+    if(bi_is_zero(y)){
+        bi_assign(&dst, x);
+        bi_flip_sign(dst);
+        return;
+    }  
+    // if x == y, then return 0
+    if(compare(x, y) == 0){
+        bi_set_zero(&dst);
+        return;
+    }
+#endif
+
+    if((y->sign == NONNEGATIVE) && (compare(x, y) >= 0)){
+        bi_subc(dst, x, y);
+    }
+    else if((x->sign == NONNEGATIVE) && (compare(y, x) >= 0)){
+        bi_subc(dst, y, x);
+    }
+    else if ((x->sign == NEGATIVE) && (compare(x, y) >= 0)){
+        bi_subc(dst, y, x);
+        dst->sign = NONNEGATIVE;
+    }
+    else if ((y->sign == NEGATIVE) && (compare(y, x) >= 0)){
+        bi_subc(dst, x, y);
+        dst->sign = NEGATIVE;
+    }
+    else if ((x->sign == NONNEGATIVE) && (y->sign = NEGATIVE)){
+        bi_addc(dst, x, y);
+        dst->sign = NONNEGATIVE;
+    }
+    else if ((y->sign == NONNEGATIVE) && (x->sign = NEGATIVE)){
+        bi_addc(dst, x, y);
+        dst->sign = NEGATIVE;
+    }
+    return;
 }

@@ -148,6 +148,15 @@ int compare_abs(bigint* x, bigint* y){
     return 0;
 }
 
+void bi_flip_sign(bigint* x){
+    if(x->sign == NONNEGATIVE){
+        x->sign = NEGATIVE;
+    }
+    else{
+        x->sign = NONNEGATIVE;
+    }
+}
+
 // return x > y -> 1
 //        x < y -> -1
 //        x = y -> 0
