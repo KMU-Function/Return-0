@@ -16,12 +16,12 @@ int main(){
 
 
     for(int iter = 0; iter < 100; iter++){
+
         int xlen = rand() % 9 + 1;
         int ylen = rand() % 9 + 1;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
-
         bi_new(&z, xlen < ylen ? ylen : xlen);
 
         for(int i = 0; i < xlen; i++){

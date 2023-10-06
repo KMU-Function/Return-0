@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Wpedantic -std=c99
+CFLAGS = -g -Wall -Wextra -Wpedantic -std=c99
 OBJS := bigint.o rng.o arith.o array.o
 SRCS := arith.c array.c bigint.c rng.c
 
