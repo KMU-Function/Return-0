@@ -13,12 +13,14 @@ int main(){
     word xarr[10];
     word yarr[10];
 
-    bi_new(&x, 10);
-    bi_new(&y, 10);
+
 
     for(int iter = 0; iter < 100; iter++){
         int xlen = rand() % 9 + 1;
         int ylen = rand() % 9 + 1;
+
+        bi_new(&x, xlen);
+        bi_new(&y, ylen);
 
         bi_new(&z, xlen < ylen ? ylen : xlen);
 
@@ -35,10 +37,19 @@ int main(){
         printf("x: "); bi_show_hex(x);
         printf("y: "); bi_show_hex(y);
 
-        bi_addc(z, x, y);
+        if(compare(x, y) >= 0){
+            bi_subc(z, x, y);
+        }
+        else{
+            bi_subc(z, y, x);
+        }
 
         printf("z: "); bi_show_hex(z);
         printf("\n");
+
+        bi_delete(&x);
+        bi_delete(&y);
+        bi_delete(&z);
     }
 
     return 0;
