@@ -13,13 +13,15 @@ int main(){
     word xarr[10];
     word yarr[10];
 
-    bi_new(&x, 10);
-    bi_new(&y, 10);
+
 
     for(int iter = 0; iter < 100; iter++){
+
         int xlen = rand() % 9 + 1;
         int ylen = rand() % 9 + 1;
 
+        bi_new(&x, xlen);
+        bi_new(&y, ylen);
         bi_new(&z, xlen < ylen ? ylen : xlen);
 
         for(int i = 0; i < xlen; i++){
@@ -43,3 +45,5 @@ int main(){
 
     return 0;
 }
+
+// 덧셈 문제가 아님
