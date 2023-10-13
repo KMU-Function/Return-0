@@ -8,15 +8,12 @@
 
 //todo shift, reduction, show_bin/dec
 
-/**
-* @brief Delete BigInt x
-*/
-void bi_delete(bigint** x) {
+
+void bi_delete(bigint** x){
     if(*x == NULL)
         return;
- 
-#if ZEROIZE
-    printf("make zero\n");
+
+#ifdef ZEROIZE 
     init_array((*x)->a, (*x)->wordlen);
 #endif
 
