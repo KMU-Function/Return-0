@@ -6,7 +6,15 @@
 #define NONNEGATIVE 0
 #define NEGATIVE    1
 
+#ifdef DTYPE
+#if DTYPE == 8
+typedef uint8_t word;
+#elif DTYPE == 32
 typedef uint32_t word;
+#elif DTYPE == 64
+typedef uint64_t word;
+#endif
+#endif
 
 typedef struct _BIGINT{
     int sign ;      // NEGATIVE or NONNEGATIVE

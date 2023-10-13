@@ -1,9 +1,16 @@
 CC = gcc
-CFLAGS = -g -Wall -Wextra -Wpedantic -std=c99
+CFLAGS = -g -Wall -Wextra -Wpedantic -std=c99 
 OBJS := bigint.o rng.o arith.o array.o
 SRCS := arith.c array.c bigint.c rng.c
 
 OS := $(shell uname -s)
+
+DTYPE := 32 # default DTYPE is 32-bit
+ZEROIZE := 0 
+
+CFLAGS += -DDTYPE=$(DTYPE)
+CFLAGS += -DZEROIZE=$(ZEROIZE)
+
 
 # detecting OS
 ifeq ($(OS), Darwin) # macOS
@@ -23,6 +30,7 @@ OBJS += main.o
 SRCS += main.c
 $(TARGET) : $(OBJS)
 	$(CC) -o $@ $^
+
 
 # .PHONY: test
 # test:

@@ -14,8 +14,9 @@
 void bi_delete(bigint** x) {
     if(*x == NULL)
         return;
-
-#ifdef ZEROIZE 
+ 
+#if ZEROIZE
+    printf("make zero\n");
     init_array((*x)->a, (*x)->wordlen);
 #endif
 
@@ -262,7 +263,15 @@ int get_filpped_sign(bigint* x) {
 */
 void bi_show_hex(bigint* x){
     for(int i = 0; i < x->wordlen; i++){
+#if DTYPE == 8
+        printf("%02x ", x->a[i]);
+#elif DTYPE == 32
         printf("%08x ", x->a[i]);
+#elif DTYPE == 64
+        printf("%016x ", x->a[i]);
+#else
+#error "UNSUPPORTED TYPE\n";
+#endif
     }printf("\n");
 }
 

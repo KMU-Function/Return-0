@@ -38,10 +38,10 @@ int main(){
         printf("y: "); bi_show_hex(y);
 
         if(compare(x, y) >= 0){
-            bi_subc(z, x, y);
+            bi_subc(&z, x, y);
         }
         else{
-            bi_subc(z, y, x);
+            bi_subc(&z, y, x);
         }
 
         printf("z: "); bi_show_hex(z);
