@@ -52,7 +52,7 @@ int bi_set_by_array(bigint** x, int sign, word* a, int wordlen) {
 * @brief Create BigInt x by string
 */
 int bi_set_by_string(bigint** x, int sign, char* str, int base) {
-
+    return 0;
 }
 
 /**

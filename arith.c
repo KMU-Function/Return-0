@@ -31,10 +31,13 @@ void bi_addc(bigint** dst, bigint* x, bigint* y){
     for(int i = 0; i < x->wordlen; i++){
         (*dst)->a[i] = x->a[i] + y->a[i] + carry;
         // check carry
-        if((*dst)->a[i] < x->a[i]){
+        if ((*dst)->a[i] == x->a[i]) {
+            continue;
+        }
+        if ((*dst)->a[i] < x->a[i]) {
             carry = 1;
         }
-        else{
+        else {
             carry = 0;
         }
     }
