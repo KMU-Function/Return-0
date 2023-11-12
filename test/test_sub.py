@@ -1,4 +1,4 @@
-with open("test_sub.txt", "r") as f:
+with open("test/test_sub.txt", "r") as f:
     cnt = 0
     while True:
         x = f.readline().split()[1:][::-1]
@@ -13,8 +13,8 @@ with open("test_sub.txt", "r") as f:
         y = int(''.join(y), 16)
         z = int(''.join(z), 16)
         
-        if x>=y:
-            if x-y != z:
+        if x >= y:
+            if x - y != z:
                 print(cnt)
                 print(x)
                 print(y)
@@ -22,8 +22,8 @@ with open("test_sub.txt", "r") as f:
                 print(z)
                 print()
                 cnt += 1
-        elif x<y:
-            if y-x != z:
+        elif x < y:
+            if y - x != z:
                 print(cnt)
                 print(x)
                 print(y)

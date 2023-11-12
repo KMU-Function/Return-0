@@ -1,50 +1,53 @@
+# compiler and options
 CC = gcc
-CFLAGS = -g -Wall -Wextra -Wpedantic -std=c99 
-OBJS := bigint.o rng.o arith.o array.o
-SRCS := arith.c array.c bigint.c rng.c
+CFLAGS = -Wall -Wextra -Wpedantic -std=c99
 
-OS := $(shell uname -s)
+# file directories
+SRC_DIR = src
+TEST_DIR = test
+BUILD_DIR = build
 
-<<<<<<< HEAD
-DTYPE := 32 # default DTYPE is 32-bit
-=======
-#DTYPE := 32 # default DTYPE is 32-bit
-DTYPE := 32
->>>>>>> 1a72806f65ff22679eb656bda3f4b7d0c8194bb3
-ZEROIZE := 0 
+# get source files
+SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
+TEST_SRC_FILES = $(wildcard $(TEST_DIR)/*.c)
 
+# get object files
+OBJ_FILES = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRC_FILES))
+TEST_OBJ_FILES = $(patsubst $(TEST_DIR)/%.c,$(BUILD_DIR)/%.o,$(TEST_SRC_FILES))
+
+# define DTYPE and ZEROIZE value
+DTYPE := 32 	# default DTYPE is 32-bit
+ZEROIZE := 0 	# default ZEROIZE is 0
+
+# add DTYPE and ZEROIZE into CFLAGS
 CFLAGS += -DDTYPE=$(DTYPE)
 CFLAGS += -DZEROIZE=$(ZEROIZE)
 
 
-# detecting OS
-ifeq ($(OS), Darwin) # macOS
-TARGET := main.out
-else ifeq ($(OS), Windows_NT)
-TARGET := main.exe
-else ifeq ($(OS), Linux)
-TARGET := main
-else
-$(info Current OS is $(OS))
-$(error $(OS) is not supported in this library)
-endif
 
-.PHONY: all 
-all: $(TARGET)
-OBJS += main.o
-SRCS += main.c
-$(TARGET) : $(OBJS)
-	$(CC) -o $@ $^
+# build target
+all: test
 
-# .PHONY: test
-# test:
-# $(info build for testing...)
-# OBJS += test.o
-# SRCS += test.c
-# TARGET := test
-# $(TARGET) : $(OBJS)
-# 	$(CC) -o $@ $^
+# test 
+test: $(BUILD_DIR)/test_executable
 
-.PHONY: clean
+# build test_executable
+$(BUILD_DIR)/test_executable: $(OBJ_FILES) $(TEST_OBJ_FILES) | $(BUILD_DIR)
+	$(CC) $(CFLAGS) $^ -o $@
+
+# create test directory
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+# build object files
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/%.o: $(TEST_DIR)/%.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# clean
 clean:
-	rm -rf *.o $(TARGET)
+	rm -rf $(BUILD_DIR)
+
+.PHONY: all test clean
