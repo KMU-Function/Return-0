@@ -160,27 +160,36 @@ void bi_sub(bigint** dst, bigint* x, bigint* y){
     }
 #endif
 
-    if((y->sign == NONNEGATIVE) && (compare(x, y) >= 0)){
+    if ((y->sign == NONNEGATIVE) && (compare(x, y) >= 0)) {
+        // 0 < y <= x
         bi_subc(dst, x, y);
+        (*dst)->sign = NONNEGATIVE;
     }
-    else if((x->sign == NONNEGATIVE) && (compare(y, x) >= 0)){
+    else if ((x->sign == NONNEGATIVE) && (compare(y, x) >= 0)) {
+        // 0 < x <= y
         bi_subc(dst, y, x);
+        (*dst)->sign = NEGATIVE;
     }
-    else if ((x->sign == NEGATIVE) && (compare(x, y) >= 0)){
+    else if ((x->sign == NEGATIVE) && (compare(x, y) >= 0)) {
+        // y <= x < 0
         bi_subc(dst, y, x);
         (*dst)->sign = NONNEGATIVE;
     }
-    else if ((y->sign == NEGATIVE) && (compare(y, x) >= 0)){
+    else if ((y->sign == NEGATIVE) && (compare(y, x) >= 0)) {
+        // x <= y < 0
         bi_subc(dst, x, y);
         (*dst)->sign = NEGATIVE;
     }
-    else if ((x->sign == NONNEGATIVE) && (y->sign = NEGATIVE)){
-        bi_addc(dst, x, y);
+    else if ((x->sign == NONNEGATIVE) && (y->sign == NEGATIVE)) {
+        // y < 0 < x
+        bi_addc(dst, x, y);     // 이거 add로 할 필요 없겠지?
         (*dst)->sign = NONNEGATIVE;
     }
-    else if ((y->sign == NONNEGATIVE) && (x->sign = NEGATIVE)){
+    else if ((y->sign == NONNEGATIVE) && (x->sign == NEGATIVE)) {
+        // x < 0 < y
         bi_addc(dst, x, y);
         (*dst)->sign = NEGATIVE;
     }
+
     return;
 }
