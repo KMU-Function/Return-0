@@ -5,7 +5,12 @@ SRCS := arith.c array.c bigint.c rng.c
 
 OS := $(shell uname -s)
 
+<<<<<<< HEAD
 DTYPE := 32 # default DTYPE is 32-bit
+=======
+#DTYPE := 32 # default DTYPE is 32-bit
+DTYPE := 32
+>>>>>>> 1a72806f65ff22679eb656bda3f4b7d0c8194bb3
 ZEROIZE := 0 
 
 CFLAGS += -DDTYPE=$(DTYPE)
