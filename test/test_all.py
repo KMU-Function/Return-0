@@ -11,6 +11,7 @@ import os
 #: run subtract test
 os.system('python3 test_add.py') 
 os.system('python3 test_sub.py') 
+os.system('python3 test_mul.py') 
 
 # #: Delete previous test vector files
 # os.system('rm -rf test_add.txt')

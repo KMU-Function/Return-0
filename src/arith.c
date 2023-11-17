@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include "array.h"
 #include "bigint.h"
 
@@ -64,7 +65,7 @@ void bi_addc(bigint** dst, bigint* x, bigint* y){
 void bi_subc(bigint** dst, bigint* x, bigint* y) {
 
     if (x->sign == NEGATIVE || y->sign == NEGATIVE) {
-        fprintf(stderr, "bi_subc input value's sign is not positive\n");
+        fprintf(stderr, "bi_subc input value is NEGATIVE\n");
         return;
     }
 
@@ -241,5 +242,90 @@ void bi_mul_textbook(bigint** dst, bigint* x, bigint* y) {
         return;
     }
 
+    bigint *c = NULL;
+    bigint *t = NULL;
+
+    bi_new(&c, x->wordlen + y->wordlen);
+    bi_new(&t, 2);
+
+    for (int j = 0; j < x->wordlen; j++) {
+        for (int i = 0; i < y->wordlen; i++) {
+            bi_mul_singleword(t->a, x->a[j], y->a[i]);
+            // printf("i + j = %d + %d = %d\n", i, j, i + j);
+            bi_shift_left(&t, i + j);
+            // printf("t = \n");
+            // bi_show_hex_inorder(t);
+            // printf("dst = \n");
+            // bi_show_hex_inorder(*dst);
+            // printf("\n");
+            bi_assign(&c, *dst);    // 불필요한 복사같은데 어떻게 수정할까?
+            bi_addc(dst, c, t);
+            bi_new(&t, 2);
+        }
+    }
+
+    // printf("dst: %d\n", (*dst)->wordlen);
+    bi_delete(&c);
+    bi_delete(&t);
+
     return;
+}
+
+void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
+    if (bi_is_zero(x) || bi_is_zero(y)) {
+        bi_set_zero(dst);
+        return;
+    }
+
+    if (bi_is_one(x)) {
+        bi_assign(dst, y);
+        return;
+    }
+
+    if (bi_is_one(y)) {
+        bi_assign(dst, x);
+        return;
+    }
+
+    bigint* tmp = NULL;
+    // x is -1
+    bi_assign(&tmp, x);
+    bi_flip_sign(tmp);  
+    if (bi_is_one(tmp)) {
+        bi_assign(dst, y);
+        bi_flip_sign(*dst);
+        bi_delete(&tmp);
+        return;
+    }
+
+    // y is -1
+    bi_assign(&tmp, y);
+    bi_flip_sign(tmp);  
+    if (bi_is_one(tmp)) {
+        bi_assign(dst, x);
+        bi_flip_sign(*dst);
+        bi_delete(&tmp);
+        return;
+    }
+
+    bi_delete(&tmp);
+
+    bigint* x_tmp = NULL;
+    bigint* y_tmp = NULL;
+    bi_assign(&x_tmp, x);
+    bi_assign(&y_tmp, y);
+    x_tmp->sign = NONNEGATIVE;
+    y_tmp->sign = NONNEGATIVE;
+
+    if (strcmp(mulc, "textbook") == 0) {
+        bi_mul_textbook(dst, x_tmp, y_tmp);
+        bi_delete(&x_tmp);
+        bi_delete(&y_tmp);
+        return;
+    }
+    else {
+        fprintf(stderr, "mulc name error");
+        return;
+    }
+
 }

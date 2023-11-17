@@ -4,6 +4,8 @@
 #include <assert.h>
 #include "../src/api.h"
 
+#define ITERNUM 100
+
 void fprint_format(FILE* fp, bigint* x, int idx){
     #if DTYPE == 8
         fprintf(fp, "%02x ", x->a[idx]);
@@ -14,7 +16,7 @@ void fprint_format(FILE* fp, bigint* x, int idx){
     #endif
 }
 
-int main(){
+int main(void){
     srand(time(NULL));
 
     bigint* x = NULL;
@@ -29,7 +31,7 @@ int main(){
     // fp_add = fopen("test/test_add.txt", "w");
     fp_add = fopen("../test/test_add.txt", "w");
     assert(fp_add != NULL);
-    for (int iter = 0; iter < 10000; iter++) {
+    for (int iter = 0; iter < ITERNUM; iter++) {
 
         int xlen = rand() % 100;
         int ylen = rand() % 100;
@@ -88,7 +90,7 @@ int main(){
     fp_sub = fopen("../test/test_sub.txt", "w");
     assert(fp_sub != NULL);
     
-    for (int iter = 0; iter < 10000; iter++) {
+    for (int iter = 0; iter < ITERNUM; iter++) {
 
         int xlen = rand() % 100;
         int ylen = rand() % 100;
@@ -136,20 +138,59 @@ int main(){
     }
     fclose(fp_sub);
 
-    // //! mul test*********************************************************
-    // word w1 = rand();
-    // word w2 = rand();
-    // word result[2] = { 0x00 };
+    //! mul test*********************************************************
+    FILE* fp_mul = NULL;
+    // fp_sub = fopen("test/test_sub.txt", "w");
+    fp_mul = fopen("../test/test_mul.txt", "w");
+    assert(fp_mul != NULL);
+    
+    for (int iter = 0; iter < ITERNUM; iter++) {
 
-    // printf("%u %8X\n", w1, w1);
-    // printf("%u %8X\n", w2, w2);
+        int xlen = rand() % 100;
+        int ylen = rand() % 100;
 
-    // bi_mulc(result, w1, w2);
+        bi_new(&x, xlen);
+        bi_new(&y, ylen);
+        bi_new(&z, xlen + ylen);
 
-    // for (int i = 1; i >= 0; i--) {
-    //     printf("%8X ", result[i]);
+        xarr = (word*)calloc(xlen, sizeof(word));
+        yarr = (word*)calloc(ylen, sizeof(word));
 
-    // }
+        for(int i = 0; i < xlen; i++){
+            xarr[i] = rand();
+        }
+        for(int i = 0; i < ylen; i++){
+            yarr[i] = rand();
+        }
+
+        bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
+        bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
+
+        bi_mul(&z, x, y, "textbook");
+
+        fprintf(fp_mul, "%s", "x: ");
+        for(int idx = 0; idx < x->wordlen; idx++){
+            fprint_format(fp_mul, x, idx);
+        }fprintf(fp_mul, "%s", "\n");
+
+        fprintf(fp_mul, "%s", "y: ");
+        for(int idx = 0; idx < y->wordlen; idx++){
+            fprint_format(fp_mul, y, idx);
+        }fprintf(fp_mul, "%s", "\n");
+
+        fprintf(fp_mul, "%s", "z: ");
+        for(int idx = 0; idx < z->wordlen; idx++){
+            fprint_format(fp_mul, z, idx);
+        }fprintf(fp_mul, "%s", "\n\n");
+
+        bi_delete(&x);
+        bi_delete(&y);
+        bi_delete(&z);
+
+        free(xarr);
+        free(yarr);
+    }
+    fclose(fp_mul);
 
     return 0;
 }

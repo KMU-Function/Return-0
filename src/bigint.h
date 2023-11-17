@@ -52,6 +52,9 @@ int get_filpped_sign(bigint* x);
 void bi_show_hex(bigint* x);
 void bi_show_hex_inorder(bigint* x);
 
+void bi_shift_right(bigint** x, int size);
+void bi_shift_left(bigint** x, int size);
+
 //todo
 // void bi_show_bin(bigint* x);
 // void bi_show_bin_inorder(bigint* x);

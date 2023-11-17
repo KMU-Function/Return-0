@@ -281,6 +281,30 @@ void bi_show_hex_inorder(bigint* x) {
     }printf("\n");
 }
 
+void bi_shift_right(bigint** x, int size) {
+    bigint *y = NULL;
+    bi_new(&y, (*x)->wordlen - size);
+    y->sign = (*x)->sign;
+    copy_array(y->a, (*x)->a + size, y->wordlen);
+
+    // x -> y
+    bi_assign(x, y);
+    bi_delete(&y);
+}
+
+void bi_shift_left(bigint** x, int size) {
+    bigint *y = NULL;
+    bi_new(&y, (*x)->wordlen + size);   // will be all 0 by calloc()
+    y->sign = (*x)->sign;
+    copy_array(y->a + size, (*x)->a, (*x)->wordlen);
+
+    // x -> y
+    bi_assign(x, y);
+    bi_delete(&y);
+}
+
+
+
 //todo
 /**
 * @brief Print BigInt x in binary representation in order
