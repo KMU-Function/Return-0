@@ -8,4 +8,6 @@ void bi_subc(bigint** dst, bigint* x, bigint* y);
 void bi_add(bigint** dst, bigint* x, bigint* y);
 void bi_sub(bigint** dst, bigint* x, bigint* y);
 
+void bi_mul_singleword(word* dst, word x, word y);
+
 #endif

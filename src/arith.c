@@ -12,6 +12,12 @@
 * @param dst pointer of destination where the result of x + y will be stored
 */
 void bi_addc(bigint** dst, bigint* x, bigint* y){
+
+    if ((x->sign ^ y->sign) != 0) {
+        fprintf(stderr, "bi_addc input value's sign is not same\n");
+        return;
+    }
+
     int carry = 0;
 
     // expand smaller one
@@ -55,7 +61,13 @@ void bi_addc(bigint** dst, bigint* x, bigint* y){
 * Assume 0 < y <= x
 * @param dst pointer of destination where the result of x - y will be stored
 */
-void bi_subc(bigint** dst, bigint* x, bigint* y){
+void bi_subc(bigint** dst, bigint* x, bigint* y) {
+
+    if (x->sign == NEGATIVE || y->sign == NEGATIVE) {
+        fprintf(stderr, "bi_subc input value's sign is not positive\n");
+        return;
+    }
+
     int borrow = 0;
 
     if(y->wordlen < x->wordlen){
@@ -194,14 +206,40 @@ void bi_sub(bigint** dst, bigint* x, bigint* y){
     return;
 }
 
-void bi_mulc(bigint** dst, bigint* x, bigint* y) {
+void bi_mul_singleword(word* dst, word x, word y) {
+    word x0 = x & ((1 << (sizeof(word) * 8 / 2)) - 1);
+    word x1 = x >> (sizeof(word) * 8 / 2);
 
-    
+    word y0 = y & ((1 << (sizeof(word) * 8 / 2)) - 1);
+    word y1 = y >> (sizeof(word) * 8 / 2);
+
+    word t, t0, t1, c0, c1;
+
+    t0 = x0 * y1;
+    t1 = x1 * y0;
+    t0 = t0 + t1;
+    t1 = (t0 < t1) ? 1 : 0;
+
+    c0 = x0 * y0;
+    c1 = x1 * y1;
+    t = c0;
+    // printf("%08X\n", t0);
+    // printf("%08X\n", (t0 << (sizeof(word) * 8 / 2)));
+    c0 = c0 + (t0 << (sizeof(word) * 8 / 2));
+    c1 = c1 + (t1 << (sizeof(word) * 8 / 2)) + (t0 >> (sizeof(word) * 8 / 2)) + (c0 < t ? 1 : 0);
+
+    dst[1] = c1;
+    dst[0] = c0;
 
     return;
 }
 
-void bi_mul() {
+void bi_mul_textbook(bigint** dst, bigint* x, bigint* y) {
+
+    if (x->sign == NEGATIVE || y->sign == NEGATIVE) {
+        fprintf(stderr, "Textbook multiplication input value is NEGATIVE \n");
+        return;
+    }
 
     return;
 }

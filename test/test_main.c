@@ -42,16 +42,16 @@ int main(){
         yarr = (word*)calloc(ylen, sizeof(word));
 
         for(int i = 0; i < xlen; i++){
-            xarr[i] = rand() % 100;
+            xarr[i] = rand();
         }
         for(int i = 0; i < ylen; i++){
-            yarr[i] = rand() % 100;
+            yarr[i] = rand();
         }
 
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
-        bi_add(&z, x, y);
+        bi_add(&z, x, x);
 
         fprintf(fp_add, "%s", "x: ");
         for(int idx = 0; idx < x->wordlen; idx++){
@@ -59,9 +59,14 @@ int main(){
         }fprintf(fp_add, "%s", "\n");
 
         fprintf(fp_add, "%s", "y: ");
-        for(int idx = 0; idx < y->wordlen; idx++){
-            fprint_format(fp_add, y, idx);
+        for(int idx = 0; idx < x->wordlen; idx++){
+            fprint_format(fp_add, x, idx);
         }fprintf(fp_add, "%s", "\n");
+
+        // fprintf(fp_add, "%s", "y: ");
+        // for(int idx = 0; idx < y->wordlen; idx++){
+        //     fprint_format(fp_add, y, idx);
+        // }fprintf(fp_add, "%s", "\n");
 
         fprintf(fp_add, "%s", "z: ");
         for(int idx = 0; idx < z->wordlen; idx++){
@@ -131,6 +136,20 @@ int main(){
     }
     fclose(fp_sub);
 
+    // //! mul test*********************************************************
+    // word w1 = rand();
+    // word w2 = rand();
+    // word result[2] = { 0x00 };
+
+    // printf("%u %8X\n", w1, w1);
+    // printf("%u %8X\n", w2, w2);
+
+    // bi_mulc(result, w1, w2);
+
+    // for (int i = 1; i >= 0; i--) {
+    //     printf("%8X ", result[i]);
+
+    // }
 
     return 0;
 }
