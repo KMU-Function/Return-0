@@ -193,3 +193,15 @@ void bi_sub(bigint** dst, bigint* x, bigint* y){
 
     return;
 }
+
+void bi_mulc(bigint** dst, bigint* x, bigint* y) {
+
+    
+
+    return;
+}
+
+void bi_mul() {
+
+    return;
+}

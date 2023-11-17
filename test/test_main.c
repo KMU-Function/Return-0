@@ -26,9 +26,10 @@ int main(){
 
     //! add test*********************************************************
     FILE* fp_add = NULL;
-    fp_add = fopen("test/test_add.txt", "w");
+    // fp_add = fopen("test/test_add.txt", "w");
+    fp_add = fopen("../test/test_add.txt", "w");
     assert(fp_add != NULL);
-    for(int iter = 0; iter < 10000; iter++){
+    for (int iter = 0; iter < 10000; iter++) {
 
         int xlen = rand() % 100;
         int ylen = rand() % 100;
@@ -78,9 +79,11 @@ int main(){
 
     //! sub test*********************************************************
     FILE* fp_sub = NULL;
-    fp_sub = fopen("test/test_sub.txt", "w");
+    // fp_sub = fopen("test/test_sub.txt", "w");
+    fp_sub = fopen("../test/test_sub.txt", "w");
     assert(fp_sub != NULL);
-    for(int iter = 0; iter < 10000; iter++){
+    
+    for (int iter = 0; iter < 10000; iter++) {
 
         int xlen = rand() % 100;
         int ylen = rand() % 100;

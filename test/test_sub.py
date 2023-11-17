@@ -1,4 +1,5 @@
-with open("test/test_sub.txt", "r") as f:
+# with open("test/test_sub.txt", "r") as f:
+with open("test_sub.txt", "r") as f:
     cnt = 0
     while True:
         x = f.readline().split()[1:][::-1]

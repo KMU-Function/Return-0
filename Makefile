@@ -1,6 +1,6 @@
 # compiler and options
 CC = gcc
-CFLAGS = -Wall -Wextra -Wpedantic -std=c99
+CFLAGS = -Wall -Wextra -Wpedantic -std=c99 -g
 
 # file directories
 SRC_DIR = src
