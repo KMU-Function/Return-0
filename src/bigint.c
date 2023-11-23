@@ -281,28 +281,67 @@ void bi_show_hex_inorder(bigint* x) {
     }printf("\n");
 }
 
-void bi_shift_right(bigint** x, int size) {
-    bigint *y = NULL;
-    bi_new(&y, (*x)->wordlen - size);
-    y->sign = (*x)->sign;
-    copy_array(y->a, (*x)->a + size, y->wordlen);
+// 이대로 둬야 할 듯 (테스트 통과)
+void bi_shift_right_word(bigint** x, int bytelen) {
+    for(int i = 0; i < (*x)->wordlen - bytelen; i++){
+        (*x)->a[i] = (*x)->a[i + bytelen];
+    }
 
-    // x -> y
-    bi_assign(x, y);
-    bi_delete(&y);
+    for(int i = (*x)->wordlen - bytelen; i < (*x)->wordlen; i++){
+        (*x)->a[i] = 0;
+    }
+
+    bi_refine(*x);
 }
 
-void bi_shift_left(bigint** x, int size) {
-    bigint *y = NULL;
-    bi_new(&y, (*x)->wordlen + size);   // will be all 0 by calloc()
-    y->sign = (*x)->sign;
-    copy_array(y->a + size, (*x)->a, (*x)->wordlen);
+void bi_shift_left_word(bigint** x, int bytelen) {
+    if(bytelen == 0){
+        return;
+    }
+    printf("%d\n", bytelen);
+    bi_expand(*x, (*x)->wordlen + bytelen);
 
-    // x -> y
-    bi_assign(x, y);
-    bi_delete(&y);
+    for(int i = (*x)->wordlen - 1; i >= bytelen; i--){
+        (*x)->a[i] = (*x)->a[i - bytelen];
+    }
+
+    for(int i = bytelen - 1; i >= 0; i--){
+        (*x)->a[i] = 0;
+    }
 }
 
+/**
+* @brief Bitwise shift left
+* @param x Pointer of a big integer
+* @param r Shift amount
+*/
+void bi_shr(bigint* x, const int r){
+    // r >= wordlen -> return a<-0
+    if(r >= x->wordlen){
+        bi_set_zero(&x);
+        return;
+    }
+
+    if(r % (sizeof(word) * 8) == 0){
+        bi_shift_right_word(&x, r >> 3);
+        return;
+    }
+
+    // 
+    bi_shift_right_word(&x, r / (sizeof(word) * 8));
+
+    /*  |-----|***|  |*****|---|
+    *         - r -        - r -
+    */
+    int reminder = r % (sizeof(word) * 8);
+    for(int i = 0; i < x->wordlen - 1; i++){
+        int tmp = (x->a[i] >> reminder) || (x->a[i+1] << (sizeof(word) - reminder));
+        x->a[i] = tmp;
+    }
+
+    // last element
+    x->a[x->wordlen - 1] >>= r;
+}
 
 
 //todo

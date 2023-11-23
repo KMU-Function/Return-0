@@ -6,6 +6,9 @@
 #define NONNEGATIVE 0
 #define NEGATIVE    1
 
+#define DTYPE 32
+
+
 #ifdef DTYPE
 #if DTYPE == 8
 typedef uint8_t word;
@@ -52,8 +55,11 @@ int get_filpped_sign(bigint* x);
 void bi_show_hex(bigint* x);
 void bi_show_hex_inorder(bigint* x);
 
-void bi_shift_right(bigint** x, int size);
-void bi_shift_left(bigint** x, int size);
+void bi_shift_right_word(bigint** x, int size);
+void bi_shift_left_word(bigint** x, int size);
+
+
+void bi_shr(bigint* x, const int r);
 
 //todo
 // void bi_show_bin(bigint* x);

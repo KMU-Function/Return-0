@@ -12,6 +12,8 @@ import os
 os.system('python3 test_add.py') 
 os.system('python3 test_sub.py') 
 os.system('python3 test_mul.py') 
+os.system('python3 test_shr_word.py') 
+os.system('python3 test_shl_word.py') 
 
 # #: Delete previous test vector files
 # os.system('rm -rf test_add.txt')
