@@ -298,7 +298,7 @@ void bi_shift_left_word(bigint** x, int bytelen) {
     if(bytelen == 0){
         return;
     }
-    printf("%d\n", bytelen);
+
     bi_expand(*x, (*x)->wordlen + bytelen);
 
     for(int i = (*x)->wordlen - 1; i >= bytelen; i--){
@@ -313,31 +313,44 @@ void bi_shift_left_word(bigint** x, int bytelen) {
 /**
 * @brief Bitwise shift left
 * @param x Pointer of a big integer
-* @param r Shift amount
+* @param r Shift amount in bit
 */
 void bi_shr(bigint* x, const int r){
-    // r >= wordlen -> return a<-0
-    if(r >= x->wordlen){
+    int x_bitlen = x->wordlen * sizeof(word) * 8;
+    int r_blocklen = r / (sizeof(word) * 8); // full byte
+    int remainder = r % (sizeof(word) * 8);  // last bit length
+
+    // r >= wordlen -> return 0
+    if(r >= x_bitlen){
         bi_set_zero(&x);
         return;
     }
 
-    if(r % (sizeof(word) * 8) == 0){
-        bi_shift_right_word(&x, r >> 3);
+    if(r % ((sizeof(word) * 8)) == 0){
+        bi_shift_right_word(&x, r_blocklen);
         return;
     }
 
-    // 
-    bi_shift_right_word(&x, r / (sizeof(word) * 8));
+    for(int i = 0; i < x->wordlen; i++){
+        printf("%08x ", x->a[i]);
+    }printf("\n\n");
+    printf("r_blocklen: %d\n", r_blocklen);
+    printf("r: %d\n", r);
+    bi_shift_right_word(&x, r_blocklen);
+    for(int i = 0; i < x->wordlen; i++){
+        printf("%08x ", x->a[i]);
+    }printf("\n\n");
 
     /*  |-----|***|  |*****|---|
     *         - r -        - r -
     */
-    int reminder = r % (sizeof(word) * 8);
+
+   printf("remiander: %d\ntmp: ", remainder);
     for(int i = 0; i < x->wordlen - 1; i++){
-        int tmp = (x->a[i] >> reminder) || (x->a[i+1] << (sizeof(word) - reminder));
+        word tmp = (x->a[i] >> remainder) | (x->a[i+1] << (sizeof(word) * 8 - remainder));
         x->a[i] = tmp;
-    }
+        printf("%08x  %08x  ", (x->a[i] >> remainder) , (x->a[i+1] << (sizeof(word) * 8 - remainder)));
+    }printf("\n\n");
 
     // last element
     x->a[x->wordlen - 1] >>= r;

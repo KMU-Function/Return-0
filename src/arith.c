@@ -252,7 +252,7 @@ void bi_mul_textbook(bigint** dst, bigint* x, bigint* y) {
         for (int i = 0; i < y->wordlen; i++) {
             bi_mul_singleword(t->a, x->a[j], y->a[i]);
             // printf("i + j = %d + %d = %d\n", i, j, i + j);
-            bi_shift_left(&t, i + j);
+            bi_shift_left_word(&t, i + j);
             // printf("t = \n");
             // bi_show_hex_inorder(t);
             // printf("dst = \n");
