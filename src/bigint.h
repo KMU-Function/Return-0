@@ -60,6 +60,8 @@ void bi_shift_left_word(bigint** x, int size);
 
 
 void bi_shr(bigint* x, const int r);
+void bi_shl(bigint** x, uint64_t r);
+
 
 //todo
 // void bi_show_bin(bigint* x);

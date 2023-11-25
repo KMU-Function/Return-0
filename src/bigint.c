@@ -326,36 +326,77 @@ void bi_shr(bigint* x, const int r){
         return;
     }
 
-    if(r % ((sizeof(word) * 8)) == 0){
+    // r is multiple of word bit length -> only do word shift
+    if(remainder == 0){
         bi_shift_right_word(&x, r_blocklen);
         return;
     }
 
-    for(int i = 0; i < x->wordlen; i++){
-        printf("%08x ", x->a[i]);
-    }printf("\n\n");
-    printf("r_blocklen: %d\n", r_blocklen);
-    printf("r: %d\n", r);
     bi_shift_right_word(&x, r_blocklen);
-    for(int i = 0; i < x->wordlen; i++){
-        printf("%08x ", x->a[i]);
-    }printf("\n\n");
 
     /*  |-----|***|  |*****|---|
     *         - r -        - r -
     */
-
-   printf("remiander: %d\ntmp: ", remainder);
     for(int i = 0; i < x->wordlen - 1; i++){
-        word tmp = (x->a[i] >> remainder) | (x->a[i+1] << (sizeof(word) * 8 - remainder));
+        word tmp = (x->a[i] >> remainder) | (x->a[i + 1] << (sizeof(word) * 8 - remainder));
         x->a[i] = tmp;
-        printf("%08x  %08x  ", (x->a[i] >> remainder) , (x->a[i+1] << (sizeof(word) * 8 - remainder)));
-    }printf("\n\n");
+    }
 
     // last element
     x->a[x->wordlen - 1] >>= r;
 }
 
+
+void bi_shl(bigint** x, uint64_t r) {
+    // Check for invalid inputs: NULL source or non-positive shift value.
+    if (*x == NULL || r == 0) {
+        return;
+    }
+    
+    //printf("r = %d\n", r);
+    //bi_show_hex_inorder(*x);
+
+    // Calculate word and bit offsets for the shift operation.
+    uint64_t word_shift = r / (8 * sizeof(word)); // Offset in words
+    uint64_t bit_offset = r % (8 * sizeof(word));  // Offset in bits
+
+    // Create a temporary bigint to hold the shifted value.
+    bigint* temp = NULL;  // Changed to bigint* from bigint**
+    bi_new(&temp, (*x)->wordlen + word_shift + 1);  // Pass the address of temp
+
+    // Perform word shift.
+    if (word_shift == 0) {
+        memcpy(temp->a, (*x)->a, sizeof(word) * (*x)->wordlen);
+    }
+    else {
+        for (int i = 0; i < (*x)->wordlen; i++) {
+            uint64_t shifted_index = i + word_shift;
+            temp->a[shifted_index] = (*x)->a[i];
+        }
+    }
+
+    word carry = 0;
+    for (int i = 0; i < temp->wordlen; i++) {
+        word temp_word = temp->a[i];
+        word shifted_word = temp->a[i] << bit_offset;
+        temp->a[i] = (shifted_word | carry);
+        carry = temp_word >> ((8 * sizeof(word)) - bit_offset);
+        //printf("carry: %08x\n", carry);
+    }
+
+    // Handle the final carry.
+    if (temp->wordlen > 0 && carry > 0) {
+        temp->a[temp->wordlen - 1] |= carry;
+    }
+    //bi_show_hex_inorder(temp);
+
+
+    bi_refine(temp);
+    bi_assign(x, temp);
+    // bi_new(x, temp->wordlen);
+    // memcpy((*x)->a, temp->a, sizeof(word) * temp->wordlen);
+    bi_delete(&temp);  // Pass the address of temp to bi_delete
+}
 
 //todo
 /**

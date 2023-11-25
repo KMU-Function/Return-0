@@ -25,8 +25,5 @@ with open("test_shl_word.txt", "r") as f:
                     print(z)
                     print()
                     cnt += 1
-                    break
-        else:
-            print("Invalid Length")
                 
 print("{0:-<20} Success!".format("shl word ") if cnt == 0 else f"Failed in {cnt} Test Vectors")

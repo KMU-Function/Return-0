@@ -28,7 +28,6 @@ int main(void){
 
     //! add test*********************************************************
     FILE* fp_add = NULL;
-    // fp_add = fopen("test/test_add.txt", "w");
     fp_add = fopen("test/test_add.txt", "w");
     assert(fp_add != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
@@ -224,7 +223,7 @@ int main(void){
             fprint_format(fp_shr_word, x, idx);
         }fprintf(fp_shr_word, "%s", "\n");
 
-        int r = rand() % x->wordlen;
+        int r = rand() % (x->wordlen + 1);
         bi_shift_right_word(&x, r);
 
         fprintf(fp_shr_word, "%s", "y: ");
@@ -249,7 +248,6 @@ int main(void){
     FILE* fp_shr_bit = NULL;
     fp_shr_bit = fopen("test/test_shr_bit.txt", "w");
     assert(fp_shr_bit != NULL);
-    printf("shr bit start..\n");
     for (int iter = 0; iter < ITERNUM; iter++) {
 
         int xlen = rand() % 100;
@@ -278,7 +276,7 @@ int main(void){
             fprint_format(fp_shr_bit, x, idx);
         }fprintf(fp_shr_bit, "%s", "\n");
 
-        int r = rand() % x->wordlen;
+        int r = rand() % (x->wordlen + 1);
         bi_shr(x, r);
 
         fprintf(fp_shr_bit, "%s", "y: ");
@@ -301,10 +299,8 @@ int main(void){
 
     //! shl test*********************************************************
     FILE* fp_shl_word = NULL;
-    fp_sub = fopen("test/test_sub.txt", "w");
     fp_shl_word = fopen("test/test_shl_word.txt", "w");
     assert(fp_shl_word != NULL);
-    printf("shl start...\n");
     for (int iter = 0; iter < ITERNUM; iter++) {
 
         int xlen = rand() % 100;
@@ -333,7 +329,7 @@ int main(void){
             fprint_format(fp_shl_word, x, idx);
         }fprintf(fp_shl_word, "%s", "\n");
 
-        int r = rand() % x->wordlen;
+        int r = rand() % (x->wordlen + 1);
         bi_shift_left_word(&x, r);
 
         fprintf(fp_shl_word, "%s", "y: ");
@@ -353,6 +349,58 @@ int main(void){
         free(yarr);
     }
     fclose(fp_shl_word);
+
+        //! shl test*********************************************************
+    FILE* fp_shl_bit = NULL;
+    fp_shl_bit = fopen("test/test_shl_bit.txt", "w");
+    assert(fp_shl_bit != NULL);
+    for (int iter = 0; iter < ITERNUM; iter++) {
+        int xlen = rand() % 10;
+        int ylen = rand() % 10;
+
+        bi_new(&x, xlen);
+        bi_new(&y, ylen);
+        bi_new(&z, xlen + ylen);
+
+        xarr = (word*)calloc(xlen, sizeof(word));
+        yarr = (word*)calloc(ylen, sizeof(word));
+
+        for(int i = 0; i < xlen; i++){
+            xarr[i] = rand();
+        }
+        for(int i = 0; i < ylen; i++){
+            yarr[i] = rand();
+        }
+
+        bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
+        bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
+
+
+        fprintf(fp_shl_bit, "%s", "x: ");
+        for(int idx = 0; idx < x->wordlen; idx++){
+            fprint_format(fp_shl_bit, x, idx);
+        }fprintf(fp_shl_bit, "%s", "\n");
+
+        int r = rand() % (x->wordlen + 1);
+        bi_shl(&x, r);
+
+        fprintf(fp_shl_bit, "%s", "y: ");
+        fprintf(fp_shl_bit, "%d", r);
+        fprintf(fp_shl_bit, "%s", "\n");
+
+        fprintf(fp_shl_bit, "%s", "x: ");
+        for(int idx = 0; idx < x->wordlen; idx++){
+            fprint_format(fp_shl_bit, x, idx);
+        }fprintf(fp_shl_bit, "%s", "\n\n");
+
+        bi_delete(&x);
+        bi_delete(&y);
+        bi_delete(&z);
+
+        free(xarr);
+        free(yarr);
+    }
+    fclose(fp_shl_bit);
 
     return 0;
 }
