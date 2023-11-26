@@ -28,7 +28,7 @@ int main(void){
 
     //! add test*********************************************************
     FILE* fp_add = NULL;
-    fp_add = fopen("../test/test_add.txt", "w");
+    fp_add = fopen("test/test_add.txt", "w");
     assert(fp_add != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
 
@@ -133,7 +133,7 @@ int main(void){
 
     //! mul test*********************************************************
     FILE* fp_mul = NULL;
-    fp_mul = fopen("../test/test_mul.txt", "w");
+    fp_mul = fopen("test/test_mul.txt", "w");
     assert(fp_mul != NULL);
     
     for (int iter = 0; iter < ITERNUM; iter++) {
@@ -288,6 +288,43 @@ int main(void){
         free(yarr);
     }
     fclose(fp_shl_bit);
+
+    //! sqr test*********************************************************
+    FILE* fp_sqr = NULL;
+    fp_sqr = fopen("test/test_sqr.txt", "w");
+    assert(fp_sqr != NULL);
+    for (int iter = 0; iter < ITERNUM; iter++) {
+        int xlen = rand() % 10;
+
+        bi_new(&x, xlen);
+        bi_new(&z, 2 * xlen);
+
+        xarr = (word*)calloc(xlen, sizeof(word));
+
+        for(int i = 0; i < xlen; i++){
+            xarr[i] = rand();
+        }
+
+        bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
+
+        bi_sqr(&z, x, "textbook");
+
+        fprintf(fp_sqr, "%s", "x: ");
+        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_sqr, x, idx);
+        }fprintf(fp_sqr, "%s", "\n");
+
+        fprintf(fp_sqr, "%s", "z: ");
+        for(int idx = z->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_sqr, z, idx);
+        }fprintf(fp_sqr, "%s", "\n\n");
+
+        bi_delete(&x);
+        bi_delete(&z);
+
+        free(xarr);
+    }
+    fclose(fp_sqr);
 
     return 0;
 }
