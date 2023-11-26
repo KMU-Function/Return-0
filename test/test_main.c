@@ -28,7 +28,7 @@ int main(void){
 
     //! add test*********************************************************
     FILE* fp_add = NULL;
-    fp_add = fopen("test/test_add.txt", "w");
+    fp_add = fopen("../test/test_add.txt", "w");
     assert(fp_add != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
 
@@ -80,9 +80,9 @@ int main(void){
 
     //! sub test*********************************************************
     FILE* fp_sub = NULL;
+    // fp_sub = fopen("test/test_sub.txt", "w");
     fp_sub = fopen("test/test_sub.txt", "w");
     assert(fp_sub != NULL);
-    
     for (int iter = 0; iter < ITERNUM; iter++) {
 
         int xlen = rand() % 100;
@@ -133,7 +133,7 @@ int main(void){
 
     //! mul test*********************************************************
     FILE* fp_mul = NULL;
-    fp_mul = fopen("test/test_mul.txt", "w");
+    fp_mul = fopen("../test/test_mul.txt", "w");
     assert(fp_mul != NULL);
     
     for (int iter = 0; iter < ITERNUM; iter++) {
