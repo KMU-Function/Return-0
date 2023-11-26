@@ -28,7 +28,7 @@ int main(void){
 
     //! add test*********************************************************
     FILE* fp_add = NULL;
-    fp_add = fopen("test/test_add.txt", "w");
+    fp_add = fopen("../test/test_add.txt", "w");
     assert(fp_add != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
 
@@ -85,8 +85,8 @@ int main(void){
 
     //! sub test*********************************************************
     FILE* fp_sub = NULL;
-    // fp_sub = fopen("test/test_sub.txt", "w");
-    fp_sub = fopen("test/test_sub.txt", "w");
+    // fp_sub = fopen("../test/test_sub.txt", "w");
+    fp_sub = fopen("../test/test_sub.txt", "w");
     assert(fp_sub != NULL);
     
     for (int iter = 0; iter < ITERNUM; iter++) {
@@ -139,7 +139,7 @@ int main(void){
 
     //! mul test*********************************************************
     FILE* fp_mul = NULL;
-    fp_mul = fopen("test/test_mul.txt", "w");
+    fp_mul = fopen("../test/test_mul.txt", "w");
     assert(fp_mul != NULL);
     
     for (int iter = 0; iter < ITERNUM; iter++) {
@@ -192,7 +192,7 @@ int main(void){
 
     //! shr test*********************************************************
     FILE* fp_shr_word = NULL;
-    fp_shr_word = fopen("test/test_shr_word.txt", "w");
+    fp_shr_word = fopen("../test/test_shr_word.txt", "w");
     assert(fp_shr_word != NULL);
     
     for (int iter = 0; iter < ITERNUM; iter++) {
@@ -246,7 +246,7 @@ int main(void){
 
     //! shr bit test*********************************************************
     FILE* fp_shr_bit = NULL;
-    fp_shr_bit = fopen("test/test_shr_bit.txt", "w");
+    fp_shr_bit = fopen("../test/test_shr_bit.txt", "w");
     assert(fp_shr_bit != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
 
@@ -299,7 +299,7 @@ int main(void){
 
     //! shl test*********************************************************
     FILE* fp_shl_word = NULL;
-    fp_shl_word = fopen("test/test_shl_word.txt", "w");
+    fp_shl_word = fopen("../test/test_shl_word.txt", "w");
     assert(fp_shl_word != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
 
@@ -352,7 +352,7 @@ int main(void){
 
         //! shl test*********************************************************
     FILE* fp_shl_bit = NULL;
-    fp_shl_bit = fopen("test/test_shl_bit.txt", "w");
+    fp_shl_bit = fopen("../test/test_shl_bit.txt", "w");
     assert(fp_shl_bit != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = rand() % 10;
