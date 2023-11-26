@@ -80,7 +80,6 @@ int main(void){
 
     //! sub test*********************************************************
     FILE* fp_sub = NULL;
-    // fp_sub = fopen("test/test_sub.txt", "w");
     fp_sub = fopen("test/test_sub.txt", "w");
     assert(fp_sub != NULL);
     

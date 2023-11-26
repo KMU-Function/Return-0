@@ -376,19 +376,19 @@ void bi_shl(bigint** x, uint64_t r) {
     }
 
     word carry = 0;
-    for (int i = 0; i < temp->wordlen; i++) {
-        word temp_word = temp->a[i];
-        word shifted_word = temp->a[i] << bit_offset;
-        temp->a[i] = (shifted_word | carry);
-        carry = temp_word >> ((8 * sizeof(word)) - bit_offset);
-        //printf("carry: %08x\n", carry);
-    }
+    if(bit_offset != 0){
+        for (int i = 0; i < temp->wordlen; i++) {
+            word temp_word = temp->a[i];
+            word shifted_word = temp->a[i] << bit_offset;
+            temp->a[i] = (shifted_word | carry);
+            carry = temp_word >> ((8 * sizeof(word)) - bit_offset);
+        }
 
-    // Handle the final carry.
-    if (temp->wordlen > 0 && carry > 0) {
-        temp->a[temp->wordlen - 1] |= carry;
+        // Handle the final carry.
+        if (temp->wordlen > 0 && carry > 0) {
+            temp->a[temp->wordlen - 1] |= carry;
+        }
     }
-    //bi_show_hex_inorder(temp);
 
 
     bi_refine(temp);
