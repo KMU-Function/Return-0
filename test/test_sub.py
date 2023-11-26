@@ -2,9 +2,9 @@
 with open("test_sub.txt", "r") as f:
     cnt = 0
     while True:
-        x = f.readline().split()[1:][::-1]
-        y = f.readline().split()[1:][::-1]
-        z = f.readline().split()[1:][::-1]
+        x = f.readline().split()[1:]
+        y = f.readline().split()[1:]
+        z = f.readline().split()[1:]
         f.readline()
         
         if x==[] or y==[] or z==[]:
