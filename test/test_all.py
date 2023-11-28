@@ -15,6 +15,7 @@ os.system('python3 test_mul.py')
 os.system('python3 test_shr.py') 
 os.system('python3 test_shl.py') 
 os.system('python3 test_sqr.py') 
+#os.system('python3 test_div.py') 
 
 # #: Delete previous test vector files
 # os.system('rm -rf test_add.txt')

@@ -58,12 +58,8 @@ int get_filpped_sign(bigint* x);
 void bi_show_hex(bigint* x);
 void bi_show_hex_inorder(bigint* x);
 
-void bi_shift_right_word(bigint** x, int size);
-void bi_shift_left_word(bigint** x, int size);
-
-
-void bi_shr(bigint* x, const int r);
-void bi_shl(bigint** x, uint64_t r);
+void bi_shr(bigint** x, size_t r);
+void bi_shl(bigint** x, size_t r);
 
 
 //todo

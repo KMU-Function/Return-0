@@ -217,7 +217,7 @@ int main(void){
         }fprintf(fp_shr_bit, "%s", "\n");
 
         int r = rand() % (x->wordlen + 1);
-        bi_shr(x, r);
+        bi_shr(&x, r);
 
         fprintf(fp_shr_bit, "%s", "y: ");
         fprintf(fp_shr_bit, "%d", r);
@@ -325,6 +325,66 @@ int main(void){
         free(xarr);
     }
     fclose(fp_sqr);
+
+
+    // //! div test*********************************************************
+    // FILE* fp_div = NULL;
+    // fp_div = fopen("test/test_div.txt", "w");
+    // assert(fp_div != NULL);
+    // for (int iter = 0; iter < ITERNUM; iter++) {
+    //     printf("div %d\n", iter);
+
+    //     int xlen = rand() % 100;
+    //     int ylen = rand() % 100;
+
+    //     bigint* q = NULL;
+    //     bigint* r = NULL;
+
+    //     bi_new(&x, xlen);
+    //     bi_new(&y, ylen);
+    //     bi_new(&z, xlen < ylen ? ylen : xlen);
+
+    //     xarr = (word*)calloc(xlen, sizeof(word));
+    //     yarr = (word*)calloc(ylen, sizeof(word));
+
+    //     for(int i = 0; i < xlen; i++){
+    //         xarr[i] = rand();
+    //     }
+    //     for(int i = 0; i < ylen; i++){
+    //         yarr[i] = rand();
+    //     }
+
+    //     bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
+    //     bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
+
+    
+    //     //bi_div(&q, &r, x, y);
+
+    //     fprintf(fp_div, "%s", "x: ");
+    //     for(int idx = x->wordlen - 1; idx >= 0; idx--){
+    //         fprint_format(fp_div, x, idx);
+    //     }fprintf(fp_div, "%s", "\n");
+
+    //     fprintf(fp_div, "%s", "y: ");
+    //     for(int idx = y->wordlen - 1; idx >= 0; idx--){
+    //         fprint_format(fp_div, y, idx);
+    //     }fprintf(fp_div, "%s", "\n");
+
+    //     fprintf(fp_div, "%s", "q: ");
+    //     for(int idx = q->wordlen - 1; idx >= 0; idx--){
+    //         fprint_format(fp_div, q, idx);
+    //     }fprintf(fp_div, "%s", "\n\n");
+
+    //     bi_delete(&x);
+    //     bi_delete(&y);
+    //     bi_delete(&z);
+
+    //     free(xarr);
+    //     free(yarr);
+    // }
+    // fclose(fp_div);
+
+
 
     return 0;
 }

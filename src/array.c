@@ -8,6 +8,8 @@
 * @brief Initialize array with zero values
 */
 void init_array(word* a, int wordlen) {
+    if(a == NULL || wordlen == 0)
+        return;
     for(int i = 0; i < wordlen; i++){
         a[i] = 0;
     }

@@ -49,5 +49,6 @@ $(BUILD_DIR)/%.o: $(TEST_DIR)/%.c | $(BUILD_DIR)
 # clean
 clean:
 	rm -rf $(BUILD_DIR)
+	@find test -name "*.txt" -type f -delete
 
 .PHONY: all test clean

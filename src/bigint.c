@@ -3,37 +3,87 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <stdbool.h>
+#include <assert.h>
 #include "bigint.h"
 #include "array.h"
 
-//todo shift, reduction, show_bin/dec
+//todo reduction, show_bin/dec
 
 
-void bi_delete(bigint** x){
-    if(*x == NULL)
+// void bi_delete(bigint** x){
+//     if(*x == NULL)
+//         return;
+
+// #ifdef ZEROIZE 
+//     init_array((*x)->a, (*x)->wordlen);
+// #endif
+
+//     if((*x)->a != NULL){
+//         free((*x)->a);
+//         (*x)->a = NULL;
+//     }
+
+//     free(*x);
+//     *x = NULL;
+// }
+
+// /**
+// * @brief Create BigInt x
+// */
+// void bi_new(bigint** x, int wordlen) {
+//     assert(wordlen >= 0);
+
+//     if(*x != NULL)
+//         bi_delete(x);
+
+//     *x = (bigint*)calloc(1, sizeof(bigint));
+//     (*x)->sign = NONNEGATIVE;
+//     (*x)->wordlen = wordlen;
+
+//     (*x)->a = (word*)calloc(wordlen, sizeof(word));
+// }
+
+void bi_delete(bigint **x) { 
+    if (*x == NULL) {
         return;
+    }
 
-#ifdef ZEROIZE 
+#if ZERORIZE
     init_array((*x)->a, (*x)->wordlen);
 #endif
 
-    free((*x)->a);
+    // free((*x)->a);
+    // (*x)->a = NULL;
+    // free(*x);
+    // *x = NULL;
+
+    if ( (*x)->a != NULL ) {
+        free((*x)->a);
+        (*x)->a = NULL;
+    }
     free(*x);
     *x = NULL;
 }
 
-/**
-* @brief Create BigInt x
-*/
 void bi_new(bigint** x, int wordlen) {
-    if(*x != NULL)
+    if (*x != NULL) {
         bi_delete(x);
+    }
 
-    *x = (bigint*)calloc(1, sizeof(bigint));
-    (*x)->sign = NONNEGATIVE;
+    (*x)          = (bigint *)malloc(sizeof(bigint));
+    (*x)->sign    = NONNEGATIVE;
     (*x)->wordlen = wordlen;
-    (*x)->a = (word*)calloc(wordlen, sizeof(word));
+
+    (*x)->a       = NULL;
+    if ( wordlen > 0 ) {
+        (*x)->a       = (word *)malloc(wordlen * sizeof(word));  // [word] [word] .. : wordlen개
+        init_array((*x)->a, wordlen);
+    }
+    else {
+        (*x)->a = NULL;
+    }
 }
+
 
 /**
 * @brief Create BigInt x by array
@@ -82,9 +132,10 @@ void bi_refine(bigint* x) {
 * @brief Assign BigInt x to y (Y <- X)
 */
 void bi_assign(bigint** y, bigint* x){
-    if(*y != NULL)
+    if(*y != NULL){
         bi_delete(y);
-    
+    }
+
     bi_new(y, x->wordlen);
     (*y)->sign = x->sign;
     copy_array((*y)->a, x->a, x->wordlen);
@@ -94,10 +145,13 @@ void bi_assign(bigint** y, bigint* x){
 * @brief Expand BigInt x with new word length by zero
 */
 void bi_expand(bigint* x, int new_wordlen){
-    if(x->wordlen >= new_wordlen){
+    if(x->wordlen > new_wordlen){
         fprintf(stderr, "wordlen is larger or equal to new wordlen\n");
         return;
     }
+
+    if(x->wordlen == new_wordlen)
+        return;
 
     int old_wordlen = x->wordlen;
     x->a = (word*)realloc(x->a, sizeof(word) * new_wordlen);
@@ -142,8 +196,15 @@ void bi_set_zero(bigint** x) {
 * return 1(true) if BigInt x is 0x1, 0(false) otherwise
 */
 int bi_is_one(bigint* x) {
-    if(x->sign != NONNEGATIVE || x->a[0] != 1)
+    if(x == NULL)
         return false;
+            
+    else if(x->wordlen == 0)
+        return false;
+
+    else if(x->sign != NONNEGATIVE || x->a[0] != 1)
+        return false;
+
     for(int i = 0; i < x->wordlen - 1; i++){
         if(x->a[i] != 0)
             return false;
@@ -156,8 +217,15 @@ int bi_is_one(bigint* x) {
 * return 1(true) if BigInt x is 0x0, 0(false) otherwise
 */
 int bi_is_zero(bigint* x) {
-    if(x->sign != NONNEGATIVE || x->a[0] != 0)
+    if(x == NULL)
         return false;
+    
+    else if(x->wordlen == 0)
+        return true;
+
+    else if(x->sign != NONNEGATIVE || x->a[0] != 0)
+        return false;
+
     for(int i = 0; i < x->wordlen - 1; i++){
         if(x->a[i] != 0)
             return false;
@@ -304,6 +372,7 @@ void bi_shift_left_word(bigint** x, int bytelen) {
     for(int i = (*x)->wordlen - 1; i >= bytelen; i--){
         (*x)->a[i] = (*x)->a[i - bytelen];
     }
+    
 
     for(int i = bytelen - 1; i >= 0; i--){
         (*x)->a[i] = 0;
@@ -315,39 +384,39 @@ void bi_shift_left_word(bigint** x, int bytelen) {
 * @param x Pointer of a big integer
 * @param r Shift amount in bit
 */
-void bi_shr(bigint* x, const int r){
-    int x_bitlen = x->wordlen * sizeof(word) * 8;
+void bi_shr(bigint** x, size_t r){
+    size_t x_bitlen = (*x)->wordlen * sizeof(word) * 8;
     int r_blocklen = r / (sizeof(word) * 8); // full byte
     int remainder = r % (sizeof(word) * 8);  // last bit length
 
     // r >= wordlen -> return 0
     if(r >= x_bitlen){
-        bi_set_zero(&x);
+        bi_set_zero(x);
         return;
     }
 
     // r is multiple of word bit length -> only do word shift
     if(remainder == 0){
-        bi_shift_right_word(&x, r_blocklen);
+        bi_shift_right_word(x, r_blocklen);
         return;
     }
 
-    bi_shift_right_word(&x, r_blocklen);
+    bi_shift_right_word(x, r_blocklen);
 
     /*  |-----|***|  |*****|---|
     *         - r -        - r -
     */
-    for(int i = 0; i < x->wordlen - 1; i++){
-        word tmp = (x->a[i] >> remainder) | (x->a[i + 1] << (sizeof(word) * 8 - remainder));
-        x->a[i] = tmp;
+    for(int i = 0; i < (*x)->wordlen - 1; i++){
+        word tmp = ((*x)->a[i] >> remainder) | ((*x)->a[i + 1] << (sizeof(word) * 8 - remainder));
+        (*x)->a[i] = tmp;
     }
 
     // last element
-    x->a[x->wordlen - 1] >>= r;
+    (*x)->a[(*x)->wordlen - 1] >>= r;
 }
 
 
-void bi_shl(bigint** x, uint64_t r) {
+void bi_shl(bigint** x, size_t r) {
     // Check for invalid inputs: NULL source or non-positive shift value.
     if (*x == NULL || r == 0) {
         return;
