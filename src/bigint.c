@@ -106,7 +106,7 @@ void bi_assign(bigint** y, bigint* x){
 */
 void bi_expand(bigint* x, int new_wordlen){
     if(x->wordlen > new_wordlen){
-        fprintf(stderr, "wordlen is larger or equal to new wordlen\n");
+        fprintf(stderr, "wordlen is larger than new wordlen\n");
         return;
     }
 
@@ -263,7 +263,7 @@ int get_bitlen(bigint* x) {
 * @param i index of the bit to be extracted
 */
 int get_ith_bit(bigint* x, int i) {
-    return (x->a[i>>3] >> (i - (i>>3))) & 0x1;
+    return (x->a[i / (sizeof(word) * 8)] >> (i % (sizeof(word) * 8))) & 0x1;
 }
 
 /**
