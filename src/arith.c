@@ -125,6 +125,16 @@ void bi_add(bigint** dst, bigint* x, bigint* y) {
     }
 #endif
 
+    if(x->sign != NONNEGATIVE && x->sign != NEGATIVE){
+        fprintf(stderr, "x sign error\n");
+        printf("%d\n", x->sign);
+        abort();
+    }
+    if(y->sign != NONNEGATIVE && y->sign != NEGATIVE){
+        fprintf(stderr, "y sign error\n");
+        abort();
+    }
+
     if(bi_is_zero(x) || x == NULL){
         bi_assign(dst, y);
     }
@@ -155,11 +165,17 @@ void bi_add(bigint** dst, bigint* x, bigint* y) {
             (*dst)->sign = NONNEGATIVE;
         }
     }
-    else if(x->wordlen >= y->wordlen){
-        bi_addc(dst, x, y);
+    else if(x->sign == y->sign){
+        if(x->wordlen >= y->wordlen){
+            bi_addc(dst, x, y);
+        }
+        else{
+            bi_addc(dst, y, x);
+        }
     }
     else{
-        bi_addc(dst, y, x);
+        fprintf(stderr, "sign is not same\n");
+        abort();
     }
 
     //bi_assign(dst, tmp);
@@ -251,9 +267,22 @@ void bi_mul_singleword(word* dst, word x, word y) {
 }
 
 void bi_mul_textbook(bigint** dst, bigint* x, bigint* y) {
-
+    
     if (x->sign == NEGATIVE || y->sign == NEGATIVE) {
         fprintf(stderr, "Textbook multiplication input value is NEGATIVE \n");
+        return;
+    }
+
+    if(bi_is_one(x)){
+        bi_assign(dst, y);
+        return;
+    }
+    else if(bi_is_one(y)){
+        bi_assign(dst, x);
+        return;
+    }
+    else if(bi_is_zero(x) || bi_is_zero(y)){
+        bi_set_zero(dst);
         return;
     }
 
@@ -261,6 +290,7 @@ void bi_mul_textbook(bigint** dst, bigint* x, bigint* y) {
     bigint *t = NULL;
 
     bi_new(&c, x->wordlen + y->wordlen);
+    bi_new(dst, x->wordlen + y->wordlen);
     bi_new(&t, 2);
 
     for (int j = 0; j < x->wordlen; j++) {
@@ -286,11 +316,13 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
     }
 
     if (bi_is_one(x)) {
+        printf("x is one\n");
         bi_assign(dst, y);
         return;
     }
 
     if (bi_is_one(y)) {
+        printf("y is one\n");
         bi_assign(dst, x);
         return;
     }
@@ -325,14 +357,23 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
     x_tmp->sign = NONNEGATIVE;
     y_tmp->sign = NONNEGATIVE;
 
+    //todo 1129 test
+    bigint* z_tmp = NULL;
+    bi_new(&z_tmp, 1);
+
     if (strcmp(mulc, "textbook") == 0) {
-        bi_mul_textbook(dst, x_tmp, y_tmp);
+        bi_mul_textbook(&z_tmp, x_tmp, y_tmp);
+        bi_assign(dst, z_tmp);  //todo 1129 test
         bi_delete(&x_tmp);
         bi_delete(&y_tmp);
+        bi_delete(&z_tmp);  //todo 1129 test
         return;
     }
     else {
         fprintf(stderr, "mulc name error");
+        bi_delete(&x_tmp);
+        bi_delete(&y_tmp);
+        bi_delete(&z_tmp);  //todo 1129 test
         return;
     }
 
@@ -433,96 +474,148 @@ void bi_sqr(bigint** dst, bigint* x, const char *mulc) {
 
 }
 
-//! added
-int bi_2word_div(word *q, bigint *x, word *y) {
-    if (q == NULL || x == NULL || y == NULL) {
-        return -1;
-    }
-
-    int j = (sizeof(word) * 8) - 1;
-    word w = 1 << j,
-         r = x->a[1];
-
-    *q = 0;
-
-    while (j >= 0) {
-        if (r >= w) {
-            (*q) += (1 << j);
-            ( r)  = (2*r) + ((x->a[0] >> j) & 0x1) - (*y);
-        }
-        else {
-            r = (2*r) + ((x->a[0] >> j) & 0x1);
-            if (r >= (*y)) {
-                (*q) += (1 << j);
-                ( r) -= *y;
-            }
-        }
-        j--;
-    }
-
-    return 0;
-}
-
-/*
-    DIVCC
-     input : Xn-1·W^{n-1} + Xn-2·W^{n-2} + ··· + X0, Ym-1·W^{m-1} + Ym-2·W^{m-2} + ··· + Y0
-     output: Q, R
-*/
-int bi_divcc(bigint **q, bigint **r, bigint *x, bigint *y) {
-    if (x == NULL || y == NULL) {       // Check input
-        return -1;
-    }
+int bi_2word_div(word* q, bigint* a, word* b){
+    word r = a->a[1];       // r <- a[1]
+    (*q) = 0;               // q <- 0
     
-    size_t  n = x->wordlen, m = y->wordlen;
-    bigint *a = NULL, *t = NULL;
-
-    bi_new(q, 1);
-
-    if (n == m) {
-        (*q)->a[0] = x->a[m-1] / y->a[m-1];     // Q = Xm-1 / Ym-1
-    }
-    else if (n == (m + 1)) {
-        if (x->a[m] != y->a[m-1]) {
-            /*
-                Q = A / Ym-1
-                A = Xm·W + Xm-1
-            */
-            bi_new(&a, 2);
-            a->a[1] = x->a[m];
-            a->a[0] = x->a[m-1];
-
-            if (bi_2word_div(&((*q)->a[0]), a, &(y->a[m-1])) == -1) {
-                bi_delete(&a);
-                return -1;
+    for(int j = (sizeof(word) * 8) - 1; j >= 0; j--){
+        if(r >= (1 << (sizeof(word) * 8 - 1))){     // r >= 2^(w-1)
+            (*q) += (1 << j);
+            r = (2 * r) + ((a->a[0] >> j) & 0x01) - (*b);
+        }
+        else{
+            r = (2 * r) + ((a->a[0] >> j) & 0x01);
+            if(r >= (*b)){
+                (*q) += (1 << j);
+                r -= (*b);
             }
         }
-        else {
-            (*q)->a[0] = MAXWORD;
-        }
     }
-    else {
-        return -1;
-    }
-
-    /* R = X - YQ */
-    bi_mul(&t, y, *q, "textbook");
-    bi_sub(r, x, t);
-
-    while ((*r)->sign == NEGATIVE) {        // R < 0
-        /* 
-            Q = Q - 1
-            T = R + Y
-            R = T
-        */
-        (*q)->a[0]--;
-        bi_add(&t, *r, y);
-        bi_assign(r, t);
-    }
-
-    bi_delete(&a);
-    bi_delete(&t);
     return 0;
 }
+
+int bi_divcc(bigint** q, bigint** r, bigint* a, bigint* b){
+    if(a == NULL || b == NULL || a->wordlen == 0 || bi_is_zero(b)){
+        return;
+    }
+    bigint* one = NULL;
+    bi_set_one(&one);
+
+    int n = a->wordlen;
+    int m = b->wordlen;
+    
+    bi_new(q, 1);      // q in [0, w)
+
+    if(n == m){
+        (*q)->a[0] = a->a[m - 1] / b->a[m - 1];
+    }
+    if(n == m + 1){
+        if(a->a[m] == b->a[m - 1]){
+            (*q)->a[0] = MAXWORD;       // q <- w - 1
+        }
+        else{
+            bigint* tmp_a = NULL;
+            bi_new(&tmp_a, 2);
+            tmp_a->a[0] = a->a[m - 1];
+            tmp_a->a[1] = a->a[m];      // tmp_a <- a_m*W + a_(m-1)
+
+            if(bi_2word_div((*q)->a, tmp_a, &(b->a[m - 1])) == -1){
+                fprintf(stderr, "2 word div error\n");
+                exit(0);
+            }
+            bi_delete(&tmp_a);
+        }
+    }
+
+    bigint* tmp = NULL;
+    bi_new(&tmp, b->wordlen + (*q)->wordlen + 1);
+    printf("b: ");
+    for(int i = 0; i < b->wordlen; i++){
+        printf("%08x ", b->a[i]);
+    }printf("\n");
+
+
+
+    bi_mul(&tmp, b, *q, "textbook");    // r <- bq
+    bi_sub(r, a, tmp);                  // r <- a - bq
+    bi_new(&tmp, 1);
+    while ((*r)->sign == NEGATIVE){
+        bi_sub(tmp, *q, one);     // q <- q - 1
+        bi_add(r, *r, b);       // r <- r + b
+        bi_assign(q, tmp);
+    }
+    printf("q: ");
+    for(int i = 0; i < (*q)->wordlen; i++){
+        printf("%08x ", (*q)->a[i]);
+    }printf("\n");
+    bi_delete(&tmp);
+    bi_delete(&one);
+    if(*q == NULL || q == NULL){
+        abort();
+    }
+}
+
+
+// /*
+//     DIVCC
+//      input : Xn-1·W^{n-1} + Xn-2·W^{n-2} + ··· + X0, Ym-1·W^{m-1} + Ym-2·W^{m-2} + ··· + Y0
+//      output: Q, R
+// */
+// int _bi_divcc(bigint **q, bigint **r, bigint *x, bigint *y) {
+//     if (x == NULL || y == NULL) {       // Check input
+//         return -1;
+//     }
+    
+//     size_t  n = x->wordlen, m = y->wordlen;
+//     bigint *a = NULL, *t = NULL;
+
+//     bi_new(q, 1);
+
+//     if (n == m) {
+//         (*q)->a[0] = x->a[m-1] / y->a[m-1];     // Q = Xm-1 / Ym-1
+//     }
+//     else if (n == (m + 1)) {
+//         if (x->a[m] != y->a[m-1]) {
+//             /*
+//                 Q = A / Ym-1
+//                 A = Xm·W + Xm-1
+//             */
+//             bi_new(&a, 2);
+//             a->a[1] = x->a[m];
+//             a->a[0] = x->a[m-1];
+
+//             if (bi_2word_div(&((*q)->a[0]), a, &(y->a[m-1])) == -1) {
+//                 bi_delete(&a);
+//                 return -1;
+//             }
+//         }
+//         else {
+//             (*q)->a[0] = MAXWORD;
+//         }
+//     }
+//     else {
+//         return -1;
+//     }
+
+//     /* R = X - YQ */
+//     bi_mul(&t, y, *q, "textbook");
+//     bi_sub(r, x, t);
+
+//     while ((*r)->sign == NEGATIVE) {        // R < 0
+//         /* 
+//             Q = Q - 1
+//             T = R + Y
+//             R = T
+//         */
+//         (*q)->a[0]--;
+//         bi_add(&t, *r, y);
+//         bi_assign(r, t);
+//     }
+
+//     bi_delete(&a);
+//     bi_delete(&t);
+//     return 0;
+// }
 
 /*
     DIVC

@@ -15,10 +15,10 @@ with open("test_mul.txt", "r") as f:
         
         if x * y != z:
             print(cnt)
-            print(x)
-            print(y)
-            print(x*y)
-            print(z)
+            print(hex(x))
+            print(hex(y))
+            print(hex(x*y))
+            print(hex(z))
             print()
             cnt += 1
                 

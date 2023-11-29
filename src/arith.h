@@ -14,6 +14,9 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc);
 void bi_sqr_singleword(word* dst, word x);
 void bi_sqr_textbook(bigint** dst, bigint* x);
 void bi_sqr(bigint** dst, bigint* x, const char *mulc);
-int bi_div(bigint **q, bigint **r, const bigint *x, const bigint *y);
+
+
+int bi_2word_div(word* q, bigint* a, word* b);
+int bi_divcc(bigint** q, bigint** r, bigint* a, bigint* b);
 
 #endif

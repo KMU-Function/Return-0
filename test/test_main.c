@@ -2,7 +2,12 @@
 #include <stdlib.h>
 #include <time.h>
 #include <assert.h>
+
+#if defined(__linux__) || defined(__APPLE__)
 #include "../src/api.h"
+#elif defined(_WIN32)
+#include "api.h"
+#endif
 
 #define ITERNUM 100
 
@@ -327,15 +332,15 @@ int main(void){
     fclose(fp_sqr);
 
 
-    // //! div test*********************************************************
+    // ! div test*********************************************************
     // FILE* fp_div = NULL;
     // fp_div = fopen("test/test_div.txt", "w");
     // assert(fp_div != NULL);
     // for (int iter = 0; iter < ITERNUM; iter++) {
     //     printf("div %d\n", iter);
 
-    //     int xlen = rand() % 100;
-    //     int ylen = rand() % 100;
+    //     int xlen = rand() % 5 + 2;
+    //     int ylen = xlen;
 
     //     bigint* q = NULL;
     //     bigint* r = NULL;
@@ -348,17 +353,19 @@ int main(void){
     //     yarr = (word*)calloc(ylen, sizeof(word));
 
     //     for(int i = 0; i < xlen; i++){
-    //         xarr[i] = rand();
-    //     }
-    //     for(int i = 0; i < ylen; i++){
-    //         yarr[i] = rand();
+    //         word tmp1 = rand();
+    //         word tmp2 = rand();
+    //         x->a[i] = tmp1 < tmp2 ? tmp2 : tmp1;
+    //         y->a[i] = tmp1 > tmp2 ? tmp2 : tmp1;
     //     }
 
     //     bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
     //     bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
-    
-    //     //bi_div(&q, &r, x, y);
+    //     bi_divcc(&q, &r, x, y);
+    //     if(q == NULL){
+    //         abort();
+    //     }
 
     //     fprintf(fp_div, "%s", "x: ");
     //     for(int idx = x->wordlen - 1; idx >= 0; idx--){

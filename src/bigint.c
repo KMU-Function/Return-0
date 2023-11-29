@@ -10,79 +10,39 @@
 //todo reduction, show_bin/dec
 
 
-// void bi_delete(bigint** x){
-//     if(*x == NULL)
-//         return;
-
-// #ifdef ZEROIZE 
-//     init_array((*x)->a, (*x)->wordlen);
-// #endif
-
-//     if((*x)->a != NULL){
-//         free((*x)->a);
-//         (*x)->a = NULL;
-//     }
-
-//     free(*x);
-//     *x = NULL;
-// }
-
-// /**
-// * @brief Create BigInt x
-// */
-// void bi_new(bigint** x, int wordlen) {
-//     assert(wordlen >= 0);
-
-//     if(*x != NULL)
-//         bi_delete(x);
-
-//     *x = (bigint*)calloc(1, sizeof(bigint));
-//     (*x)->sign = NONNEGATIVE;
-//     (*x)->wordlen = wordlen;
-
-//     (*x)->a = (word*)calloc(wordlen, sizeof(word));
-// }
-
-void bi_delete(bigint **x) { 
-    if (*x == NULL) {
+void bi_delete(bigint** x){
+    if(*x == NULL)
         return;
-    }
 
-#if ZERORIZE
+#ifdef ZEROIZE 
     init_array((*x)->a, (*x)->wordlen);
 #endif
 
-    // free((*x)->a);
-    // (*x)->a = NULL;
-    // free(*x);
-    // *x = NULL;
-
-    if ( (*x)->a != NULL ) {
+    if((*x)->a != NULL){
         free((*x)->a);
         (*x)->a = NULL;
     }
+
     free(*x);
     *x = NULL;
 }
 
+/**
+* @brief Create BigInt x
+*/
 void bi_new(bigint** x, int wordlen) {
-    if (*x != NULL) {
-        bi_delete(x);
-    }
+    assert(wordlen >= 0);
 
-    (*x)          = (bigint *)malloc(sizeof(bigint));
-    (*x)->sign    = NONNEGATIVE;
+    if(*x != NULL)
+        bi_delete(x);
+
+    *x = (bigint*)calloc(1, sizeof(bigint));
+    (*x)->sign = NONNEGATIVE;
     (*x)->wordlen = wordlen;
 
-    (*x)->a       = NULL;
-    if ( wordlen > 0 ) {
-        (*x)->a       = (word *)malloc(wordlen * sizeof(word));  // [word] [word] .. : wordlen개
-        init_array((*x)->a, wordlen);
-    }
-    else {
-        (*x)->a = NULL;
-    }
+    (*x)->a = (word*)calloc(wordlen, sizeof(word));
 }
+
 
 
 /**
