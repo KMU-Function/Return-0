@@ -117,7 +117,7 @@ int bi_add(bigint** dst, bigint* x, bigint* y) {
     return -1;
 }
 
-word bi_subcc(word* dst, word x, word y, word b) {
+int bi_subcc(word* dst, word x, word y, int b) {
     word nb;     // next borrow
 
     *dst = x - b;           
@@ -196,14 +196,17 @@ int bi_sub(bigint** dst, bigint* x, bigint* y) {
     }
     // x, y >= 0
     if ((x->sign == NONNEGATIVE) && (y->sign == NONNEGATIVE)) {
+        // printf("(x->sign == NONNEGATIVE) && (y->sign == NONNEGATIVE)\n");
         // x >= y >= 0
         if (cmp == 1) {
+            // printf("(x->sign == NONNEGATIVE) && (y->sign == NONNEGATIVE) --> (cmp == 1)\n");
             bi_subc(&tmp, x, y);
             bi_assign(dst, tmp);
             bi_delete(&tmp);
         }
         // y > x >= 0 
         else if (cmp == -1) {
+            // printf("(x->sign == NONNEGATIVE) && (y->sign == NONNEGATIVE) --> (cmp == -1)\n");
             bi_subc(&tmp, y, x);
             bi_assign(dst, tmp);
             (*dst)->sign = NEGATIVE;
@@ -214,17 +217,20 @@ int bi_sub(bigint** dst, bigint* x, bigint* y) {
     }
     // x, y < 0 
     else if ((x->sign == NEGATIVE) && (y->sign == NEGATIVE)) {
+        // printf("(x->sign == NEGATIVE) && (y->sign == NEGATIVE)\n");
         bi_assign(&tmp_x, x);
         tmp_x->sign = NONNEGATIVE;
         bi_assign(&tmp_y, y);
         tmp_y->sign = NONNEGATIVE;
 
         if (cmp == 1) {
+            // printf("(x->sign == NEGATIVE) && (y->sign == NEGATIVE) --> (cmp == 1)\n");
             bi_subc(&tmp, tmp_y, tmp_x);
             bi_assign(dst, tmp);
             bi_delete(&tmp);
         }
         else if (cmp == -1) {
+            // printf("(x->sign == NEGATIVE) && (y->sign == NEGATIVE) --> (cmp == -1)\n");
             bi_subc(&tmp, tmp_x, tmp_y);
             bi_assign(dst, tmp);
             (*dst)->sign = NEGATIVE;
@@ -578,7 +584,9 @@ void karatsuba_mul_core(bigint** dest, bigint* src1, bigint* src2, uint64_t len)
 
 void karatsuba_mul(bigint** dest, bigint* src1, bigint* src2) {
     uint64_t len = (src1->wordlen < src2->wordlen) ? src1->wordlen : src2->wordlen;
-    karatsuba_mul_core(dest, src1, src2, len);
+    bigint* _dst = NULL;
+    karatsuba_mul_core(&_dst, src1, src2, len);
+    bi_assign(dest, _dst);
     (*dest)->sign = src1->sign ^ src2->sign;
 }
 
@@ -652,23 +660,15 @@ int bi_barrett_reduction(bigint** r, bigint* x, bigint* m, bigint* t){
 
     bi_assign(&tmp_x, x);
     bi_shr(&tmp_x, (sizeof(word) * 8) * (n - 1));    // qhat = A >> w(n-1)
-    printf("tmp_x = "); bi_show_hex_inorder(tmp_x);
-
     bi_mul(&qhat, tmp_x, t, "textbook");             // qhat = qhat * t
-    printf("qhat = "); bi_show_hex_inorder(qhat);
-
     bi_shr(&qhat, (sizeof(word) * 8) * (n + 1));     // qhat = qhat >> w(n+1)
-    printf("qhat = "); bi_show_hex_inorder(qhat);
-
     bi_mul(&tmp_r, m, qhat, "textbook");             // R = N * qhat
-    printf("tmp_r = "); bi_show_hex_inorder(tmp_r);
-
-    bi_sub(r, x, tmp_r);                             // R = A - R
-    printf("r = "); bi_show_hex_inorder(*r);
+    bi_assign(&tmp_x, x);
+    bi_sub(r, tmp_x, tmp_r);
 
     while (compare(*r, m) >= 0){
-        bi_sub(r, *r, m);
-        printf("r = "); bi_show_hex_inorder(*r);
+        bi_sub(&tmp_r, *r, m);
+        bi_assign(r, tmp_r);
     }
 
     bi_delete(&qhat);
@@ -677,36 +677,37 @@ int bi_barrett_reduction(bigint** r, bigint* x, bigint* m, bigint* t){
     return 0;
 }
 
-int bi_barrett_reduction__(bigint** r, bigint *x, bigint *m, bigint *t) {
+// compute z = x^n
+void bi_LtR(bigint** z, bigint** x, bigint* n) {
 
-    if (x == NULL || m == NULL || t == NULL) {
-        return -1;
+    bigint* _x = NULL;
+    bi_assign(&_x, *x);  // _x <- x (temp)
+
+    bigint* t = NULL;
+    bi_set_one(&t);
+
+    bigint* _t = NULL;
+    bi_set_one(&_t);
+
+    bigint* _tsqr = NULL;
+    bi_set_one(&_tsqr);
+
+    uint8_t _n = 0;
+
+    for (int i = n->wordlen - 1; i >= 0; i--) {
+        for (int j = (sizeof(word) * 8) - 1; j >= 0; j--) {        
+            bi_sqr(&_tsqr, t, "textbook");
+            bi_assign(&t, _tsqr);  // t <- t^2          
+            _n = (n->a[i] >> j) & 0x01;
+            if (_n == 1) {      // n_i = 1            
+                bi_mul(&_t, t, _x, "textbook");         
+                bi_assign(&t, _t);     // t <- t * x             
+            }
+        }
     }
-
-    size_t n = m->wordlen;
-
-    if ( x->wordlen > (2*n) ) {
-        return -1;
-    }
-
-    bigint *r_ = NULL, 
-           *qh = NULL, 
-           *x_ = NULL;
-
-    bi_assign(&x_, x);
-    bi_shr(&x_, (sizeof(word) * 8) * (n - 1));
-    bi_mul(&qh, x_, t, "textbook");
-    bi_shr(&qh, (sizeof(word) * 8) * (n + 1));
-    bi_mul(&r_, m, qh, "textbook");
-    bi_sub(r, x, r_);
-
-    while (compare(*r, m) >= 0) {
-        bi_sub(&r_, *r, m); 
-        bi_assign(r, r_); 
-    }
-
-    bi_delete(&qh);
-    bi_delete(&x_);
-    bi_delete(&r_);
-    return 0;
+    bi_assign(z, t);
+    
+    bi_delete(&_x);
+    bi_delete(&t);
+    bi_delete(&_t);
 }

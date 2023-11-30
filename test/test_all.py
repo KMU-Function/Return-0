@@ -9,7 +9,7 @@ import os
 # os.system('python3 test/test_sub.py') 
 
 #: run subtract test
-op = ['add', 'sub', 'mul', 'shr', 'shl', 'sqr', 'div']
+op = ['add', 'sub', 'mul', 'shr', 'shl', 'sqr', 'div', 'bar', 'exp']
 for o in op:
     os.system(f'python3 test_{o}.py') 
 

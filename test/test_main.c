@@ -9,7 +9,7 @@
 #include "api.h"
 #endif
 
-#define ITERNUM 100
+#define ITERNUM 10
 #define MIN(a, b) a < b ? a : b;
 #define MAX(a, b) a > b ? a : b;
 
@@ -24,7 +24,12 @@ void fprint_format(FILE* fp, bigint* x, int idx){
     #endif
 }
 
-int main(void){
+// tmpx = 7ed8c407 73c75ad1 62aafadd 2ddf0cf3 00bfc89b 23d99420 16d8e0f3 288fbec0 337ede46 2570c74a 49abc507 4e5e95f9 5ce559cf 4dd76ec9
+// x sign: 0
+// x len: 14
+// tmpr = 7ed8c407 73c75ad1 62aafadd 2ddf0cf3 00bfc89b 23d99420 16d8e0f2 e1035447 5a3e25af 93d80f5e 4888411a 9daa0646 4682d697 c939d84e
+
+int main(void) {
     srand(time(NULL));
 
     bigint* x = NULL;
@@ -93,13 +98,17 @@ int main(void){
 
     //! sub test*********************************************************
     FILE* fp_sub = NULL;
-    // fp_sub = fopen("test/test_sub.txt", "w");
+    fp_sub = fopen("test/test_sub.txt", "w");
     fp_sub = fopen("test/test_sub.txt", "w");
     assert(fp_sub != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
 
-        int xlen = rand() % 100;
-        int ylen = rand() % 100;
+        // printf("iter == %d\n\n", iter);
+
+        // int xlen = rand() % 100;
+        // int ylen = rand() % 100;
+        int xlen = 14;
+        int ylen = 14;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -108,15 +117,20 @@ int main(void){
         xarr = (word*)calloc(xlen, sizeof(word));
         yarr = (word*)calloc(ylen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
-            xarr[i] = rand();
-        }
-        for(int i = 0; i < ylen; i++){
-            yarr[i] = rand();
-        }
+        // for(int i = 0; i < xlen; i++){
+        //     xarr[i] = rand();
+        // }
+        // for(int i = 0; i < ylen; i++){
+        //     yarr[i] = rand();
+        // }
+        word _xarr[14] = { 0x4dd76ec9, 0x5ce559cf, 0x4e5e95f9, 0x49abc507,0x2570c74a,0x337ede46,0x288fbec0,0x16d8e0f3,0x23d99420,0x00bfc89b,0x2ddf0cf3,0x62aafadd,0x73c75ad1, 0x7ed8c407 };
+        
+        word _yarr[14] = { 0xc939d84e, 0x4682d697, 0x9daa0646 ,0x4888411a, 0x93d80f5e, 0x5a3e25af, 0xe1035447, 0x16d8e0f2, 0x23d99420, 0x00bfc89b, 0x2ddf0cf3, 0x62aafadd, 0x73c75ad1, 0x7ed8c407};
 
-        bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
-        bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
+        // bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
+        // bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
+        bi_set_by_array(&x, NONNEGATIVE, _xarr, 14);
+        bi_set_by_array(&y, NONNEGATIVE, _yarr, 14);
 
         bi_sub(&z, x, y);
 
@@ -339,54 +353,54 @@ int main(void){
     }
     fclose(fp_sqr);
 
-//     // //! Karatsuba test*********************************************************
-//     // FILE* fp_krt = NULL;
-//     // fp_krt = fopen("test/test_krt.txt", "w");
-//     // assert(fp_krt != NULL);
-//     // for (int iter = 0; iter < ITERNUM; iter++) {
-//     //     int xlen = rand() % 10;
-//     //     int ylen = rand() % 10;
+    // //! Karatsuba test*********************************************************
+    // FILE* fp_krt = NULL;
+    // fp_krt = fopen("test/test_krt.txt", "w");
+    // assert(fp_krt != NULL);
+    // for (int iter = 0; iter < ITERNUM; iter++) {
+    //     int xlen = rand() % 2;
+    //     int ylen = rand() % 2;
 
-//     //     bi_new(&x, xlen);
-//     //     bi_new(&y, ylen);
-//     //     bi_new(&z, xlen + ylen);
+    //     bi_new(&x, xlen);
+    //     bi_new(&y, ylen);
+    //     bi_new(&z, xlen + ylen);
 
-//     //     xarr = (word*)calloc(xlen, sizeof(word));
-//     //     yarr = (word*)calloc(ylen, sizeof(word));
+    //     xarr = (word*)calloc(xlen, sizeof(word));
+    //     yarr = (word*)calloc(ylen, sizeof(word));
 
-//     //     for(int i = 0; i < xlen; i++){
-//     //         xarr[i] = rand();
-//     //     }
-//     //     for(int i = 0; i < ylen; i++){
-//     //         yarr[i] = rand();
-//     //     }
+    //     for(int i = 0; i < xlen; i++){
+    //         xarr[i] = rand();
+    //     }
+    //     for(int i = 0; i < ylen; i++){
+    //         yarr[i] = rand();
+    //     }
 
-//     //     bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
-//     //     bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
+    //     bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
+    //     bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
-//     //     karatsuba_mul(&z, x, y);
+    //     karatsuba_mul(&z, x, y);
 
-//     //     fprintf(fp_krt, "%s", "x: ");
-//     //     for(int idx = x->wordlen - 1; idx >= 0; idx--){
-//     //         fprint_format(fp_krt, x, idx);
-//     //     }fprintf(fp_krt, "%s", "\n");
+    //     fprintf(fp_krt, "%s", "x: ");
+    //     for(int idx = x->wordlen - 1; idx >= 0; idx--){
+    //         fprint_format(fp_krt, x, idx);
+    //     }fprintf(fp_krt, "%s", "\n");
 
-//     //     fprintf(fp_krt, "%s", "y: ");
-//     //     for(int idx = y->wordlen - 1; idx >= 0; idx--){
-//     //         fprint_format(fp_krt, y, idx);
-//     //     }fprintf(fp_krt, "%s", "\n");
+    //     fprintf(fp_krt, "%s", "y: ");
+    //     for(int idx = y->wordlen - 1; idx >= 0; idx--){
+    //         fprint_format(fp_krt, y, idx);
+    //     }fprintf(fp_krt, "%s", "\n");
 
-//     //     fprintf(fp_krt, "%s", "z: ");
-//     //     for(int idx = z->wordlen - 1; idx >= 0; idx--){
-//     //         fprint_format(fp_krt, z, idx);
-//     //     }fprintf(fp_krt, "%s", "\n\n");
+    //     fprintf(fp_krt, "%s", "z: ");
+    //     for(int idx = z->wordlen - 1; idx >= 0; idx--){
+    //         fprint_format(fp_krt, z, idx);
+    //     }fprintf(fp_krt, "%s", "\n\n");
 
-//     //     bi_delete(&x);
-//     //     bi_delete(&z);
+    //     bi_delete(&x);
+    //     bi_delete(&z);
 
-//     //     free(xarr);
-//     // }
-//     // fclose(fp_krt);
+    //     free(xarr);
+    // }
+    // fclose(fp_krt);
 
     
     //! div test*********************************************************
@@ -453,70 +467,129 @@ EXIT:
     }
     fclose(fp_div);
 
-    // //! barrett test*********************************************************
-    // FILE* fp_bar = NULL;
-    // fp_bar = fopen("test/test_bar.txt", "w");
-    // assert(fp_bar != NULL);
-    // for (int iter = 0; iter < 1; iter++) {
+    //! barrett test*********************************************************
+    FILE* fp_bar = NULL;
+    fp_bar = fopen("test/test_bar.txt", "w");
+    assert(fp_bar != NULL);
+    for (int iter = 0; iter < 10000; iter++) {
 
-    //     int ylen = (rand() % 10) + 1;
-    //     int xlen = ylen * 2;
+        int ylen = (rand() % 10) + 1;
+        int xlen = ylen * 2;
         
 
-    //     bigint* r = NULL;
+        bigint* r = NULL;
 
-    //     bi_new(&x, xlen);
-    //     bi_new(&y, ylen);
+        bi_new(&x, xlen);
+        bi_new(&y, ylen);
 
-    //     xarr = (word*)calloc(xlen, sizeof(word));
-    //     yarr = (word*)calloc(ylen, sizeof(word));
+        xarr = (word*)calloc(xlen, sizeof(word));
+        yarr = (word*)calloc(ylen, sizeof(word));
 
-    //     for(int i = 0; i < xlen; i++){
-    //         xarr[i] = rand();
-    //     }
-    //     for(int i = 0; i < ylen; i++){
-    //         yarr[i] = rand();
-    //     }
+        for(int i = 0; i < xlen; i++){
+            xarr[i] = rand();
+        }
+        for(int i = 0; i < ylen; i++){
+            yarr[i] = rand();
+        }
 
-    //     bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
-    //     bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
+        bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
+        bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
-    //     size_t n = y->wordlen;
-    //     bigint *w = NULL, *tt = NULL;
-    //     bi_set_min_words(&w, NONNEGATIVE, 2 * n + 1); // w^2n
-    //     bi_binary_longdiv(&tt, &r, w, y);
+        size_t n = y->wordlen;
+        bigint *w = NULL, *tt = NULL;
+        bi_set_min_words(&w, NONNEGATIVE, 2 * n + 1); // w^2n
+        bi_binary_longdiv(&tt, &r, w, y);
 
-    //     printf("w2= "); bi_show_hex_inorder(w);
-    //     printf("x= "); bi_show_hex_inorder(x);
-    //     printf("y= "); bi_show_hex_inorder(y);
-    //     printf("t= "); bi_show_hex_inorder(tt);
-    //     bi_barrett_reduction(&r, x, y, tt);
+        bi_barrett_reduction(&r, x, y, tt);
         
-    //     fprintf(fp_bar, "%s", "x: ");
-    //     for(int idx = x->wordlen - 1; idx >= 0; idx--){
-    //         fprint_format(fp_bar, x, idx);
-    //     }fprintf(fp_bar, "%s", "\n");
+        fprintf(fp_bar, "%s", "x: ");
+        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_bar, x, idx);
+        }fprintf(fp_bar, "%s", "\n");
 
-    //     fprintf(fp_bar, "%s", "y: ");
-    //     for(int idx = y->wordlen - 1; idx >= 0; idx--){
-    //         fprint_format(fp_bar, y, idx);
-    //     }fprintf(fp_bar, "%s", "\n");
+        fprintf(fp_bar, "%s", "y: ");
+        for(int idx = y->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_bar, y, idx);
+        }fprintf(fp_bar, "%s", "\n");
 
-    //     fprintf(fp_bar, "%s", "r: ");
-    //     for(int idx = r->wordlen - 1; idx >= 0; idx--){
-    //         fprint_format(fp_bar, r, idx);
-    //     }fprintf(fp_bar, "%s", "\n\n");
+        fprintf(fp_bar, "%s", "r: ");
+        for(int idx = r->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_bar, r, idx);
+        }fprintf(fp_bar, "%s", "\n\n");
 
-    //     bi_delete(&x);
-    //     bi_delete(&y);
-    //     bi_delete(&r);
-    //     bi_delete(&w);
-    //     bi_delete(&tt);
+        bi_delete(&x);
+        bi_delete(&y);
+        bi_delete(&r);
+        bi_delete(&w);
+        bi_delete(&tt);
 
-    //     free(xarr);
-    //     free(yarr);
-    // }
-    // fclose(fp_bar);
+        free(xarr);
+        free(yarr);
+    }
+    fclose(fp_bar);
+
+
+    //! exp test*********************************************************
+    FILE* fp_exp = NULL;
+    fp_exp = fopen("test/test_exp.txt", "w");
+    assert(fp_exp != NULL);
+    for (int iter = 0; iter < ITERNUM; iter++) {
+        printf("exp %d\n", iter);
+
+        int xlen = rand() % 10;
+        // int xlen = 1;
+        // int ylen = rand() % 100;
+        int ylen = 1;
+
+        // bigint* x = NULL;
+        // bigint* y = NULL;
+        // bigint* z = NULL;
+
+        bi_new(&x, xlen);
+        bi_new(&y, ylen);
+        bi_new(&z, 1);
+
+        xarr = (word*)calloc(xlen, sizeof(word));
+        yarr = (word*)calloc(ylen, sizeof(word));
+
+        for(int i = 0; i < xlen; i++){
+            xarr[i] = rand();
+            // xarr[i] = 0x12345678;
+        }
+        for(int i = 0; i < ylen; i++){
+            yarr[i] = rand() % 10;
+            // yarr[i] = 5;
+        }
+
+        bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
+        bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
+
+    
+        bi_LtR(&z, &x, y);
+
+        fprintf(fp_exp, "%s", "x: ");
+        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_exp, x, idx);
+        }fprintf(fp_exp, "%s", "\n");
+
+        fprintf(fp_exp, "%s", "y: ");
+        for(int idx = y->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_exp, y, idx);
+        }fprintf(fp_exp, "%s", "\n");
+
+        fprintf(fp_exp, "%s", "z: ");
+        for(int idx = z->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_exp, z, idx);
+        }fprintf(fp_exp, "%s", "\n\n");
+
+        bi_delete(&x);
+        bi_delete(&y);
+        bi_delete(&z);
+
+        free(xarr);
+        free(yarr);
+    }
+    fclose(fp_exp);
 
 
     return 0;

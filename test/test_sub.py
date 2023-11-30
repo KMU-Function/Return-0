@@ -17,19 +17,19 @@ with open("test_sub.txt", "r") as f:
         if x >= y:
             if x - y != z:
                 print(cnt)
-                print(x)
-                print(y)
-                print(x-y)
-                print(z)
+                print(hex(x))
+                print(hex(y))
+                print(hex(x-y))
+                print(hex(z))
                 print()
                 cnt += 1
         elif x < y:
             if y - x != z:
                 print(cnt)
-                print(x)
-                print(y)
-                print(x-y)
-                print(z)
+                print(hex(x))
+                print(hex(y))
+                print(hex(x-y))
+                print(hex(z))
                 print()
                 cnt += 1
                 

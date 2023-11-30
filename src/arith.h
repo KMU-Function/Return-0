@@ -18,6 +18,6 @@ int bi_binary_longdiv(bigint** q, bigint** r, bigint* a, bigint* b);
 void bi_compute_barrett_t(bigint** t, bigint* x);
 int bi_barrett_reduction(bigint** r, bigint* x, bigint* m, bigint* t);
 
-int bi_div(bigint **q, bigint **r, const bigint *x, const bigint *y);
+void bi_LtR(bigint** z, bigint** x, bigint* n);
 
 #endif

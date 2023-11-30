@@ -235,35 +235,44 @@ void bi_flip_sign(bigint* x) {
 * return -1 if x < y
 */
 int compare(bigint* x, bigint* y){
-    int ret;
+    if ((x)->sign == NONNEGATIVE && (y)->sign == NEGATIVE)
+      return 1; // bi_X는 양수, bi_Y는 음수일 경우 반환은 First is Big
+   if ((x)->sign == NEGATIVE && (y)->sign == NONNEGATIVE)
+      return -1;                                               // 반대일 경우, 반환은 Second is big
+   if ((x)->sign == NONNEGATIVE && (y)->sign == NONNEGATIVE) // 비교하려는 두수의 부호가 동일한 경우
+   {
+      if ((x)->wordlen > ((y)->wordlen))
+         return 1; // Wordlen 비교
+      if ((x)->wordlen < ((y)->wordlen))
+         return -1; // Wordlen 비교
+      int cnt_i;
+      for (cnt_i = (x)->wordlen - 1; cnt_i >= 0; cnt_i--)
+      {
+         if ((x)->a[cnt_i] > (y)->a[cnt_i]) // 두수의 wordlen이 같을때 배열의 각 word를 비교하기
+            return 1;                      // First is big (bi_X>bi_Y)
+         if ((x)->a[cnt_i] < (y)->a[cnt_i])
+            return -1; // Second is big
+      }
+      return 0; // 만약 해당하는것이 아무것도 없는경우 두수는 같다고 표현
+   }
+   if ((x)->sign == NEGATIVE && (y)->sign == NEGATIVE) // 바로 위의 if Condition과 같은 논리이다.
+   {
+      if ((x)->wordlen > ((y)->wordlen))
+         return -1;
+      if ((x)->wordlen < ((y)->wordlen))
+         return 1;
+      int cnt_i;
+      for (cnt_i = (x)->wordlen - 1; cnt_i >= 0; cnt_i--)
+      {
+         if ((x)->a[cnt_i] > (y)->a[cnt_i])
+            return -1;
+         if ((x)->a[cnt_i] < (y)->a[cnt_i])
+            return 1;
+      }
+      return 0;
+   }
 
-    /* case exception */
-    if ((x == NULL) || (y == NULL)) {
-        return -1;
-    }
-
-    /* x > y */
-    if ((x->sign == NONNEGATIVE) && (y->sign == NEGATIVE)) {
-        return 1;
-    }
-
-    /* x < y */
-    if ((x->sign == NEGATIVE) && (y->sign == NONNEGATIVE)) {
-        return -1;
-    }
-
-    /* (x, y > 0) or (x, y < 0) */
-    ret = compare_abs(x, y);
-
-    if (x->sign == NONNEGATIVE) {
-        return ret;             // 1, 0, -1
-    }
-    else {
-        return ret * (-1);      // -1, 0, 1
-    }
-
-    /* case exception */
-    return -1;
+   abort();
 }
 
 /**
