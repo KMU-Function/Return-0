@@ -95,6 +95,9 @@ void bi_assign(bigint** y, bigint* x){
     if(*y != NULL){
         bi_delete(y);
     }
+    if(*y == x){
+        return;
+    }
 
     bi_new(y, x->wordlen);
     (*y)->sign = x->sign;
@@ -178,19 +181,19 @@ int bi_is_one(bigint* x) {
 */
 int bi_is_zero(bigint* x) {
     if(x == NULL)
-        return false;
+        return 0;
     
     else if(x->wordlen == 0)
-        return true;
+        return 0;
 
     else if(x->sign != NONNEGATIVE || x->a[0] != 0)
-        return false;
+        return 0;
 
-    for(int i = 0; i < x->wordlen - 1; i++){
+    for(int i = x->wordlen; i >= 0; i--){
         if(x->a[i] != 0)
-            return false;
+            return 0;
     }
-    return true;
+    return 1;
 }
 
 /**
@@ -232,16 +235,35 @@ void bi_flip_sign(bigint* x) {
 * return -1 if x < y
 */
 int compare(bigint* x, bigint* y){
-    if(x->sign == NONNEGATIVE && y->sign == NEGATIVE)
-        return 1;
-    if(x->sign == NEGATIVE && y->sign == NONNEGATIVE)
+    int ret;
+
+    /* case exception */
+    if ((x == NULL) || (y == NULL)) {
         return -1;
-    
-    int ret = compare_abs(x, y);
-    if(x->sign == NONNEGATIVE) 
-        return ret;
-    else
-        return -ret;
+    }
+
+    /* x > y */
+    if ((x->sign == NONNEGATIVE) && (y->sign == NEGATIVE)) {
+        return 1;
+    }
+
+    /* x < y */
+    if ((x->sign == NEGATIVE) && (y->sign == NONNEGATIVE)) {
+        return -1;
+    }
+
+    /* (x, y > 0) or (x, y < 0) */
+    ret = compare_abs(x, y);
+
+    if (x->sign == NONNEGATIVE) {
+        return ret;             // 1, 0, -1
+    }
+    else {
+        return ret * (-1);      // -1, 0, 1
+    }
+
+    /* case exception */
+    return -1;
 }
 
 /**
@@ -293,7 +315,7 @@ void bi_show_hex(bigint* x){
 #elif DTYPE == 32
         printf("%08x ", x->a[i]);
 #elif DTYPE == 64
-        printf("%016x ", x->a[i]);
+        printf("%016lx ", x->a[i]);
 #else
 #error "UNSUPPORTED TYPE\n";
 #endif
@@ -301,11 +323,19 @@ void bi_show_hex(bigint* x){
 }
 
 /**
-* @brief Print BigInt x in hexa representation in order
+* @brief Print BigInt x in hexadecimal representation in order
 */
 void bi_show_hex_inorder(bigint* x) {
     for(int i = x->wordlen - 1; i >= 0; i--){
+#if DTYPE == 8
+        printf("%02x ", x->a[i]);
+#elif DTYPE == 32
         printf("%08x ", x->a[i]);
+#elif DTYPE == 64
+        printf("%016lx ", x->a[i]);
+#else
+#error "UNSUPPORTED TYPE\n";
+#endif
     }printf("\n");
 }
 
@@ -426,6 +456,13 @@ void bi_shl(bigint** x, size_t r) {
     // memcpy((*x)->a, temp->a, sizeof(word) * temp->wordlen);
     bi_delete(&temp);  // Pass the address of temp to bi_delete
 }
+
+void bi_set_min_words(bigint **x, int sign, size_t wordlen) {
+    bi_new(x, wordlen);
+    (*x)->sign = sign;
+    (*x)->a[wordlen-1] = 1;
+}
+
 
 //todo
 /**

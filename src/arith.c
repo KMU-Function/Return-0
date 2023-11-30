@@ -5,257 +5,234 @@
 #include <assert.h>
 #include "array.h"
 #include "bigint.h"
+#include "arith.h"
 
 //todo addc, multi-precision add, final add, sub
 
-/**
-* @brief Calculate addition of same signed two BigInt x, y
-* Assume x, y != 0
-* @param dst pointer of destination where the result of x + y will be stored
-*/
-void bi_addc(bigint** dst, bigint* x, bigint* y){
 
-    if ((x->sign ^ y->sign) != 0) {
-        fprintf(stderr, "bi_addc input value's sign is not same\n");
-        return;
-    }
-    bigint* tmp = NULL;
-    if(*dst != NULL){
-        bi_assign(&tmp, *dst);
-    }else{
-        bi_new(&tmp, 1);
-    }
+word bi_addcc(word* dst, word x, word y, word c) {
+    word nc;     // next carry
 
-    int carry = 0;
-    // expand smaller one
-    if(x->wordlen < y->wordlen){       
-        bi_expand(x, y->wordlen);
-    } 
-    else if(y->wordlen < x->wordlen){
-        bi_expand(y, x->wordlen);
-    }
+    *dst = x + y;     
+    nc  = *dst < x; 
 
-    // if dst->wordlen is smaller than x or y, then realloc dst->wordlen
-    // check for only x because now x->wordlen and y->wordlen are the same
-    if(tmp->wordlen <= x->wordlen){
-        bi_expand(tmp, x->wordlen + 1);
-    }
-
-    assert(x->wordlen == y->wordlen);
-    for(int i = 0; i < x->wordlen; i++){
-        tmp->a[i] = x->a[i] + y->a[i] + carry;
-        // check carry
-        if (tmp->a[i] == x->a[i]) {
-            continue;
-        }
-        if (tmp->a[i] < x->a[i]) {
-            carry = 1;
-        }
-        else {
-            carry = 0;
-        }
-    }
-
-    if(carry == 1 || (*dst)->wordlen == x->wordlen + 1){
-        tmp->a[tmp->wordlen - 1] = 1;
-    }
-
-    // remove zero words
-    bi_refine(tmp);
-    bi_assign(dst, tmp);
-    bi_delete(&tmp);
+    *dst = *dst + c;          
+    nc  = (*dst < c) + nc;   
+    return nc;
 }
 
-/**
-* @brief Calculate subtraction of two positive BigInt x, y 
-* Assume 0 < y <= x
-* @param dst pointer of destination where the result of x - y will be stored
+/*
+    dst <- x + y
 */
-void bi_subc(bigint** dst, bigint* x, bigint* y) {
+int bi_addc(bigint** dst, bigint* x, bigint* y) {
+    int c = 0;
+    int j, n = x->wordlen, m = y->wordlen;      // n >= m
 
-    if (x->sign == NEGATIVE || y->sign == NEGATIVE) {
-        fprintf(stderr, "bi_subc input value is NEGATIVE\n");
-        return;
+    bi_new(dst, n + 1);
+
+    bigint *tmp_y = NULL;    
+    if (n == m) {
+        bi_assign(&tmp_y, y);
+    }
+    else if (n > m) {
+        bi_new(&tmp_y, n);
+        copy_array(tmp_y->a, y->a, m);
+        tmp_y->sign = y->sign;
+        for (j = m; j < n; j++) {
+            tmp_y->a[j] = 0;
+        }
     }
 
-    int borrow = 0;
+    for (j = 0; j < n; j++) {
+        c = bi_addcc(&((*dst)->a[j]), x->a[j], tmp_y->a[j], c);
+    }
 
-    if(y->wordlen < x->wordlen){
-        bi_new(dst, x->wordlen);
+    (*dst)->a[n] = c;    
+    bi_refine(*dst);
+
+    bi_delete(&tmp_y);
+    return 1;
+}
+
+/*
+    addition of two integers
+     z <- x + y
+     input: x, y \in Z
+     output: z = x + y \in Z
+*/
+int bi_add(bigint** dst, bigint* x, bigint* y) {
+    bigint *absx = NULL, *absy = NULL, *tmp = NULL;
+
+
+    // x = 0
+    if (bi_is_zero(x) == 1 || x == NULL) {
+        bi_assign(dst, y);
+        return 1;
+    }
+    // y = 0
+    else if (bi_is_zero(y) == 1 || y == NULL) {
+        bi_assign(dst, x);
+        return 1;
+    }
+    // x > 0 and y < 0
+    else if ((x->sign == NONNEGATIVE) && (y->sign == NEGATIVE)) {
+        bi_assign(&absy, y);
+        bi_flip_sign(absy);
+        bi_sub(dst, x, absy);
+        bi_delete(&absy);
+        return 1;
+    }
+    // x < 0 and y > 0 
+    else if ((x->sign == NEGATIVE) && (y->sign == NONNEGATIVE)) {
+        bi_assign(&absx, x);
+        bi_flip_sign(absx);
+        bi_sub(dst, y, absx);
+        bi_delete(&absx);
+        return 1;
+    }
+    // x > 0 and y > 0 or 
+    // x < 0 and y < 0
+    else if (x->wordlen >= y->wordlen) {
+        bi_addc(dst, x, y);
+        return 1;
     }
     else {
-        bi_new(dst, y->wordlen);
+        bi_addc(dst, y, x);
+        return 1;
     }
 
-    // Expand y if y->wordlen is less than x->wordlen
-    if(y->wordlen < x->wordlen){
-        bi_expand(y, x->wordlen);
-    }
-
-    for(int i = 0; i < x->wordlen; i++){
-        (*dst)->a[i] = x->a[i] - y->a[i] - borrow;
-
-        // check borrow
-        if(x->a[i] < y->a[i] || ((x->a[i] == y->a[i]) && (borrow == 1))){
-            borrow = 1;
-        }
-        else{
-            borrow = 0;
-        }
-    }
-
-    bi_refine(*dst);
+    return -1;
 }
 
-/**
-* @brief Calculate addition of two BigInt x, y
-* @param dst pointer of destination where the result of x - y will be stored
+word bi_subcc(word* dst, word x, word y, word b) {
+    word nb;     // next borrow
+
+    *dst = x - b;           
+    nb = (x < b);          
+    nb = nb + (*dst < y);   
+    *dst = *dst - y;         
+
+    return nb;
+}
+
+/*
+    z <- x + y
 */
-// 부호에 상관 없다는 내용을 넣을까 말까
-void bi_add(bigint** dst, bigint* x, bigint* y) {
-#ifdef ZERO_OPTIMIZE
-    // check whether x == 0 or y == 0
-    if(bi_is_zero(x)){
-        bi_assign(&dst, y);
-        return;
-    }
-    if(bi_is_zero(y)){
-        bi_assign(&dst, x);
-        return;
-    }
-#endif
+int bi_subc(bigint** dst, bigint* x, bigint* y) {
+    int b;
+    size_t j, n = x->wordlen, m = y->wordlen;      // n >= m
+    
+    bi_new(dst, n);
+    bigint *tmp_y = NULL;    
 
-    if(x->sign != NONNEGATIVE && x->sign != NEGATIVE){
-        fprintf(stderr, "x sign error\n");
-        printf("%d\n", x->sign);
-        abort();
+    if (n == m) {
+        bi_assign(&tmp_y, y);
     }
-    if(y->sign != NONNEGATIVE && y->sign != NEGATIVE){
-        fprintf(stderr, "y sign error\n");
-        abort();
-    }
-
-    if(bi_is_zero(x) || x == NULL){
-        bi_assign(dst, y);
-    }
-    else if(bi_is_zero(y) || y == NULL){
-        bi_assign(dst, x);
-    }
-    else if ((x->sign == NONNEGATIVE) && (y->sign == NEGATIVE)) {
-        // if x >= y, then dst <- x - y (non-negative)
-        // if x < y, then dst <- y - x (negative because y is negative)
-        if(compare_abs(x, y) >= 0){
-            bi_subc(dst, x, y);
-            (*dst)->sign = NONNEGATIVE;
+    else if (n > m) {
+        bi_new(&tmp_y, n);
+        copy_array(tmp_y->a, y->a, m);
+        tmp_y->sign = y->sign;
+        for (j = m; j < n; j++) {
+            tmp_y->a[j] = 0;
         }
-        else{
+    }
+
+    b = 0;      
+    for (j = 0; j < n; j++) {
+        b = bi_subcc(&((*dst)->a[j]), x->a[j], tmp_y->a[j], b);
+    }
+
+    bi_delete(&tmp_y);
+    bi_refine(*dst);
+    return 1;
+}
+
+/*
+    Subtraction of two integers
+*/
+int bi_sub(bigint** dst, bigint* x, bigint* y) {
+    int cmp;
+    bigint *tmp_x = NULL, *tmp_y = NULL;
+
+    // x = 0
+    if (bi_is_zero(x) || x == NULL) {
+        bi_assign(dst, y);
+        bi_flip_sign(*dst);
+        return 0;
+    }
+    // y = 0
+    else if (bi_is_zero(y) || y == NULL) {
+        bi_assign(dst, x);
+
+        return 0;
+    }
+
+    cmp = compare(x, y);
+    
+    // x = y
+    if (cmp == 0) {
+        bi_set_zero(dst);
+        return 0;
+    }
+    // x, y >= 0
+    if ((x->sign == NONNEGATIVE) && (y->sign == NONNEGATIVE)) {
+        // x >= y >= 0
+        if (cmp ==  1) {
+            bi_subc(dst, x, y);
+        }
+        // y > x >= 0 
+        else if (cmp == -1) {
             bi_subc(dst, y, x);
             (*dst)->sign = NEGATIVE;
         }
+
+        return 0;
     }
-    else if((x->sign == NEGATIVE) && (y->sign == NONNEGATIVE)){
-        // if x >= y, then dst <- x - y (negative because x is negative)
-        // if x < y, then dst <- y - x (non-negative)
-        if(compare_abs(x, y) >= 0){
-            bi_subc(dst, x, y);
+    // x, y < 0 
+    else if ((x->sign == NEGATIVE) && (y->sign == NEGATIVE)) {
+        bi_assign(&tmp_x, x);
+        tmp_x->sign = NONNEGATIVE;
+        bi_assign(&tmp_y, y);
+        tmp_y->sign = NONNEGATIVE;
+
+        if (cmp ==  1) {
+            bi_subc(dst, tmp_y, tmp_x);
+        }
+        else if (cmp == -1) {
+            bi_subc(dst, tmp_x, tmp_y);
             (*dst)->sign = NEGATIVE;
         }
-        else{
-            bi_subc(dst, y, x);
-            (*dst)->sign = NONNEGATIVE;
-        }
+        
+        bi_delete(&tmp_x);
+        bi_delete(&tmp_y);
+        return 0;
     }
-    else if(x->sign == y->sign){
-        if(x->wordlen >= y->wordlen){
-            bi_addc(dst, x, y);
-        }
-        else{
-            bi_addc(dst, y, x);
-        }
-    }
-    else{
-        fprintf(stderr, "sign is not same\n");
-        abort();
-    }
-
-    //bi_assign(dst, tmp);
-    return;
-}
-
-// Big Number Subtraction
-// Performs dst <- x - y independent to the sign of x and y.
-void bi_sub(bigint** dst, bigint* x, bigint* y){
-#ifdef ZERO_OPTIMIZE
-    // if x == 0, then return -y
-    if(bi_is_zero(x)){
-        bi_assign(dst, y);
-        bi_flip_sign(*dst);
-        return;
-    }
-    // if y == 0, then return -x
-    if(bi_is_zero(y)){
-        bi_assign(dst, x);
-        bi_flip_sign(*dst);
-        return;
-    }  
-    // if x == y, then return 0
-    if(compare(x, y) == 0){
-        bi_set_zero(*dst);
-        return;
-    }
-#endif
-
-    if(x->sign != NONNEGATIVE && x->sign != NEGATIVE){
-        fprintf(stderr, "x sign error\n");
-        printf("%d\n", x->sign);
-        abort();
-    }
-    if(y->sign != NONNEGATIVE && y->sign != NEGATIVE){
-        fprintf(stderr, "y sign error\n");
-        abort();
-    }
-
-    if(bi_is_zero(x) || x == NULL){
-        bi_assign(dst, y);
-        (*dst)->sign ^= 1;      // 0 - y = -y
-    }
-    else if(bi_is_zero(y) || y == NULL){
-        bi_assign(dst, x);      // x - 0 = x
-    }
-    else if ((y->sign == NONNEGATIVE) && (compare(x, y) >= 0)) {
-        // 0 < y <= x
-        bi_subc(dst, x, y);
-        (*dst)->sign = NONNEGATIVE;
-    }
-    else if ((x->sign == NONNEGATIVE) && (compare(y, x) >= 0)) {
-        // 0 < x <= y
-        bi_subc(dst, y, x);
-        (*dst)->sign = NEGATIVE;
-    }
-    else if ((x->sign == NEGATIVE) && (compare(x, y) >= 0)) {
-        // y <= x < 0
-        bi_subc(dst, y, x);
-        (*dst)->sign = NONNEGATIVE;
-    }
-    else if ((y->sign == NEGATIVE) && (compare(y, x) >= 0)) {
-        // x <= y < 0
-        bi_subc(dst, x, y);
-        (*dst)->sign = NEGATIVE;
-    }
+    /* x > 0 and y < 0 : add(x, |y|) */
     else if ((x->sign == NONNEGATIVE) && (y->sign == NEGATIVE)) {
-        // y < 0 < x
-        bi_addc(dst, x, y);     // 이거 add로 할 필요 없겠지?
-        (*dst)->sign = NONNEGATIVE;
+        bi_assign(&tmp_y, y);
+        tmp_y->sign = NONNEGATIVE;
+
+        bi_add(dst, x, tmp_y);
+
+        bi_delete(&tmp_y);
+        return 0;
     }
-    else if ((y->sign == NONNEGATIVE) && (x->sign == NEGATIVE)) {
-        // x < 0 < y
-        bi_addc(dst, x, y);
+    /* x < 0 and y > 0 : -add(|x|, y) */
+    else {
+        bi_assign(&tmp_x, x);
+        tmp_x->sign = NONNEGATIVE;
+
+        bi_add(dst, tmp_x, y);
         (*dst)->sign = NEGATIVE;
+
+        bi_delete(&tmp_x);
+        return 0;
     }
-    return;
+
+    return -1;
 }
 
-void bi_mul_singleword(word* dst, word x, word y) {
+void bi_mulc(word* dst, word x, word y) {
     word x0 = x & ((1 << (sizeof(word) * 8 / 2)) - 1);
     word x1 = x >> (sizeof(word) * 8 / 2);
 
@@ -267,63 +244,47 @@ void bi_mul_singleword(word* dst, word x, word y) {
     t0 = x0 * y1;
     t1 = x1 * y0;
     t0 = t0 + t1;
-    t1 = (t0 < t1) ? 1 : 0;
+    t1 = t0 < t1;
 
     c0 = x0 * y0;
     c1 = x1 * y1;
     t = c0;
-    // printf("%08X\n", t0);
-    // printf("%08X\n", (t0 << (sizeof(word) * 8 / 2)));
     c0 = c0 + (t0 << (sizeof(word) * 8 / 2));
-    c1 = c1 + (t1 << (sizeof(word) * 8 / 2)) + (t0 >> (sizeof(word) * 8 / 2)) + (c0 < t ? 1 : 0);
+    c1 = c1 + (t1 << (sizeof(word) * 8 / 2)) + (t0 >> (sizeof(word) * 8 / 2)) + (c0 < t);
 
     dst[1] = c1;
     dst[0] = c0;
-
     return;
 }
 
-void bi_mul_textbook(bigint** dst, bigint* x, bigint* y) {
-    
+/*
+    Textbook Multiplication
+*/
+int bi_mul_textbook(bigint** dst, bigint* x, bigint* y) {
     if (x->sign == NEGATIVE || y->sign == NEGATIVE) {
-        fprintf(stderr, "Textbook multiplication input value is NEGATIVE \n");
-        return;
+        abort();
     }
 
-    if(bi_is_one(x)){
-        bi_assign(dst, y);
-        return;
-    }
-    else if(bi_is_one(y)){
-        bi_assign(dst, x);
-        return;
-    }
-    else if(bi_is_zero(x) || bi_is_zero(y)){
-        bi_set_zero(dst);
-        return;
-    }
+    int i, j, n = x->wordlen, m = y->wordlen;
+    bigint *c = NULL, *t = NULL;
 
-    //bigint *c = NULL;
-    bigint *t = NULL;
-
-    //bi_new(&c, x->wordlen + y->wordlen);
-    bi_new(dst, x->wordlen + y->wordlen);
+    bi_new(&c, n + m);        
     bi_new(&t, 2);
 
-    for (int j = 0; j < x->wordlen; j++) {
-        for (int i = 0; i < y->wordlen; i++) {
-            bi_mul_singleword(t->a, x->a[j], y->a[i]);
-            bi_shl(&t, (i + j) * 8 * sizeof(word));
-            //bi_assign(&c, *dst);    // 불필요한 복사같은데 어떻게 수정할까?
-            bi_addc(dst, *dst, t);
+    for (j = 0; j < n; j++) {
+        for (i = 0; i < m; i++) {
+            bi_mulc(t->a, x->a[j], y->a[i]);     
+            bi_shl(&t, (sizeof(word) * 8) * (i + j));     // t <- t << w(i+j);
+            bi_add(dst, c, t);
+            bi_assign(&c, *dst);
             bi_new(&t, 2);
         }
     }
 
-    //bi_delete(&c);
+    bi_refine(*dst);
+    bi_delete(&c);
     bi_delete(&t);
-
-    return;
+    return 0;
 }
 
 void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
@@ -333,13 +294,11 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
     }
 
     if (bi_is_one(x)) {
-        printf("x is one\n");
         bi_assign(dst, y);
         return;
     }
 
     if (bi_is_one(y)) {
-        printf("y is one\n");
         bi_assign(dst, x);
         return;
     }
@@ -381,19 +340,19 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
     if (strcmp(mulc, "textbook") == 0) {
         bi_mul_textbook(&z_tmp, x_tmp, y_tmp);
         bi_assign(dst, z_tmp);  //todo 1129 test
-        bi_delete(&x_tmp);
-        bi_delete(&y_tmp);
-        bi_delete(&z_tmp);  //todo 1129 test
-        return;
     }
     else {
         fprintf(stderr, "mulc name error");
         bi_delete(&x_tmp);
         bi_delete(&y_tmp);
         bi_delete(&z_tmp);  //todo 1129 test
-        return;
     }
+    (*dst)->sign = x->sign ^ y->sign;
+    bi_delete(&x_tmp);
+    bi_delete(&y_tmp);
+    bi_delete(&z_tmp);  //todo 1129 test
 
+    return;
 }
 
 // 부호에 관계 없음
@@ -437,7 +396,7 @@ void bi_sqr_textbook(bigint** dst, bigint* x) {
         bi_shl(&t1, (2 * j) * 8 * sizeof(word));
         bi_add(&c1, t1, c1);
         for (int i = j + 1; i < x->wordlen; i++) {
-            bi_mul_singleword(t2->a, x->a[i], x->a[j]);
+            bi_mulc(t2->a, x->a[i], x->a[j]);
             bi_shl(&t2, (i + j) * 8 * sizeof(word));
             bi_add(&c2, c2, t2);
             bi_new(&t2, 2);
@@ -569,211 +528,131 @@ void karatsuba_mul(bigint** dest, bigint* src1, bigint* src2) {
     (*dest)->sign = src1->sign ^ src2->sign;
 }
 
-
+//: SUCCESS
 int bi_binary_longdiv(bigint** q, bigint** r, bigint* a, bigint* b){
+
     if(a == NULL || b == NULL){
         return -1;
     }
-    if(compare_abs(a, b) == -1){
+    if(bi_is_zero(b)){
+        bi_set_zero(q);
+        bi_set_zero(r);
         return -1;
+    }
+    if(bi_is_zero(a)){
+        bi_set_zero(q);
+        bi_set_zero(r);
+        return 0;
     }
 
     bigint* one = NULL;
-    bi_set_zero(q);
+    bigint* tmp_r = NULL;
+    bi_new(q, a->wordlen);
     bi_set_zero(r);     // q = r = 0
+    bi_set_zero(&tmp_r);     
     
-    for(int j = (a->wordlen * sizeof(word) * 8); j >= 0; j--){
-        int aj = get_ith_bit(a, j);
-        bi_add(&r, r, aj);      // r = 2 * r + aj
+    for(int j = (a->wordlen * sizeof(word) * 8) - 1; j >= 0; j--){
+        bigint* aj = NULL;
+        bi_new(&aj, 1);
+        aj->a[0] = get_ith_bit(a, j);
+        bi_shl(r, 1);
+        bi_assign(&tmp_r, *r);
+        bi_add(r, tmp_r, aj);      // r = 2 * r + aj
 
-        if(compare(r, b) >= 0){
+        if(compare(*r, b) >= 0){
+            bi_set_one(&one);
+            bi_shl(&one, j);        // one = 2 ^ j
+
+            //bi_add(q, tmp_q, one);     // q = q + 2^j
+            (*q)->a[j / (sizeof(word) * 8)] += 1 << j;
             
+            bi_assign(&tmp_r, *r);
+            bi_sub(r, tmp_r, b);       // r = r - b
         }
-
+        bi_delete(&aj);
     }
-
+    bi_delete(&one);
+    bi_delete(&tmp_r);
+    bi_refine(*q);
+    return 0;
 }
 
-// void binary_DIVISION(bigint** dest_Q, bigint** dest_R, bigint* src1, bigint* src2) {
-//     uint64_t n = src1->wordlen * sizeof(word) * 8;
 
-//     bigint* Q = NULL;
-//     bigint* R = NULL;
-//     bi_set_zero(&Q);
-//     bi_set_zero(&R);
-//     bigint* one = NULL;
-//     for (int j = n-1 ; j >= 0; j--) {
-//         printf("%d\n", j);
-//         bi_shl(&R, 1);
-//         R->a[0] += get_ith_bit(src1, j);  // R = (R << 1) ⊕ aj
+// r <- x mod m
+// t is pre-computed value
+int bi_barrett_reduction(bigint** r, bigint* x, bigint* m, bigint* t){
+    if (x == NULL || m == NULL || t == NULL) {
+        return -1;
+    }
 
-//         while (compare_abs(R, src2) >= 0) {
-//             bi_set_one(&one);
-//             bi_shl(&one, j);
-//             // Q = Q + 2^j, R = R - B
-//             //printf("q len: %d\n", Q->wordlen);
-//             bi_expand(Q, 1 + Q->wordlen);
-//             bi_add(&Q, Q, one);
+    int n = m->wordlen;
 
-//             bi_expand(R, src2->wordlen);
-//             bi_sub(&R, R, src2);
-//             printf("while end / for : %d\n", j);
+    // x->wordlen > 2 * n then return fail
+    if(x->wordlen > (n * 2)){
+        return -1;
+    }
 
-//         }
-//     }
+    bigint* tmp_r = NULL;
+    bigint* qhat  = NULL;
+    bigint* tmp_x = NULL;
 
-//     // 결과 반환
-//     bi_set_by_array(dest_Q, NONNEGATIVE, Q->a, Q->wordlen);
-//     bi_set_by_array(dest_R, NONNEGATIVE, R->a, R->wordlen);
-//     bi_delete(&Q);
+    bi_assign(&tmp_x, x);
+    bi_shr(&tmp_x, (sizeof(word) * 8) * (n - 1));    // qhat = A >> w(n-1)
+    printf("tmp_x = "); bi_show_hex_inorder(tmp_x);
 
-//     bi_delete(&R);
-// }
+    bi_mul(&qhat, tmp_x, t, "textbook");             // qhat = qhat * t
+    printf("qhat = "); bi_show_hex_inorder(qhat);
 
-// int DIVISION(bigint** dest_Q, bigint** dest_R, bigint* src1, bigint* src2) {
-//     int com = compare(src1, src2);
-//     //printf("com = %d", com);
-//     if (bi_is_zero(src2)) {
-//         printf("Cannot divide by 0\n");
-//         return -1;
-//     }
-//     if (com == -1) {//src1<src2
-//         //printf("DIVISION_if\n");
-//         //몫은 0 나머지는 src1
-//         //dest_Q = src2
-//         bi_set_zero(dest_Q);
-//         //dest_R = src1
-//         bi_set_by_array(dest_R, src1->sign, src1->a, src1->wordlen);
-//     }
-//     else if (com == 1) {//src1>src2
-//         //printf("DIVISION_elif\n");
-//         binary_DIVISION(dest_Q, dest_R, src1, src2);
-//     }
-//     else {
-//         //printf("DIVISION_else\n");
-//         //동일한 경우 몫은 1 나머지 0
-//         bi_set_one(dest_Q);
-//         bi_set_zero(dest_R);
-//     }
-//     return 0;
-// }
+    bi_shr(&qhat, (sizeof(word) * 8) * (n + 1));     // qhat = qhat >> w(n+1)
+    printf("qhat = "); bi_show_hex_inorder(qhat);
 
+    bi_mul(&tmp_r, m, qhat, "textbook");             // R = N * qhat
+    printf("tmp_r = "); bi_show_hex_inorder(tmp_r);
 
+    bi_sub(r, x, tmp_r);                             // R = A - R
+    printf("r = "); bi_show_hex_inorder(*r);
 
-// /*
-//     DIVCC
-//      input : Xn-1·W^{n-1} + Xn-2·W^{n-2} + ··· + X0, Ym-1·W^{m-1} + Ym-2·W^{m-2} + ··· + Y0
-//      output: Q, R
-// */
-// int _bi_divcc(bigint **q, bigint **r, bigint *x, bigint *y) {
-//     if (x == NULL || y == NULL) {       // Check input
-//         return -1;
-//     }
-    
-//     size_t  n = x->wordlen, m = y->wordlen;
-//     bigint *a = NULL, *t = NULL;
+    while (compare(*r, m) >= 0){
+        bi_sub(r, *r, m);
+        printf("r = "); bi_show_hex_inorder(*r);
+    }
 
-//     bi_new(q, 1);
+    bi_delete(&qhat);
+    bi_delete(&tmp_r);
+    bi_delete(&tmp_x);
+    return 0;
+}
 
-//     if (n == m) {
-//         (*q)->a[0] = x->a[m-1] / y->a[m-1];     // Q = Xm-1 / Ym-1
-//     }
-//     else if (n == (m + 1)) {
-//         if (x->a[m] != y->a[m-1]) {
-//             /*
-//                 Q = A / Ym-1
-//                 A = Xm·W + Xm-1
-//             */
-//             bi_new(&a, 2);
-//             a->a[1] = x->a[m];
-//             a->a[0] = x->a[m-1];
+int bi_barrett_reduction__(bigint** r, bigint *x, bigint *m, bigint *t) {
 
-//             if (bi_2word_div(&((*q)->a[0]), a, &(y->a[m-1])) == -1) {
-//                 bi_delete(&a);
-//                 return -1;
-//             }
-//         }
-//         else {
-//             (*q)->a[0] = MAXWORD;
-//         }
-//     }
-//     else {
-//         return -1;
-//     }
+    if (x == NULL || m == NULL || t == NULL) {
+        return -1;
+    }
 
-//     /* R = X - YQ */
-//     bi_mul(&t, y, *q, "textbook");
-//     bi_sub(r, x, t);
+    size_t n = m->wordlen;
 
-//     while ((*r)->sign == NEGATIVE) {        // R < 0
-//         /* 
-//             Q = Q - 1
-//             T = R + Y
-//             R = T
-//         */
-//         (*q)->a[0]--;
-//         bi_add(&t, *r, y);
-//         bi_assign(r, t);
-//     }
+    if ( x->wordlen > (2*n) ) {
+        return -1;
+    }
 
-//     bi_delete(&a);
-//     bi_delete(&t);
-//     return 0;
-// }
+    bigint *r_ = NULL, 
+           *qh = NULL, 
+           *x_ = NULL;
 
-/*
-    DIVC
-     input : Xm·W^m + Xm-1·W^{m-1} + ··· + X0, Ym-1·W^{m-1} + Ym-2·W^{m-2} + ··· + Y0
-     output: Q, R
+    bi_assign(&x_, x);
+    bi_shr(&x_, (sizeof(word) * 8) * (n - 1));
+    bi_mul(&qh, x_, t, "textbook");
+    bi_shr(&qh, (sizeof(word) * 8) * (n + 1));
+    bi_mul(&r_, m, qh, "textbook");
+    bi_sub(r, x, r_);
 
-     if wordlen(X) is in {wordlen(Y), wordlen(Y) + 1}
-      else return Q = 0, R = X
-*/
+    while (compare(*r, m) >= 0) {
+        bi_sub(&r_, *r, m); 
+        bi_assign(r, r_); 
+    }
 
-// // compute t
-// // x in needed to get N
-// void bi_compute_barrett_t(bigint** t, bigint* m, bigint* x){
-//     bigint* w = NULL;
-//     bigint* tt = NULL;
-//     bigint* r = NULL;
-
-//     bi_new(&w, 2 * x->wordlen + 1);
-//     w->a[w->wordlen - 1] = 1;
-//     bi_div(tt, &r, w, x);
-// }
-
-// // r <- x mod m
-// // t is pre-computed value
-// void bi_barrett_reduction(bigint** r, bigint* x, bigint* m, bigint* t){
-//     if (x == NULL || m == NULL || t == NULL) {
-//         return -1;
-//     }
-
-//     int n = m->wordlen;
-
-//     // x->wordlen > 2 * n then return fail
-//     if(x->wordlen > (n << 1)){
-//         return -1;
-//     }
-
-//     bigint* tmp_r = NULL;
-//     bigint* qhat  = NULL;
-//     bigint* tmp_x = NULL;
-
-//     bi_assign(&tmp_x, x);
-//     bi_shr(tmp_x, (sizeof(word) * 8) * (n - 1));    // qhat = A >> w(n-1)
-//     bi_mul(&qhat, tmp_x, t, "Karatsuba");           // qhat = qhat * t
-//     bi_shr(qhat, (sizeof(word) * 8) * (n + 1));     // qhat = qhat >> w(n+1)
-//     bi_mul(&tmp_r, m, qhat, "Karatsuba");           // R = N * qhat
-//     bi_sub(r, m, tmp_r);                            // R = A - R
-
-//     while (compare(r, m) >= 0){
-//         bi_sub(&tmp_r, *r, m);
-//         bi_assign(r, tmp_r);
-//     }
-
-//     bi_delete(&qhat);
-//     bi_delete(&tmp_r);
-//     bi_delete(&tmp_x);
-//     return 0;
-// }
+    bi_delete(&qh);
+    bi_delete(&x_);
+    bi_delete(&r_);
+    return 0;
+}

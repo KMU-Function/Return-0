@@ -1,5 +1,6 @@
 with open("test_div.txt", "r") as f:    
     cnt = 0
+    num_test = 0
     while True:
         x = f.readline().split()[1:]
         y = f.readline().split()[1:]
@@ -21,5 +22,6 @@ with open("test_div.txt", "r") as f:
             print(hex(z))
             print()
             cnt += 1
+        num_test+=1
                 
 print("{0:-<20} Success!".format("Division ") if cnt == 0 else f"Failed in {cnt} Test Vectors")

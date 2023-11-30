@@ -10,16 +10,16 @@ with open("test_shl.txt", "r") as f:
         if x==[] or y==[] or z==[]:
             break
         
-        intx = int(''.join(x), 16)
+        x = int(''.join(x), 16)
         y = int(y[0])
-        intz = int(''.join(z), 16)
+        z = int(''.join(z), 16)
         
         
-        if intx << y != intz:
+        if x << y != z:
             print(cnt)
             print(x)
             print(f'{y} bit')
-            print(hex(intx << y))
+            print(hex(x << y))
             print(z)
             print()
             cnt += 1

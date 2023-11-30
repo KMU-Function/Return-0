@@ -1,5 +1,5 @@
 # with open("test/test_sub.txt", "r") as f:
-with open("test_barrett.txt", "r") as f:
+with open("test_bar.txt", "r") as f:
     cnt = 0
     while True:
         x = f.readline().split()[1:]
@@ -20,6 +20,7 @@ with open("test_barrett.txt", "r") as f:
             print(hex(y))
             print(hex(x % y))
             print(hex(z))
+            print()
             cnt += 1
                 
 print("{0:-<20} Success!".format("Barrett Reduction ") if cnt == 0 else f"Failed in {cnt} Test Vectors")

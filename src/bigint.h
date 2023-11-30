@@ -12,13 +12,13 @@
 #ifdef DTYPE
 #if DTYPE == 8
 typedef uint8_t word;
-#define MAXWORD 0xff
+#define MAXWORD UINT8_MAX
 #elif DTYPE == 32
 typedef uint32_t word;
-#define MAXWORD 0xffffffff
+#define MAXWORD UINT32_MAX
 #elif DTYPE == 64
 typedef uint64_t word;
-#define MAXWORD 0xffffffffffffffff
+#define MAXWORD UINT64_MAX
 #endif
 #endif
 
@@ -60,7 +60,7 @@ void bi_show_hex_inorder(bigint* x);
 
 void bi_shr(bigint** x, size_t r);
 void bi_shl(bigint** x, size_t r);
-
+void bi_set_min_words(bigint **x, int sign, size_t wordlen);
 
 //todo
 // void bi_show_bin(bigint* x);
