@@ -320,18 +320,24 @@ int bi_mul_textbook(bigint** dst, bigint* x, bigint* y) {
 }
 
 void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
+    bigint* z_tmp = NULL;
+
     if (bi_is_zero(x) || bi_is_zero(y)) {
         bi_set_zero(dst);
         return;
     }
 
     if (bi_is_one(x)) {
-        bi_assign(dst, y);
+        bi_assign(&z_tmp, y);
+        bi_assign(dst, z_tmp);
+        bi_delete(&z_tmp);
         return;
     }
 
     if (bi_is_one(y)) {
-        bi_assign(dst, x);
+        bi_assign(&z_tmp, x);
+        bi_assign(dst, z_tmp);
+        bi_delete(&z_tmp);
         return;
     }
 
@@ -340,8 +346,10 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
     bi_assign(&tmp, x);
     bi_flip_sign(tmp);  
     if (bi_is_one(tmp)) {
-        bi_assign(dst, y);
+        bi_assign(&z_tmp, y);
+        bi_assign(dst, z_tmp);
         bi_flip_sign(*dst);
+        bi_delete(&z_tmp);
         bi_delete(&tmp);
         return;
     }
@@ -350,8 +358,10 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
     bi_assign(&tmp, y);
     bi_flip_sign(tmp);  
     if (bi_is_one(tmp)) {
-        bi_assign(dst, x);
+        bi_assign(&z_tmp, x);
+        bi_assign(dst, z_tmp);
         bi_flip_sign(*dst);
+        bi_delete(&z_tmp);
         bi_delete(&tmp);
         return;
     }
@@ -365,9 +375,9 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
     x_tmp->sign = NONNEGATIVE;
     y_tmp->sign = NONNEGATIVE;
 
-    //todo 1129 test
-    bigint* z_tmp = NULL;
+    //! 이거 안해주면 터지는데 why??
     bi_new(&z_tmp, 1);
+    // z_tmp = NULL;
 
     if (strcmp(mulc, "textbook") == 0) {
         bi_mul_textbook(&z_tmp, x_tmp, y_tmp);
@@ -378,7 +388,9 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
         bi_delete(&x_tmp);
         bi_delete(&y_tmp);
         bi_delete(&z_tmp);  //todo 1129 test
+        return;
     }
+    // bi_show_hex_inorder(*dst);
     (*dst)->sign = x->sign ^ y->sign;
     bi_delete(&x_tmp);
     bi_delete(&y_tmp);
@@ -449,8 +461,12 @@ void bi_sqr_textbook(bigint** dst, bigint* x) {
 }
 
 void bi_sqr(bigint** dst, bigint* x, const char *mulc) {
+    bigint* dst_tmp = NULL;
+
     if (bi_is_zero(x) || bi_is_one(x)) {    // x = 0 or x = 1
-        bi_assign(dst, x);
+        bi_assign(&dst_tmp, x);
+        bi_assign(dst, dst_tmp);
+        bi_delete(&dst_tmp);
         return;
     }
 
@@ -458,25 +474,31 @@ void bi_sqr(bigint** dst, bigint* x, const char *mulc) {
     bi_assign(&tmp, x);
     bi_flip_sign(tmp);
     if (bi_is_one(tmp)) {       // x = -1;
-        bi_assign(dst, x);
+        bi_assign(&dst_tmp, x);
+        bi_assign(dst, dst_tmp);
         bi_flip_sign(*dst);
+        bi_delete(&dst_tmp);
         bi_delete(&tmp);
         return;
     }
 
     bi_delete(&tmp);
 
+    // x_tmp는 const로 없앨 수 있을듯
     bigint* x_tmp = NULL;
     bi_assign(&x_tmp, x);
     x_tmp->sign = NONNEGATIVE;
     
     if (strcmp(mulc, "textbook") == 0) {
-        bi_sqr_textbook(dst, x_tmp);
+        bi_sqr_textbook(&dst_tmp, x_tmp);
+        bi_assign(dst, dst_tmp);
+        bi_delete(&dst_tmp);
         bi_delete(&x_tmp);
         return;
     }
     else {
         fprintf(stderr, "mulc name error");
+        bi_delete(&x_tmp);
         return;
     }
 
