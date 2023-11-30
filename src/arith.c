@@ -61,43 +61,56 @@ int bi_addc(bigint** dst, bigint* x, bigint* y) {
      output: z = x + y \in Z
 */
 int bi_add(bigint** dst, bigint* x, bigint* y) {
-    bigint *absx = NULL, *absy = NULL, *tmp = NULL;
-
+    bigint *absx = NULL;
+    bigint *absy = NULL;
+    bigint *tmp = NULL;
 
     // x = 0
     if (bi_is_zero(x) == 1 || x == NULL) {
-        bi_assign(dst, y);
+        bi_assign(&tmp, y);
+        bi_assign(dst, tmp);
+        bi_delete(&tmp);
         return 1;
     }
     // y = 0
     else if (bi_is_zero(y) == 1 || y == NULL) {
-        bi_assign(dst, x);
+        bi_assign(&tmp, x);
+        bi_assign(dst, tmp);
+        bi_delete(&tmp);
         return 1;
     }
     // x > 0 and y < 0
     else if ((x->sign == NONNEGATIVE) && (y->sign == NEGATIVE)) {
         bi_assign(&absy, y);
         bi_flip_sign(absy);
-        bi_sub(dst, x, absy);
+        bi_sub(&tmp, x, absy);
+        bi_assign(dst, tmp);
         bi_delete(&absy);
+        bi_delete(&tmp);
         return 1;
     }
     // x < 0 and y > 0 
     else if ((x->sign == NEGATIVE) && (y->sign == NONNEGATIVE)) {
         bi_assign(&absx, x);
         bi_flip_sign(absx);
-        bi_sub(dst, y, absx);
+        bi_sub(&tmp, y, absx);
+        bi_assign(dst, tmp);
         bi_delete(&absx);
+        bi_delete(&tmp);
         return 1;
     }
     // x > 0 and y > 0 or 
     // x < 0 and y < 0
     else if (x->wordlen >= y->wordlen) {
-        bi_addc(dst, x, y);
+        bi_addc(&tmp, x, y);
+        bi_assign(dst, tmp);
+        bi_delete(&tmp);
         return 1;
     }
     else {
-        bi_addc(dst, y, x);
+        bi_addc(&tmp, y, x);
+        bi_assign(dst, tmp);
+        bi_delete(&tmp);
         return 1;
     }
 
@@ -153,16 +166,23 @@ int bi_subc(bigint** dst, bigint* x, bigint* y) {
 int bi_sub(bigint** dst, bigint* x, bigint* y) {
     int cmp;
     bigint *tmp_x = NULL, *tmp_y = NULL;
+    bigint *tmp = NULL;
 
     // x = 0
     if (bi_is_zero(x) || x == NULL) {
-        bi_assign(dst, y);
+        bi_assign(&tmp, y);
+        bi_assign(dst, tmp);
         bi_flip_sign(*dst);
+        bi_delete(&tmp);
+
         return 0;
     }
     // y = 0
     else if (bi_is_zero(y) || y == NULL) {
-        bi_assign(dst, x);
+        // bi_assign(dst, x);
+        bi_assign(&tmp, x);
+        bi_assign(dst, tmp);
+        bi_delete(&tmp);
 
         return 0;
     }
@@ -177,13 +197,17 @@ int bi_sub(bigint** dst, bigint* x, bigint* y) {
     // x, y >= 0
     if ((x->sign == NONNEGATIVE) && (y->sign == NONNEGATIVE)) {
         // x >= y >= 0
-        if (cmp ==  1) {
-            bi_subc(dst, x, y);
+        if (cmp == 1) {
+            bi_subc(&tmp, x, y);
+            bi_assign(dst, tmp);
+            bi_delete(&tmp);
         }
         // y > x >= 0 
         else if (cmp == -1) {
-            bi_subc(dst, y, x);
+            bi_subc(&tmp, y, x);
+            bi_assign(dst, tmp);
             (*dst)->sign = NEGATIVE;
+            bi_delete(&tmp);
         }
 
         return 0;
@@ -195,12 +219,16 @@ int bi_sub(bigint** dst, bigint* x, bigint* y) {
         bi_assign(&tmp_y, y);
         tmp_y->sign = NONNEGATIVE;
 
-        if (cmp ==  1) {
-            bi_subc(dst, tmp_y, tmp_x);
+        if (cmp == 1) {
+            bi_subc(&tmp, tmp_y, tmp_x);
+            bi_assign(dst, tmp);
+            bi_delete(&tmp);
         }
         else if (cmp == -1) {
-            bi_subc(dst, tmp_x, tmp_y);
+            bi_subc(&tmp, tmp_x, tmp_y);
+            bi_assign(dst, tmp);
             (*dst)->sign = NEGATIVE;
+            bi_delete(&tmp);
         }
         
         bi_delete(&tmp_x);
@@ -212,7 +240,9 @@ int bi_sub(bigint** dst, bigint* x, bigint* y) {
         bi_assign(&tmp_y, y);
         tmp_y->sign = NONNEGATIVE;
 
-        bi_add(dst, x, tmp_y);
+        bi_add(&tmp, x, tmp_y);
+        bi_assign(dst, tmp);
+        bi_delete(&tmp);
 
         bi_delete(&tmp_y);
         return 0;
@@ -222,9 +252,11 @@ int bi_sub(bigint** dst, bigint* x, bigint* y) {
         bi_assign(&tmp_x, x);
         tmp_x->sign = NONNEGATIVE;
 
-        bi_add(dst, tmp_x, y);
+        bi_add(&tmp, tmp_x, y);
+        bi_assign(dst, tmp);
         (*dst)->sign = NEGATIVE;
 
+        bi_delete(&tmp);
         bi_delete(&tmp_x);
         return 0;
     }

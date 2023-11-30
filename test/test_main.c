@@ -302,42 +302,42 @@ int main(void){
     }
     fclose(fp_shl_bit);
 
-    // //! sqr test*********************************************************
-    // FILE* fp_sqr = NULL;
-    // fp_sqr = fopen("test/test_sqr.txt", "w");
-    // assert(fp_sqr != NULL);
-    // for (int iter = 0; iter < ITERNUM; iter++) {
-    //     int xlen = rand() % 10;
+    //! sqr test*********************************************************
+    FILE* fp_sqr = NULL;
+    fp_sqr = fopen("test/test_sqr.txt", "w");
+    assert(fp_sqr != NULL);
+    for (int iter = 0; iter < ITERNUM; iter++) {
+        int xlen = rand() % 10;
 
-    //     bi_new(&x, xlen);
-    //     bi_new(&z, 2 * xlen);
+        bi_new(&x, xlen);
+        bi_new(&z, 2 * xlen);
 
-    //     xarr = (word*)calloc(xlen, sizeof(word));
+        xarr = (word*)calloc(xlen, sizeof(word));
 
-    //     for(int i = 0; i < xlen; i++){
-    //         xarr[i] = rand();
-    //     }
+        for(int i = 0; i < xlen; i++){
+            xarr[i] = rand();
+        }
 
-    //     bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
+        bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
 
-    //     bi_sqr(&z, x, "textbook");
+        bi_sqr(&z, x, "textbook");
 
-    //     fprintf(fp_sqr, "%s", "x: ");
-    //     for(int idx = x->wordlen - 1; idx >= 0; idx--){
-    //         fprint_format(fp_sqr, x, idx);
-    //     }fprintf(fp_sqr, "%s", "\n");
+        fprintf(fp_sqr, "%s", "x: ");
+        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_sqr, x, idx);
+        }fprintf(fp_sqr, "%s", "\n");
 
-    //     fprintf(fp_sqr, "%s", "z: ");
-    //     for(int idx = z->wordlen - 1; idx >= 0; idx--){
-    //         fprint_format(fp_sqr, z, idx);
-    //     }fprintf(fp_sqr, "%s", "\n\n");
+        fprintf(fp_sqr, "%s", "z: ");
+        for(int idx = z->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_sqr, z, idx);
+        }fprintf(fp_sqr, "%s", "\n\n");
 
-    //     bi_delete(&x);
-    //     bi_delete(&z);
+        bi_delete(&x);
+        bi_delete(&z);
 
-    //     free(xarr);
-    // }
-    // fclose(fp_sqr);
+        free(xarr);
+    }
+    fclose(fp_sqr);
 
 //     // //! Karatsuba test*********************************************************
 //     // FILE* fp_krt = NULL;
@@ -453,70 +453,70 @@ EXIT:
     }
     fclose(fp_div);
 
-    //! barrett test*********************************************************
-    FILE* fp_bar = NULL;
-    fp_bar = fopen("test/test_bar.txt", "w");
-    assert(fp_bar != NULL);
-    for (int iter = 0; iter < 1; iter++) {
+    // //! barrett test*********************************************************
+    // FILE* fp_bar = NULL;
+    // fp_bar = fopen("test/test_bar.txt", "w");
+    // assert(fp_bar != NULL);
+    // for (int iter = 0; iter < 1; iter++) {
 
-        int ylen = (rand() % 10) + 1;
-        int xlen = ylen * 2;
+    //     int ylen = (rand() % 10) + 1;
+    //     int xlen = ylen * 2;
         
 
-        bigint* r = NULL;
+    //     bigint* r = NULL;
 
-        bi_new(&x, xlen);
-        bi_new(&y, ylen);
+    //     bi_new(&x, xlen);
+    //     bi_new(&y, ylen);
 
-        xarr = (word*)calloc(xlen, sizeof(word));
-        yarr = (word*)calloc(ylen, sizeof(word));
+    //     xarr = (word*)calloc(xlen, sizeof(word));
+    //     yarr = (word*)calloc(ylen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
-            xarr[i] = rand();
-        }
-        for(int i = 0; i < ylen; i++){
-            yarr[i] = rand();
-        }
+    //     for(int i = 0; i < xlen; i++){
+    //         xarr[i] = rand();
+    //     }
+    //     for(int i = 0; i < ylen; i++){
+    //         yarr[i] = rand();
+    //     }
 
-        bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
-        bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
+    //     bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
+    //     bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
-        size_t n = y->wordlen;
-        bigint *w = NULL, *tt = NULL;
-        bi_set_min_words(&w, NONNEGATIVE, 2 * n + 1); // w^2n
-        bi_binary_longdiv(&tt, &r, w, y);
+    //     size_t n = y->wordlen;
+    //     bigint *w = NULL, *tt = NULL;
+    //     bi_set_min_words(&w, NONNEGATIVE, 2 * n + 1); // w^2n
+    //     bi_binary_longdiv(&tt, &r, w, y);
 
-        printf("w2= "); bi_show_hex_inorder(w);
-        printf("x= "); bi_show_hex_inorder(x);
-        printf("y= "); bi_show_hex_inorder(y);
-        printf("t= "); bi_show_hex_inorder(tt);
-        bi_barrett_reduction(&r, x, y, tt);
+    //     printf("w2= "); bi_show_hex_inorder(w);
+    //     printf("x= "); bi_show_hex_inorder(x);
+    //     printf("y= "); bi_show_hex_inorder(y);
+    //     printf("t= "); bi_show_hex_inorder(tt);
+    //     bi_barrett_reduction(&r, x, y, tt);
         
-        fprintf(fp_bar, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
-            fprint_format(fp_bar, x, idx);
-        }fprintf(fp_bar, "%s", "\n");
+    //     fprintf(fp_bar, "%s", "x: ");
+    //     for(int idx = x->wordlen - 1; idx >= 0; idx--){
+    //         fprint_format(fp_bar, x, idx);
+    //     }fprintf(fp_bar, "%s", "\n");
 
-        fprintf(fp_bar, "%s", "y: ");
-        for(int idx = y->wordlen - 1; idx >= 0; idx--){
-            fprint_format(fp_bar, y, idx);
-        }fprintf(fp_bar, "%s", "\n");
+    //     fprintf(fp_bar, "%s", "y: ");
+    //     for(int idx = y->wordlen - 1; idx >= 0; idx--){
+    //         fprint_format(fp_bar, y, idx);
+    //     }fprintf(fp_bar, "%s", "\n");
 
-        fprintf(fp_bar, "%s", "r: ");
-        for(int idx = r->wordlen - 1; idx >= 0; idx--){
-            fprint_format(fp_bar, r, idx);
-        }fprintf(fp_bar, "%s", "\n\n");
+    //     fprintf(fp_bar, "%s", "r: ");
+    //     for(int idx = r->wordlen - 1; idx >= 0; idx--){
+    //         fprint_format(fp_bar, r, idx);
+    //     }fprintf(fp_bar, "%s", "\n\n");
 
-        bi_delete(&x);
-        bi_delete(&y);
-        bi_delete(&r);
-        bi_delete(&w);
-        bi_delete(&tt);
+    //     bi_delete(&x);
+    //     bi_delete(&y);
+    //     bi_delete(&r);
+    //     bi_delete(&w);
+    //     bi_delete(&tt);
 
-        free(xarr);
-        free(yarr);
-    }
-    fclose(fp_bar);
+    //     free(xarr);
+    //     free(yarr);
+    // }
+    // fclose(fp_bar);
 
 
     return 0;
