@@ -323,7 +323,7 @@ void bi_show_hex(bigint* x){
 #elif DTYPE == 32
         printf("%08x ", x->a[i]);
 #elif DTYPE == 64
-        printf("%016lx ", x->a[i]);
+        printf("%016llx ", x->a[i]);
 #else
 #error "UNSUPPORTED TYPE\n";
 #endif
@@ -340,7 +340,7 @@ void bi_show_hex_inorder(bigint* x) {
 #elif DTYPE == 32
         printf("%08x ", x->a[i]);
 #elif DTYPE == 64
-        printf("%016lx ", x->a[i]);
+        printf("%016llx ", x->a[i]);
 #else
 #error "UNSUPPORTED TYPE\n";
 #endif
@@ -382,35 +382,45 @@ void bi_shift_left_word(bigint** x, int bytelen) {
 * @param x Pointer of a big integer
 * @param r Shift amount in bit
 */
-void bi_shr(bigint** x, size_t r){
-    size_t x_bitlen = (*x)->wordlen * sizeof(word) * 8;
-    int r_blocklen = r / (sizeof(word) * 8); // full byte
-    int remainder = r % (sizeof(word) * 8);  // last bit length
-
-    // r >= wordlen -> return 0
-    if(r >= x_bitlen){
-        bi_set_zero(x);
+void bi_shr(bigint** src, size_t r) {
+    // Check for invalid inputs: NULL source or non-positive shift value.
+    if (*src == NULL || r < 0) {
+        printf("Invalid inputs. Function: Right_shift\n");
         return;
     }
-
-    // r is multiple of word bit length -> only do word shift
-    if(remainder == 0){
-        bi_shift_right_word(x, r_blocklen);
+    
+    // Calculate word and bit offsets for the shift operation.
+    uint64_t word_shift = r / (8 * sizeof(word)); // Offset in words
+    uint64_t bit_offset = r % (8 * sizeof(word));  // Offset in bits
+    
+    // Create a temporary bigint to hold the shifted value.
+    bigint* temp = NULL;
+    bi_new(&temp, (*src)->wordlen - word_shift );
+    if (word_shift >= (*src)->wordlen) {
+        bi_set_zero(src);
         return;
     }
-
-    bi_shift_right_word(x, r_blocklen);
-
-    /*  |-----|***|  |*****|---|
-    *         - r -        - r -
-    */
-    for(int i = 0; i < (*x)->wordlen - 1; i++){
-        word tmp = ((*x)->a[i] >> remainder) | ((*x)->a[i + 1] << (sizeof(word) * 8 - remainder));
-        (*x)->a[i] = tmp;
+    // Perform word shift.
+    for (uint64_t i = 0; i < temp->wordlen; i++) {
+        uint64_t shifted_index = i + word_shift;
+        temp->a[i] = (*src)->a[shifted_index];
+    }
+       
+    // Perform bit shift within each word.
+    if (bit_offset > 0) {
+        word carry = 0;
+        for (int i = temp->wordlen - 1; i >= 0; i--) {
+            word temp_word = temp->a[i];
+            word shifted_word = temp->a[i] >> bit_offset;
+            temp->a[i] = (shifted_word | carry);
+            carry = temp_word << ((8 * sizeof(word)) - bit_offset);
+        }
     }
 
-    // last element
-    (*x)->a[(*x)->wordlen - 1] >>= r;
+    bi_refine(temp);
+    bi_new(src, temp->wordlen);
+    memcpy((*src)->a, temp->a, sizeof(word) * temp->wordlen);
+    bi_delete(&temp);
 }
 
 

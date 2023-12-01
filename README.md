@@ -2,7 +2,7 @@
 2023 Advanced Application Programming &amp; Eureka Project
 
 ## How to Build
-Clone the repository, and run `make` at the root directory.
+Clone the repository, and run `python3 a.py` at the root directory.
 
 TODO: Implement `make test` method for test code building.
 

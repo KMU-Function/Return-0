@@ -285,10 +285,22 @@ int bi_sub(bigint** dst, bigint* x, bigint* y) {
 * @param dst pointer of destination where the result of x * y will be stored
 */
 void bi_mulc(word* dst, word x, word y) {
-    word x0 = x & ((1 << (sizeof(word) * 8 / 2)) - 1);
-    word x1 = x >> (sizeof(word) * 8 / 2);
+    word x0;
+    word y0;
 
-    word y0 = y & ((1 << (sizeof(word) * 8 / 2)) - 1);
+    if (DTYPE == 8) {
+        x0 = x & (((word)1 << (sizeof(word) * 8 / 2)) - 1);
+        y0 = y & (((word)1 << (sizeof(word) * 8 / 2)) - 1);
+    }
+    else if (DTYPE == 32) {
+        x0 = x & ((1U << (sizeof(word) * 8 / 2)) - 1);
+        y0 = y & ((1U << (sizeof(word) * 8 / 2)) - 1);
+    }
+    else if (DTYPE == 64) {
+        x0 = x & ((1ULL << (sizeof(word) * 8 / 2)) - 1);
+        y0 = y & ((1ULL << (sizeof(word) * 8 / 2)) - 1);
+    }
+    word x1 = x >> (sizeof(word) * 8 / 2);
     word y1 = y >> (sizeof(word) * 8 / 2);
 
     word t, t0, t1, c0, c1;
@@ -436,8 +448,9 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
 * @param dst pointer of destination where the result of x^2 will be stored
 */
 void bi_sqrc(word* dst, word x) {
-
-    word a0 = x & ((1 << (sizeof(word) * 8 / 2)) - 1);
+    
+    word a0 = x & (((word)1 << (sizeof(word) * 8 / 2)) - 1);
+    // word a0 = x & ((1 << (sizeof(word) * 8 / 2)) - 1);
     word a1 = x >> (sizeof(word) * 8 / 2);
 
     word c0 = a0 * a0;

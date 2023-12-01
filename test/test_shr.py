@@ -20,9 +20,9 @@ with open(file_path, "r") as f:
         
         if x >> y != z:
             print(cnt)
-            print(x)
+            print(hex(x))
             print(f'{y} bit')
-            print(z)
+            print(hex(z))
             print()
             cnt += 1
                 

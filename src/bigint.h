@@ -6,7 +6,7 @@
 #define NONNEGATIVE 0
 #define NEGATIVE    1
 
-#define DTYPE 32
+// #define DTYPE 64
 
 
 #ifdef DTYPE
@@ -22,7 +22,7 @@ typedef uint64_t word;
 #endif
 #endif
 
-typedef struct _BIGINT{
+typedef struct _BIGINT {
     int sign ;      // NEGATIVE or NONNEGATIVE
     int wordlen ;   // wordlen >= 0
     word* a;        // address for big integer
