@@ -561,85 +561,99 @@ void bi_sqr(bigint** dst, bigint* x, const char *mulc) {
 
 }
 
-// void karatsuba_mul_core(bigint** dest, bigint* src1, bigint* src2, uint64_t len) {
-//     if (len == 1) {
-//         bi_mul(dest, src1, src2, "textbook");
-//         return;
-//     }
-//     len >>= 1;
+void karatsuba_mul_core(bigint** dest, bigint* src1, bigint* src2, uint64_t len) {
 
-//     bigint* A_h = NULL;
-//     bigint* A_l = NULL;
-//     bigint* B_h = NULL;
-//     bigint* B_l = NULL;
+    bigint* tmp = NULL;
 
-//     bigint* A = NULL;
-//     bigint* B = NULL;
-//     bigint* C = NULL;    
-//     bigint* D = NULL;
-//     bigint* A_A = NULL;
-//     bigint* B_B = NULL;
+    if (len == 1) {
+        bi_mul(&tmp, src1, src2, "textbook");
+        bi_assign(dest, tmp);
+        bi_delete(&tmp);
+        return;
+    }
+    len >>= 1;
 
-//     bi_new(&A_h, src1->wordlen - len);
-//     bi_new(&A_l, len);
-//     bi_new(&B_h, src2->wordlen - len);
-//     bi_new(&B_l, len);
+    bigint* A_h = NULL;
+    bigint* A_l = NULL;
+    bigint* B_h = NULL;
+    bigint* B_l = NULL;
 
-//     copy_array(A_h->a, src1->a + len, src1->wordlen - len);
-//     copy_array(A_l->a, src1->a, len);
-//     copy_array(B_h->a, src2->a + len, src2->wordlen - len);
-//     copy_array(B_l->a, src2->a, len);
+    bigint* A = NULL;
+    bigint* B = NULL;
+    bigint* C = NULL;    
+    bigint* D = NULL;
+    bigint* A_A = NULL;
+    bigint* B_B = NULL;
 
-//     bi_new(&A_A, A_h->wordlen + 1);
-//     bi_new(&B_B, B_h->wordlen + 1);
-//     bi_new(&A, A_h->wordlen + B_h->wordlen);
-//     bi_new(&B, A_l->wordlen + B_l->wordlen);
-//     bi_new(&C, A_A->wordlen + B_B->wordlen);
-//     bi_new(&D, A_A->wordlen + B_B->wordlen);
+    bi_new(&A_h, src1->wordlen - len);
+    bi_new(&A_l, len);
+    bi_new(&B_h, src2->wordlen - len);
+    bi_new(&B_l, len);
 
-//     uint64_t len_A = ((src1->wordlen - len) < (src2->wordlen - len)) ? (src1->wordlen - len) : (src2->wordlen - len);
+    copy_array(A_h->a, src1->a + len, src1->wordlen - len);
+    copy_array(A_l->a, src1->a, len);
+    copy_array(B_h->a, src2->a + len, src2->wordlen - len);
+    copy_array(B_l->a, src2->a, len);
 
-//     karatsuba_mul_core(&A, A_h, B_h, len_A);
-//     karatsuba_mul_core(&B, A_l, B_l, len);
+    bi_new(&A_A, A_h->wordlen + 1);
+    bi_new(&B_B, B_h->wordlen + 1);
+    bi_new(&A, A_h->wordlen + B_h->wordlen);
+    bi_new(&B, A_l->wordlen + B_l->wordlen);
+    bi_new(&C, A_A->wordlen + B_B->wordlen);
+    bi_new(&D, A_A->wordlen + B_B->wordlen);
 
-//     bi_add(&A_A, A_h, A_l);
-//     bi_refine(A_A);
-//     bi_add(&B_B, B_h, B_l);
-//     bi_refine(B_B);
+    uint64_t len_A = ((src1->wordlen - len) < (src2->wordlen - len)) ? (src1->wordlen - len) : (src2->wordlen - len);
 
-//     uint64_t len_C = (A_A->wordlen < B_B->wordlen) ? A_A->wordlen : B_B->wordlen;
+    karatsuba_mul_core(&A, A_h, B_h, len_A);
+    karatsuba_mul_core(&B, A_l, B_l, len);
 
-//     karatsuba_mul_core(&C, A_A, B_B, len_C);
+    bi_add(&A_A, A_h, A_l);
+    bi_refine(A_A);
+    bi_add(&B_B, B_h, B_l);
+    bi_refine(B_B);
 
-//     bi_sub(&D, C, A);
-//     bi_sub(&D, D, B);
+    uint64_t len_C = (A_A->wordlen < B_B->wordlen) ? A_A->wordlen : B_B->wordlen;
 
-//     bi_shl(&D, len * (8 * sizeof(word)));
-//     len <<= 1;
-//     bi_shl(&A, len * (8 * sizeof(word)));
+    karatsuba_mul_core(&C, A_A, B_B, len_C);
 
-//     bi_add(dest, D, B);
-//     bi_add(dest, *dest, A);
+    // bi_sub(&D, C, A);
+    // bi_sub(&D, D, B);
+    bi_sub(&tmp, C, A);
+    bi_sub(&D, tmp, B);
 
-//     bi_delete(&A);
-//     bi_delete(&B);
-//     bi_delete(&C);
-//     bi_delete(&D);
-//     bi_delete(&A_A);
-//     bi_delete(&B_B);
-//     bi_delete(&A_h);
-//     bi_delete(&A_l);
-//     bi_delete(&B_h);
-//     bi_delete(&B_l);
-// }
+    // printf("Befor shift = "); bi_show_hex_inorder(A);
+    bi_shl(&D, len * (8 * sizeof(word)));
+    len <<= 1;
+    bi_shl(&A, len * (8 * sizeof(word)));
+    // printf("After shift = "); bi_show_hex_inorder(A);
 
-// void karatsuba_mul(bigint** dest, bigint* src1, bigint* src2) {
-//     uint64_t len = (src1->wordlen < src2->wordlen) ? src1->wordlen : src2->wordlen;
-//     bigint* _dst = NULL;
-//     karatsuba_mul_core(&_dst, src1, src2, len);
-//     bi_assign(dest, _dst);
-//     (*dest)->sign = src1->sign ^ src2->sign;
-// }
+    // bi_add(dest, D, B);
+    // bi_add(dest, *dest, A);
+    bi_add(&tmp, D, B);
+    bi_add(dest, tmp, A);
+    // bi_assign(dest, tmp);
+
+    bi_delete(&tmp);
+
+    bi_delete(&A);
+    bi_delete(&B);
+    bi_delete(&C);
+    bi_delete(&D);
+    bi_delete(&A_A);
+    bi_delete(&B_B);
+    bi_delete(&A_h);
+    bi_delete(&A_l);
+    bi_delete(&B_h);
+    bi_delete(&B_l);
+}
+
+void karatsuba_mul(bigint** dest, bigint* src1, bigint* src2) {
+    uint64_t len = (src1->wordlen < src2->wordlen) ? src1->wordlen : src2->wordlen;
+    bigint* _dst = NULL;
+    karatsuba_mul_core(&_dst, src1, src2, len);
+    bi_assign(dest, _dst);
+    (*dest)->sign = src1->sign ^ src2->sign;
+}
 
 /**
 * @brief Calculate division of BigInt x
