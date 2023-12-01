@@ -681,8 +681,8 @@ int bi_binary_longdiv(bigint** q, bigint** r, bigint* a, bigint* b){
             bi_set_one(&one);
             bi_shl(&one, j);        // one = 2 ^ j
 
-            //bi_add(q, tmp_q, one);     // q = q + 2^j
-            (*q)->a[j / (sizeof(word) * 8)] += 1 << j;
+            bi_add(q, *q, one);     // q = q + 2^j
+            //(*q)->a[j / (sizeof(word) * 8)] += (word)(1 << (j % (sizeof(word) * 8)));
             
             bi_assign(&tmp_r, *r);
             bi_sub(r, tmp_r, b);       // r = r - b
@@ -696,9 +696,22 @@ int bi_binary_longdiv(bigint** q, bigint** r, bigint* a, bigint* b){
 }
 
 
+void bi_barrett_compute_t(bigint** t, bigint* y){
+    bigint* r = NULL;
+    size_t n = y->wordlen;
+    bigint *w = NULL, *tt = NULL;
+    bi_set_min_words(&w, NONNEGATIVE, 2 * n + 1); // w^2n
+    bi_binary_longdiv(&tt, &r, w, y);
+    bi_assign(t, tt);
+
+    bi_delete(&w);
+    bi_delete(&tt);
+    bi_delete(&r);
+}
+
 // r <- x mod m
 // t is pre-computed value
-int bi_barrett_reduction(bigint** r, bigint* x, bigint* m, bigint* t){
+int bi_barrett_reduction_core(bigint** r, bigint* x, bigint* m, bigint* t){
     if (x == NULL || m == NULL || t == NULL) {
         return -1;
     }
@@ -733,6 +746,21 @@ int bi_barrett_reduction(bigint** r, bigint* x, bigint* m, bigint* t){
     return 0;
 }
 
+int bi_barrett_reduction(bigint** r, bigint* x, bigint* m){
+    bigint* t = NULL;
+    if(bi_is_zero(m)){
+        abort();
+    }
+    if(bi_is_one(m)){
+        bi_set_zero(r);
+        return 0;
+    }
+    bi_barrett_compute_t(&t, m);
+    bi_barrett_reduction_core(r, x, m, t);
+    bi_delete(&t);
+    return 0;
+}
+
 /**
 * @brief Calculate exponentiation of x^n
 * @param x number of base
@@ -763,6 +791,42 @@ void bi_LtR(bigint** z, bigint** x, bigint* n) {
             if (_n == 1) {      // n_i = 1            
                 bi_mul(&_t, t, _x, "textbook");         
                 bi_assign(&t, _t);     // t <- t * x             
+            }
+        }
+    }
+    bi_assign(z, t);
+    
+    bi_delete(&_x);
+    bi_delete(&t);
+    bi_delete(&_t);
+}
+
+void bi_LtR_mine(bigint** z, bigint** x, bigint* n, bigint* modulo) {
+
+    bigint* _x = NULL;
+    bi_assign(&_x, *x);  // _x <- x (temp)
+
+    bigint* t = NULL;
+    bi_set_one(&t);
+
+    bigint* _t = NULL;
+    bi_set_one(&_t);
+
+    bigint* _tsqr = NULL;
+    bi_set_one(&_tsqr);
+
+    uint8_t _n = 0;
+
+    for (int i = n->wordlen - 1; i >= 0; i--) {
+        for (int j = (sizeof(word) * 8) - 1; j >= 0; j--) {        
+            bi_sqr(&_tsqr, t, "textbook");
+            bi_assign(&t, _tsqr);  // t <- t^2     
+            bi_barrett_reduction(t, *x, modulo);     
+            _n = (n->a[i] >> j) & 0x01;
+            if (_n == 1) {      // n_i = 1            
+                bi_mul(&_t, t, _x, "textbook");         
+                bi_assign(&t, _t);     // t <- t * x             
+                bi_barrett_reduction(t, *x, modulo);     
             }
         }
     }
