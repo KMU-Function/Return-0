@@ -1,4 +1,8 @@
-with open("test_mul.txt", "r") as f:    
+import os
+
+file_path = os.path.join(os.path.dirname(__file__), "test_mul.txt")
+
+with open(file_path, "r") as f:  
     cnt = 0
     while True:
         x = f.readline().split()[1:]

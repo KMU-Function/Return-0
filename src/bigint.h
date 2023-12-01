@@ -32,7 +32,7 @@ void bi_delete(bigint** x);
 void bi_new(bigint** x, int wordlen);
 
 int bi_set_by_array(bigint** x, int sign, word* a, int wordlen);
-int bi_set_by_string(bigint** x, int sign, char* str, int base);
+// int bi_set_by_string(bigint** x, int sign, char* str, int base);
 
 void bi_refine(bigint* x);
 void bi_assign(bigint** y, bigint* x);

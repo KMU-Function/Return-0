@@ -7,9 +7,12 @@
 #include "bigint.h"
 #include "arith.h"
 
-//todo addc, multi-precision add, final add, sub
 
-
+/**
+* @brief Calculate addition of two word x, y
+* Consider carry
+* @param dst pointer of destination where the result of x + y will be stored
+*/
 word bi_addcc(word* dst, word x, word y, word c) {
     word nc;     // next carry
 
@@ -21,8 +24,10 @@ word bi_addcc(word* dst, word x, word y, word c) {
     return nc;
 }
 
-/*
-    dst <- x + y
+/**
+* @brief Calculate addition of same signed two BigInt x, y
+* Assume x, y != 0
+* @param dst pointer of destination where the result of x + y will be stored
 */
 int bi_addc(bigint** dst, bigint* x, bigint* y) {
     int c = 0;
@@ -54,11 +59,9 @@ int bi_addc(bigint** dst, bigint* x, bigint* y) {
     return 1;
 }
 
-/*
-    addition of two integers
-     z <- x + y
-     input: x, y \in Z
-     output: z = x + y \in Z
+/**
+* @brief Calculate addition of two BigInt x, y
+* @param dst pointer of destination where the result of x + y will be stored
 */
 int bi_add(bigint** dst, bigint* x, bigint* y) {
     bigint *absx = NULL;
@@ -117,7 +120,12 @@ int bi_add(bigint** dst, bigint* x, bigint* y) {
     return -1;
 }
 
-int bi_subcc(word* dst, word x, word y, int b) {
+/**
+* @brief Calculate subtraction of two word x, y
+* Consider burrow
+* @param dst pointer of destination where the result of x + y will be stored
+*/
+word bi_subcc(word* dst, word x, word y, word b) {
     word nb;     // next borrow
 
     *dst = x - b;           
@@ -128,8 +136,10 @@ int bi_subcc(word* dst, word x, word y, int b) {
     return nb;
 }
 
-/*
-    z <- x + y
+/**
+* @brief Calculate subtraction of two positive BigInt x, y 
+* Assume 0 < y <= x
+* @param dst pointer of destination where the result of x - y will be stored
 */
 int bi_subc(bigint** dst, bigint* x, bigint* y) {
     int b;
@@ -160,8 +170,9 @@ int bi_subc(bigint** dst, bigint* x, bigint* y) {
     return 1;
 }
 
-/*
-    Subtraction of two integers
+/**
+* @brief Calculate subtraction of two BigInt x, y
+* @param dst pointer of destination where the result of x - y will be stored
 */
 int bi_sub(bigint** dst, bigint* x, bigint* y) {
     int cmp;
@@ -179,7 +190,6 @@ int bi_sub(bigint** dst, bigint* x, bigint* y) {
     }
     // y = 0
     else if (bi_is_zero(y) || y == NULL) {
-        // bi_assign(dst, x);
         bi_assign(&tmp, x);
         bi_assign(dst, tmp);
         bi_delete(&tmp);
@@ -270,6 +280,10 @@ int bi_sub(bigint** dst, bigint* x, bigint* y) {
     return -1;
 }
 
+/**
+* @brief Calculate multiplication of two word x, y 
+* @param dst pointer of destination where the result of x * y will be stored
+*/
 void bi_mulc(word* dst, word x, word y) {
     word x0 = x & ((1 << (sizeof(word) * 8 / 2)) - 1);
     word x1 = x >> (sizeof(word) * 8 / 2);
@@ -295,8 +309,10 @@ void bi_mulc(word* dst, word x, word y) {
     return;
 }
 
-/*
-    Textbook Multiplication
+/**
+* @brief Calculate multiplication of two Bigint x, y
+* multiplication using textbook method
+* @param dst pointer of destination where the result of x * y will be stored
 */
 int bi_mul_textbook(bigint** dst, bigint* x, bigint* y) {
     if (x->sign == NEGATIVE || y->sign == NEGATIVE) {
@@ -325,14 +341,21 @@ int bi_mul_textbook(bigint** dst, bigint* x, bigint* y) {
     return 0;
 }
 
+/**
+* @brief Calculate multiplication of two BigInt x, y
+* @param mulc mode of multiplication
+* @param dst pointer of destination where the result of x * y will be stored
+*/
 void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
     bigint* z_tmp = NULL;
 
+    // x = 0 or y = 0
     if (bi_is_zero(x) || bi_is_zero(y)) {
         bi_set_zero(dst);
         return;
     }
 
+    // x = 1
     if (bi_is_one(x)) {
         bi_assign(&z_tmp, y);
         bi_assign(dst, z_tmp);
@@ -340,6 +363,7 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
         return;
     }
 
+    // y = 1
     if (bi_is_one(y)) {
         bi_assign(&z_tmp, x);
         bi_assign(dst, z_tmp);
@@ -348,7 +372,7 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
     }
 
     bigint* tmp = NULL;
-    // x is -1
+    // x = -1
     bi_assign(&tmp, x);
     bi_flip_sign(tmp);  
     if (bi_is_one(tmp)) {
@@ -360,7 +384,7 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
         return;
     }
 
-    // y is -1
+    // y = -1
     bi_assign(&tmp, y);
     bi_flip_sign(tmp);  
     if (bi_is_one(tmp)) {
@@ -387,26 +411,31 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char *mulc) {
 
     if (strcmp(mulc, "textbook") == 0) {
         bi_mul_textbook(&z_tmp, x_tmp, y_tmp);
-        bi_assign(dst, z_tmp);  //todo 1129 test
+        bi_assign(dst, z_tmp);
     }
     else {
         fprintf(stderr, "mulc name error");
         bi_delete(&x_tmp);
         bi_delete(&y_tmp);
-        bi_delete(&z_tmp);  //todo 1129 test
+        bi_delete(&z_tmp);
         return;
     }
     // bi_show_hex_inorder(*dst);
+
+    // consider sign of result
     (*dst)->sign = x->sign ^ y->sign;
     bi_delete(&x_tmp);
     bi_delete(&y_tmp);
-    bi_delete(&z_tmp);  //todo 1129 test
+    bi_delete(&z_tmp);
 
     return;
 }
 
-// 부호에 관계 없음
-void bi_sqr_singleword(word* dst, word x) {
+/**
+* @brief Calculate squaring of word x
+* @param dst pointer of destination where the result of x^2 will be stored
+*/
+void bi_sqrc(word* dst, word x) {
 
     word a0 = x & ((1 << (sizeof(word) * 8 / 2)) - 1);
     word a1 = x >> (sizeof(word) * 8 / 2);
@@ -427,7 +456,11 @@ void bi_sqr_singleword(word* dst, word x) {
     dst[1] = dst[1] + t[1] + (dst[0] < t[0] ? 1 : 0);   // consider carry
 }
 
-// 부호 관계 없음
+/**
+* @brief Calculate squaring of Bigint x
+* squaring using textbook method
+* @param dst pointer of destination where the result of x^2 will be stored
+*/
 void bi_sqr_textbook(bigint** dst, bigint* x) {
     bigint *c1 = NULL;
     bigint *c2 = NULL;
@@ -442,7 +475,7 @@ void bi_sqr_textbook(bigint** dst, bigint* x) {
     bi_new(&t2, 2);
 
     for (int j = 0; j < x->wordlen; j++) {
-        bi_sqr_singleword(t1->a, x->a[j]);
+        bi_sqrc(t1->a, x->a[j]);
         bi_shl(&t1, (2 * j) * 8 * sizeof(word));
         bi_add(&c1, t1, c1);
         for (int i = j + 1; i < x->wordlen; i++) {
@@ -466,6 +499,11 @@ void bi_sqr_textbook(bigint** dst, bigint* x) {
     bi_delete(&t2);
 }
 
+/**
+* @brief Calculate squaring of BigInt x^2
+* @param mulc mode of squaring
+* @param dst pointer of destination where the result of x^2 will be stored
+*/
 void bi_sqr(bigint** dst, bigint* x, const char *mulc) {
     bigint* dst_tmp = NULL;
 
@@ -510,87 +548,92 @@ void bi_sqr(bigint** dst, bigint* x, const char *mulc) {
 
 }
 
-void karatsuba_mul_core(bigint** dest, bigint* src1, bigint* src2, uint64_t len) {
-    if (len == 1) {
-        bi_mul(dest, src1, src2, "textbook");
-        return;
-    }
-    len >>= 1;
+// void karatsuba_mul_core(bigint** dest, bigint* src1, bigint* src2, uint64_t len) {
+//     if (len == 1) {
+//         bi_mul(dest, src1, src2, "textbook");
+//         return;
+//     }
+//     len >>= 1;
 
-    bigint* A_h = NULL;
-    bigint* A_l = NULL;
-    bigint* B_h = NULL;
-    bigint* B_l = NULL;
+//     bigint* A_h = NULL;
+//     bigint* A_l = NULL;
+//     bigint* B_h = NULL;
+//     bigint* B_l = NULL;
 
-    bigint* A = NULL;
-    bigint* B = NULL;
-    bigint* C = NULL;    
-    bigint* D = NULL;
-    bigint* A_A = NULL;
-    bigint* B_B = NULL;
+//     bigint* A = NULL;
+//     bigint* B = NULL;
+//     bigint* C = NULL;    
+//     bigint* D = NULL;
+//     bigint* A_A = NULL;
+//     bigint* B_B = NULL;
 
-    bi_new(&A_h, src1->wordlen - len);
-    bi_new(&A_l, len);
-    bi_new(&B_h, src2->wordlen - len);
-    bi_new(&B_l, len);
+//     bi_new(&A_h, src1->wordlen - len);
+//     bi_new(&A_l, len);
+//     bi_new(&B_h, src2->wordlen - len);
+//     bi_new(&B_l, len);
 
-    copy_array(A_h->a, src1->a + len, src1->wordlen - len);
-    copy_array(A_l->a, src1->a, len);
-    copy_array(B_h->a, src2->a + len, src2->wordlen - len);
-    copy_array(B_l->a, src2->a, len);
+//     copy_array(A_h->a, src1->a + len, src1->wordlen - len);
+//     copy_array(A_l->a, src1->a, len);
+//     copy_array(B_h->a, src2->a + len, src2->wordlen - len);
+//     copy_array(B_l->a, src2->a, len);
 
-    bi_new(&A_A, A_h->wordlen + 1);
-    bi_new(&B_B, B_h->wordlen + 1);
-    bi_new(&A, A_h->wordlen + B_h->wordlen);
-    bi_new(&B, A_l->wordlen + B_l->wordlen);
-    bi_new(&C, A_A->wordlen + B_B->wordlen);
-    bi_new(&D, A_A->wordlen + B_B->wordlen);
+//     bi_new(&A_A, A_h->wordlen + 1);
+//     bi_new(&B_B, B_h->wordlen + 1);
+//     bi_new(&A, A_h->wordlen + B_h->wordlen);
+//     bi_new(&B, A_l->wordlen + B_l->wordlen);
+//     bi_new(&C, A_A->wordlen + B_B->wordlen);
+//     bi_new(&D, A_A->wordlen + B_B->wordlen);
 
-    uint64_t len_A = ((src1->wordlen - len) < (src2->wordlen - len)) ? (src1->wordlen - len) : (src2->wordlen - len);
+//     uint64_t len_A = ((src1->wordlen - len) < (src2->wordlen - len)) ? (src1->wordlen - len) : (src2->wordlen - len);
 
-    karatsuba_mul_core(&A, A_h, B_h, len_A);
-    karatsuba_mul_core(&B, A_l, B_l, len);
+//     karatsuba_mul_core(&A, A_h, B_h, len_A);
+//     karatsuba_mul_core(&B, A_l, B_l, len);
 
-    bi_add(&A_A, A_h, A_l);
-    bi_refine(A_A);
-    bi_add(&B_B, B_h, B_l);
-    bi_refine(B_B);
+//     bi_add(&A_A, A_h, A_l);
+//     bi_refine(A_A);
+//     bi_add(&B_B, B_h, B_l);
+//     bi_refine(B_B);
 
-    uint64_t len_C = (A_A->wordlen < B_B->wordlen) ? A_A->wordlen : B_B->wordlen;
+//     uint64_t len_C = (A_A->wordlen < B_B->wordlen) ? A_A->wordlen : B_B->wordlen;
 
-    karatsuba_mul_core(&C, A_A, B_B, len_C);
+//     karatsuba_mul_core(&C, A_A, B_B, len_C);
 
-    bi_sub(&D, C, A);
-    bi_sub(&D, D, B);
+//     bi_sub(&D, C, A);
+//     bi_sub(&D, D, B);
 
-    bi_shl(&D, len * (8 * sizeof(word)));
-    len <<= 1;
-    bi_shl(&A, len * (8 * sizeof(word)));
+//     bi_shl(&D, len * (8 * sizeof(word)));
+//     len <<= 1;
+//     bi_shl(&A, len * (8 * sizeof(word)));
 
-    bi_add(dest, D, B);
-    bi_add(dest, *dest, A);
+//     bi_add(dest, D, B);
+//     bi_add(dest, *dest, A);
 
-    bi_delete(&A);
-    bi_delete(&B);
-    bi_delete(&C);
-    bi_delete(&D);
-    bi_delete(&A_A);
-    bi_delete(&B_B);
-    bi_delete(&A_h);
-    bi_delete(&A_l);
-    bi_delete(&B_h);
-    bi_delete(&B_l);
-}
+//     bi_delete(&A);
+//     bi_delete(&B);
+//     bi_delete(&C);
+//     bi_delete(&D);
+//     bi_delete(&A_A);
+//     bi_delete(&B_B);
+//     bi_delete(&A_h);
+//     bi_delete(&A_l);
+//     bi_delete(&B_h);
+//     bi_delete(&B_l);
+// }
 
-void karatsuba_mul(bigint** dest, bigint* src1, bigint* src2) {
-    uint64_t len = (src1->wordlen < src2->wordlen) ? src1->wordlen : src2->wordlen;
-    bigint* _dst = NULL;
-    karatsuba_mul_core(&_dst, src1, src2, len);
-    bi_assign(dest, _dst);
-    (*dest)->sign = src1->sign ^ src2->sign;
-}
+// void karatsuba_mul(bigint** dest, bigint* src1, bigint* src2) {
+//     uint64_t len = (src1->wordlen < src2->wordlen) ? src1->wordlen : src2->wordlen;
+//     bigint* _dst = NULL;
+//     karatsuba_mul_core(&_dst, src1, src2, len);
+//     bi_assign(dest, _dst);
+//     (*dest)->sign = src1->sign ^ src2->sign;
+// }
 
-//: SUCCESS
+/**
+* @brief Calculate division of BigInt x
+* @param q number of quotient
+* @param r number of remainder
+* @param a ?
+*/
 int bi_binary_longdiv(bigint** q, bigint** r, bigint* a, bigint* b){
 
     if(a == NULL || b == NULL){
@@ -677,7 +720,12 @@ int bi_barrett_reduction(bigint** r, bigint* x, bigint* m, bigint* t){
     return 0;
 }
 
-// compute z = x^n
+/**
+* @brief Calculate exponentiation of x^n
+* @param x number of base
+* @param n number of power
+* @param dst pointer of destination where the result of x^n will be stored
+*/
 void bi_LtR(bigint** z, bigint** x, bigint* n) {
 
     bigint* _x = NULL;

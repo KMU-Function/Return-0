@@ -1,4 +1,8 @@
-with open("test_div.txt", "r") as f:    
+import os
+
+file_path = os.path.join(os.path.dirname(__file__), "test_div.txt")
+
+with open(file_path, "r") as f:  
     cnt = 0
     num_test = 0
     while True:

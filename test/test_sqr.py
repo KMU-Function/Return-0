@@ -1,4 +1,8 @@
-with open("test_sqr.txt", "r") as f:
+import os
+
+file_path = os.path.join(os.path.dirname(__file__), "test_sqr.txt")
+
+with open(file_path, "r") as f:
     cnt = 0
     while True:
         x = f.readline().split()[1:]

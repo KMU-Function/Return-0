@@ -9,7 +9,6 @@
 
 //todo reduction, show_bin/dec
 
-
 void bi_delete(bigint** x){
     if(*x == NULL)
         return;
@@ -57,13 +56,13 @@ int bi_set_by_array(bigint** x, int sign, word* a, int wordlen) {
     return 0;
 }
 
-//todo
-/**
-* @brief Create BigInt x by string
-*/
-int bi_set_by_string(bigint** x, int sign, char* str, int base) {
-    return 0;
-}
+// //todo
+// /**
+// * @brief Create BigInt x by string
+// */
+// int bi_set_by_string(bigint** x, int sign, char* str, int base) {
+//     return 0;
+// }
 
 /**
 * @brief Refine BigInt x (Remove Last Zero Words)

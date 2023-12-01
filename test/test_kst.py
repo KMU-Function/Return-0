@@ -1,9 +1,8 @@
 import os
 
-file_path = os.path.join(os.path.dirname(__file__), "test_krt.txt")
+file_path = os.path.join(os.path.dirname(__file__), "test_kst.txt")
 
-# with open("test_add.txt", "r") as f:    
-with open(file_path, "r") as f:  
+with open(file_path, "r") as f:
     cnt = 0
     while True:
         x = f.readline().split()[1:]

@@ -68,9 +68,9 @@ int main(void) {
         bi_add(&z, x, y);
 
 
-        char xsign = x->sign == NONNEGATIVE ? '+' : '-';
-        char ysign = y->sign == NONNEGATIVE ? '+' : '-';
-        char zsign = z->sign == NONNEGATIVE ? '+' : '-';
+        // char xsign = x->sign == NONNEGATIVE ? '+' : '-';
+        // char ysign = y->sign == NONNEGATIVE ? '+' : '-';
+        // char zsign = z->sign == NONNEGATIVE ? '+' : '-';
 
         fprintf(fp_add, "%s", "x: "); 
         for(int idx = x->wordlen - 1; idx >= 0; idx--){
@@ -534,7 +534,7 @@ EXIT:
     fp_exp = fopen("test/test_exp.txt", "w");
     assert(fp_exp != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
-        printf("exp %d\n", iter);
+        // printf("exp %d\n", iter);
 
         int xlen = rand() % 10;
         // int xlen = 1;
