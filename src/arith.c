@@ -821,12 +821,12 @@ void bi_LtR_mine(bigint** z, bigint** x, bigint* n, bigint* modulo) {
         for (int j = (sizeof(word) * 8) - 1; j >= 0; j--) {        
             bi_sqr(&_tsqr, t, "textbook");
             bi_assign(&t, _tsqr);  // t <- t^2     
-            bi_barrett_reduction(t, *x, modulo);     
+            bi_barrett_reduction(&t, *x, modulo);     
             _n = (n->a[i] >> j) & 0x01;
             if (_n == 1) {      // n_i = 1            
                 bi_mul(&_t, t, _x, "textbook");         
                 bi_assign(&t, _t);     // t <- t * x             
-                bi_barrett_reduction(t, *x, modulo);     
+                bi_barrett_reduction(&t, *x, modulo);     
             }
         }
     }
