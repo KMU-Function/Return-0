@@ -28,7 +28,8 @@ try:
 
     # Run the Python scripts 'test_add.py' and 'test_sub.py' using relative paths
     script_paths = ['test/test_add.py', 'test/test_sub.py', 'test/test_mul.py', 'test/test_shr.py', 'test/test_shl.py', 
-                    'test/test_sqr.py', 'test/test_div.py', 'test/test_bar.py', 'test/test_exp.py', 'test/test_kst.py' ]
+                    'test/test_sqr.py', 'test/test_div.py', 'test/test_bar.py', 'test/test_exp.py', 'test/test_kst.py', 
+                    'test/test_modexp.py']
 
     for script_path in script_paths:
         subprocess.run(f'python3 {script_path}', shell=True, check=True)

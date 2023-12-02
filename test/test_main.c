@@ -491,8 +491,6 @@ EXIT:
 
         int ylen = (rand() % 10) + 1;
         int xlen = ylen * 2;
-        
-
         bigint* r = NULL;
 
         bi_new(&x, xlen);
@@ -512,7 +510,9 @@ EXIT:
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
         bi_barrett_reduction(&r, x, y);
-        
+        // printf("r = "); bi_show_hex_inorder(r);
+        // printf("wordlen of r = %d\n", r->wordlen);
+
         fprintf(fp_bar, "%s", "x: ");
         for(int idx = x->wordlen - 1; idx >= 0; idx--){
             fprint_format(fp_bar, x, idx);
@@ -544,17 +544,13 @@ EXIT:
     FILE* fp_exp = NULL;
     fp_exp = fopen("test/test_exp.txt", "w");
     assert(fp_exp != NULL);
-    for (int iter = 0; iter < ITERNUM; iter++) {
-        // printf("exp %d\n", iter);
 
-        int xlen = rand() % 10;
+    for (int iter = 0; iter < ITERNUM; iter++) {
+
+        int xlen = (rand() % 10) + 1;
         // int xlen = 1;
         // int ylen = rand() % 100;
         int ylen = 1;
-
-        // bigint* x = NULL;
-        // bigint* y = NULL;
-        // bigint* z = NULL;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -575,9 +571,9 @@ EXIT:
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
-    
         bi_LtR(&z, &x, y);
-
+        // bi_LtR_mod(&z, &x, y, mod);
+        
         fprintf(fp_exp, "%s", "x: ");
         for(int idx = x->wordlen - 1; idx >= 0; idx--){
             fprint_format(fp_exp, x, idx);
@@ -599,10 +595,83 @@ EXIT:
 
         free(xarr);
         free(yarr);
-    printf("exp test [%d] finished\n", iter);
+        printf("exp test [%d] finished\n", iter);
     }
     fclose(fp_exp);
 
+    //! modexp test*********************************************************
+    FILE* fp_modexp = NULL;
+    fp_modexp = fopen("test/test_modexp.txt", "w");
+    assert(fp_modexp != NULL);
+    bigint* mod = NULL;
+
+    for (int iter = 0; iter < ITERNUM; iter++) {
+        // printf("exp %d\n", iter);
+
+        int xlen = (rand() % 100) + 1;
+        // int xlen = 1;
+        int modlen = xlen + 1;
+        int ylen = rand() % 10;
+        // int ylen = 1;
+
+        bi_new(&x, xlen);
+        bi_new(&y, ylen);
+        bi_new(&z, xlen);
+        bi_new(&mod, modlen);
+
+        xarr = (word*)calloc(xlen, sizeof(word));
+        yarr = (word*)calloc(ylen, sizeof(word));
+
+        for(int i = 0; i < xlen; i++){
+            xarr[i] = rand();
+            // xarr[i] = 0x12345678;
+        }
+        for(int i = 0; i < ylen; i++){
+            yarr[i] = rand();
+            // yarr[i] = 5;
+        }
+
+        mod->a[modlen - 1] = 0x01;      // mod = 1 << bitlen
+        for (int i = modlen - 2; i >= 0; i--) {
+            mod->a[i] = 0x00;
+        }
+
+        bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
+        bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
+
+        // bi_LtR(&z, &x, y);
+        bi_LtR_mod(&z, &x, y, mod);
+        
+        fprintf(fp_modexp, "%s", "x: ");
+        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_modexp, x, idx);
+        }fprintf(fp_modexp, "%s", "\n");
+
+        fprintf(fp_modexp, "%s", "y: ");
+        for(int idx = y->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_modexp, y, idx);
+        }fprintf(fp_modexp, "%s", "\n");
+
+        fprintf(fp_modexp, "%s", "modulo: ");
+        for(int idx = mod->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_modexp, mod, idx);
+        }fprintf(fp_modexp, "%s", "\n");
+
+        fprintf(fp_modexp, "%s", "z: ");
+        for(int idx = z->wordlen - 1; idx >= 0; idx--){
+            fprint_format(fp_modexp, z, idx);
+        }fprintf(fp_modexp, "%s", "\n\n");
+
+        bi_delete(&x);
+        bi_delete(&y);
+        bi_delete(&mod);
+        bi_delete(&z);
+
+        free(xarr);
+        free(yarr);
+        printf("modexp test [%d] finished\n", iter);
+    }
+    fclose(fp_modexp);
 
     return 0;
 }

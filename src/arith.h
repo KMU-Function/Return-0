@@ -17,7 +17,7 @@ void karatsuba_mul(bigint** dest, bigint* src1, bigint* src2);
 int bi_binary_longdiv(bigint** q, bigint** r, bigint* a, bigint* b);
 int bi_barrett_reduction(bigint** r, bigint* x, bigint* m);
 
-void bi_LtR_mine(bigint** z, bigint** x, bigint* n, bigint* modulo);
+void bi_LtR_mod(bigint** z, bigint** x, bigint* n, bigint* modulo);
 void bi_LtR(bigint** z, bigint** x, bigint* n);
 
 #endif

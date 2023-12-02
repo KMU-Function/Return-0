@@ -378,7 +378,7 @@ void bi_shift_left_word(bigint** x, int bytelen) {
 }
 
 /**
-* @brief Bitwise shift left
+* @brief Bitwise shift right
 * @param x Pointer of a big integer
 * @param r Shift amount in bit
 */

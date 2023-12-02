@@ -813,9 +813,10 @@ void bi_LtR(bigint** z, bigint** x, bigint* n) {
     bi_delete(&_x);
     bi_delete(&t);
     bi_delete(&_t);
+    bi_delete(&_tsqr);
 }
 
-void bi_LtR_mine(bigint** z, bigint** x, bigint* n, bigint* modulo) {
+void bi_LtR_mod(bigint** z, bigint** x, bigint* n, bigint* modulo) {
 
     bigint* _x = NULL;
     bi_assign(&_x, *x);  // _x <- x (temp)
@@ -834,13 +835,40 @@ void bi_LtR_mine(bigint** z, bigint** x, bigint* n, bigint* modulo) {
     for (int i = n->wordlen - 1; i >= 0; i--) {
         for (int j = (sizeof(word) * 8) - 1; j >= 0; j--) {        
             bi_sqr(&_tsqr, t, "textbook");
-            bi_assign(&t, _tsqr);  // t <- t^2     
-            bi_barrett_reduction(&t, *x, modulo);     
+
+            if (compare(_tsqr, modulo) == 1) {     // _tsqr > modulo  --> do reduction
+                if (_tsqr->wordlen > (modulo->wordlen * 2)) {   // not suitable to barret reduction
+                        printf("_tsqr wordlen = %d, modulo wordlen = %d\n", _tsqr->wordlen, modulo->wordlen);
+                        printf("wordlen is not suitable for barret reduction\n");
+                        abort();
+                }
+                else {
+                    bi_barrett_reduction(&t, _tsqr, modulo);    // t <- t^2 mod modulo
+                }
+            }
+            else {      // _tsqr <= modulo
+                bi_assign(&t, _tsqr);  // t <- t^2         
+            }
             _n = (n->a[i] >> j) & 0x01;
             if (_n == 1) {      // n_i = 1            
-                bi_mul(&_t, t, _x, "textbook");         
-                bi_assign(&t, _t);     // t <- t * x             
-                bi_barrett_reduction(&t, *x, modulo);     
+                bi_mul(&_t, t, _x, "textbook");
+                if (compare(_t, modulo) == 1) {     // _t > modulo  --> do reduction
+                    if (_t->wordlen > (modulo->wordlen * 2)) {  // not suitable to barret reduction
+                        printf("_t wordlen = %d, modulo wordlen = %d\n", _t->wordlen, modulo->wordlen);
+                        printf("wordlen is not suitable for barret reduction\n");
+                        abort();
+                    }
+                    else {
+                        // printf("_t = "); bi_show_hex_inorder(_t);
+                        // printf("modulo = "); bi_show_hex_inorder(modulo);
+                        bi_barrett_reduction(&t, _t, modulo);     // t <- (t * x) mod modulo
+                        // printf("after reduction _t = "); bi_show_hex_inorder(_t);
+                        // printf("after reduction t = "); bi_show_hex_inorder(t);
+                    }
+                }
+                else {      // _t <= modulo
+                    bi_assign(&t, _t);     // t <- t * x             
+                }
             }
         }
     }
@@ -849,4 +877,5 @@ void bi_LtR_mine(bigint** z, bigint** x, bigint* n, bigint* modulo) {
     bi_delete(&_x);
     bi_delete(&t);
     bi_delete(&_t);
+    bi_delete(&_tsqr);
 }
