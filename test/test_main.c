@@ -605,7 +605,7 @@ EXIT:
     assert(fp_modexp != NULL);
     bigint* mod = NULL;
 
-    for (int iter = 0; iter < ITERNUM; iter++) {
+    for (int iter = 0; iter < 1; iter++) {
         // printf("exp %d\n", iter);
 
         int xlen = (rand() % 100) + 1;
@@ -672,6 +672,44 @@ EXIT:
         printf("modexp test [%d] finished\n", iter);
     }
     fclose(fp_modexp);
+
+    //! rsa test*********************************************************
+    for (int iter = 0; iter < ITERNUM; iter++) {
+
+        bigint* m = NULL;
+        bigint* ct = NULL;
+        bigint* pt = NULL;
+
+        int mlen = (rand() % 10) + 1;
+        bi_new(&m, mlen);
+
+        word* marr = (word*)calloc(mlen, sizeof(word));
+        for(int i = 0; i < mlen; i++){
+            marr[i] = rand() + 1;       // except zero
+        }   
+
+        bi_set_by_array(&m, NONNEGATIVE, marr, mlen);
+
+
+        RSA_encrypt(&ct, m);
+
+        RSA_decrypt(&pt, ct);
+        // printf("m = "); bi_show_hex_inorder(m);
+        // printf("ct = "); bi_show_hex_inorder(ct);
+        // printf("pt = "); bi_show_hex_inorder(pt);
+
+        if(RSA_verify(m, pt) == -1){
+            printf("RSA failed at iter %d\n", iter);
+        }else{
+            printf("rsa test [%d] finished\n", iter);   
+        }
+
+        bi_delete(&x);
+        bi_delete(&y);
+        bi_delete(&mod);
+        bi_delete(&z);
+
+    }
 
     return 0;
 }

@@ -859,11 +859,7 @@ void bi_LtR_mod(bigint** z, bigint** x, bigint* n, bigint* modulo) {
                         abort();
                     }
                     else {
-                        // printf("_t = "); bi_show_hex_inorder(_t);
-                        // printf("modulo = "); bi_show_hex_inorder(modulo);
                         bi_barrett_reduction(&t, _t, modulo);     // t <- (t * x) mod modulo
-                        // printf("after reduction _t = "); bi_show_hex_inorder(_t);
-                        // printf("after reduction t = "); bi_show_hex_inorder(t);
                     }
                 }
                 else {      // _t <= modulo

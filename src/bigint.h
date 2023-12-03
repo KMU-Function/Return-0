@@ -6,7 +6,7 @@
 #define NONNEGATIVE 0
 #define NEGATIVE    1
 
-// #define DTYPE 64
+#define DTYPE 32
 
 
 #ifdef DTYPE

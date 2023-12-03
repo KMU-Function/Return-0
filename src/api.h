@@ -3,5 +3,6 @@
 
 #include "bigint.h"
 #include "arith.h"
+#include "rsa.h"
 
 #endif
