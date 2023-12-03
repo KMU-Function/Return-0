@@ -6,7 +6,7 @@
 #define NONNEGATIVE 0
 #define NEGATIVE    1
 
-#define DTYPE 32
+// #define DTYPE 32
 
 
 #ifdef DTYPE
@@ -17,7 +17,7 @@ typedef uint8_t word;
 typedef uint32_t word;
 #define MAXWORD UINT32_MAX
 #elif DTYPE == 64
-typedef uint64_t word;
+typedef unsigned long long word;
 #define MAXWORD UINT64_MAX
 #endif
 #endif
@@ -58,8 +58,8 @@ int get_filpped_sign(bigint* x);
 void bi_show_hex(bigint* x);
 void bi_show_hex_inorder(bigint* x);
 
-void bi_shr(bigint** x, size_t r);
-void bi_shl(bigint** x, size_t r);
+void bi_shr(bigint** x, int r);
+void bi_shl(bigint** x, int r);
 void bi_set_min_words(bigint **x, int sign, size_t wordlen);
 
 //todo

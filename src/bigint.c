@@ -4,6 +4,7 @@
 #include <memory.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <string.h>
 #include "bigint.h"
 #include "array.h"
 
@@ -382,7 +383,7 @@ void bi_shift_left_word(bigint** x, int bytelen) {
 * @param x Pointer of a big integer
 * @param r Shift amount in bit
 */
-void bi_shr(bigint** src, size_t r) {
+void bi_shr(bigint** src, int r) {
     // Check for invalid inputs: NULL source or non-positive shift value.
     if (*src == NULL || r < 0) {
         printf("Invalid inputs. Function: Right_shift\n");
@@ -390,8 +391,8 @@ void bi_shr(bigint** src, size_t r) {
     }
     
     // Calculate word and bit offsets for the shift operation.
-    uint64_t word_shift = r / (8 * sizeof(word)); // Offset in words
-    uint64_t bit_offset = r % (8 * sizeof(word));  // Offset in bits
+    int word_shift = r / (8 * sizeof(word)); // Offset in words
+    int bit_offset = r % (8 * sizeof(word));  // Offset in bits
     
     // Create a temporary bigint to hold the shifted value.
     bigint* temp = NULL;
@@ -401,8 +402,8 @@ void bi_shr(bigint** src, size_t r) {
         return;
     }
     // Perform word shift.
-    for (uint64_t i = 0; i < temp->wordlen; i++) {
-        uint64_t shifted_index = i + word_shift;
+    for (int i = 0; i < temp->wordlen; i++) {
+        int shifted_index = i + word_shift;
         temp->a[i] = (*src)->a[shifted_index];
     }
        
@@ -424,7 +425,7 @@ void bi_shr(bigint** src, size_t r) {
 }
 
 
-void bi_shl(bigint** x, size_t r) {
+void bi_shl(bigint** x, int r) {
     // Check for invalid inputs: NULL source or non-positive shift value.
     if (*x == NULL || r == 0) {
         return;
@@ -434,8 +435,8 @@ void bi_shl(bigint** x, size_t r) {
     //bi_show_hex_inorder(*x);
 
     // Calculate word and bit offsets for the shift operation.
-    uint64_t word_shift = r / (8 * sizeof(word)); // Offset in words
-    uint64_t bit_offset = r % (8 * sizeof(word));  // Offset in bits
+    int word_shift = r / (8 * sizeof(word)); // Offset in words
+    int bit_offset = r % (8 * sizeof(word));  // Offset in bits
 
     // Create a temporary bigint to hold the shifted value.
     bigint* temp = NULL;  // Changed to bigint* from bigint**
@@ -447,7 +448,7 @@ void bi_shl(bigint** x, size_t r) {
     }
     else {
         for (int i = 0; i < (*x)->wordlen; i++) {
-            uint64_t shifted_index = i + word_shift;
+            int shifted_index = i + word_shift;
             temp->a[shifted_index] = (*x)->a[i];
         }
     }

@@ -39,6 +39,7 @@ int main(void) {
     word* xarr = NULL;
     word* yarr = NULL;
 
+
     //! add test*********************************************************
     FILE* fp_add = NULL;
     fp_add = fopen("test/test_add.txt", "w");
@@ -690,13 +691,12 @@ EXIT:
 
         bi_set_by_array(&m, NONNEGATIVE, marr, mlen);
 
-
         RSA_encrypt(&ct, m);
 
         RSA_decrypt(&pt, ct);
-        // printf("m = "); bi_show_hex_inorder(m);
-        // printf("ct = "); bi_show_hex_inorder(ct);
-        // printf("pt = "); bi_show_hex_inorder(pt);
+        printf("m = "); bi_show_hex_inorder(m);
+        printf("ct = "); bi_show_hex_inorder(ct);
+        printf("pt = "); bi_show_hex_inorder(pt);
 
         if(RSA_verify(m, pt) == -1){
             printf("RSA failed at iter %d\n", iter);

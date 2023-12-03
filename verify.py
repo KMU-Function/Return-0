@@ -31,99 +31,99 @@ def f(l):
 # print("static word darr[] = {" + "".join(darr) + "};")
 # print("static word narr[] = {" + "".join(narr) + "};")
 
-import random 
+# import random 
  
-# Utility function to do
-# modular exponentiation.
-# It returns (x^y) % p
-def power(x, y, p):
+# # Utility function to do
+# # modular exponentiation.
+# # It returns (x^y) % p
+# def power(x, y, p):
      
-    # Initialize result
-    res = 1; 
+#     # Initialize result
+#     res = 1; 
      
-    # Update x if it is more than or
-    # equal to p
-    x = x % p; 
-    while (y > 0):
+#     # Update x if it is more than or
+#     # equal to p
+#     x = x % p; 
+#     while (y > 0):
          
-        # If y is odd, multiply
-        # x with result
-        if (y & 1):
-            res = (res * x) % p;
+#         # If y is odd, multiply
+#         # x with result
+#         if (y & 1):
+#             res = (res * x) % p;
  
-        # y must be even now
-        y = y>>1; # y = y/2
-        x = (x * x) % p;
+#         # y must be even now
+#         y = y>>1; # y = y/2
+#         x = (x * x) % p;
      
-    return res;
+#     return res;
  
-# This function is called
-# for all k trials. It returns
-# false if n is composite and 
-# returns false if n is
-# probably prime. d is an odd 
-# number such that d*2<sup>r</sup> = n-1
-# for some r >= 1
-def miillerTest(d, n):
+# # This function is called
+# # for all k trials. It returns
+# # false if n is composite and 
+# # returns false if n is
+# # probably prime. d is an odd 
+# # number such that d*2<sup>r</sup> = n-1
+# # for some r >= 1
+# def miillerTest(d, n):
      
-    # Pick a random number in [2..n-2]
-    # Corner cases make sure that n > 4
-    a = 2 + random.randint(1, n - 4);
+#     # Pick a random number in [2..n-2]
+#     # Corner cases make sure that n > 4
+#     a = 2 + random.randint(1, n - 4);
  
-    # Compute a^d % n
-    x = power(a, d, n);
+#     # Compute a^d % n
+#     x = power(a, d, n);
  
-    if (x == 1 or x == n - 1):
-        return True;
+#     if (x == 1 or x == n - 1):
+#         return True;
  
-    # Keep squaring x while one 
-    # of the following doesn't 
-    # happen
-    # (i) d does not reach n-1
-    # (ii) (x^2) % n is not 1
-    # (iii) (x^2) % n is not n-1
-    while (d != n - 1):
-        x = (x * x) % n;
-        d *= 2;
+#     # Keep squaring x while one 
+#     # of the following doesn't 
+#     # happen
+#     # (i) d does not reach n-1
+#     # (ii) (x^2) % n is not 1
+#     # (iii) (x^2) % n is not n-1
+#     while (d != n - 1):
+#         x = (x * x) % n;
+#         d *= 2;
  
-        if (x == 1):
-            return False;
-        if (x == n - 1):
-            return True;
+#         if (x == 1):
+#             return False;
+#         if (x == n - 1):
+#             return True;
  
-    # Return composite
-    return False;
+#     # Return composite
+#     return False;
  
-# It returns false if n is 
-# composite and returns true if n
-# is probably prime. k is an 
-# input parameter that determines
-# accuracy level. Higher value of 
-# k indicates more accuracy.
-def isPrime( n, k):
+# # It returns false if n is 
+# # composite and returns true if n
+# # is probably prime. k is an 
+# # input parameter that determines
+# # accuracy level. Higher value of 
+# # k indicates more accuracy.
+# def isPrime( n, k):
      
-    # Corner cases
-    if (n <= 1 or n == 4):
-        return False;
-    if (n <= 3):
-        return True;
+#     # Corner cases
+#     if (n <= 1 or n == 4):
+#         return False;
+#     if (n <= 3):
+#         return True;
  
-    # Find r such that n = 
-    # 2^d * r + 1 for some r >= 1
-    d = n - 1;
-    while (d % 2 == 0):
-        d //= 2;
+#     # Find r such that n = 
+#     # 2^d * r + 1 for some r >= 1
+#     d = n - 1;
+#     while (d % 2 == 0):
+#         d //= 2;
  
-    # Iterate given number of 'k' times
-    for i in range(k):
-        if (miillerTest(d, n) == False):
-            return False;
+#     # Iterate given number of 'k' times
+#     for i in range(k):
+#         if (miillerTest(d, n) == False):
+#             return False;
  
-    return True;
+#     return True;
 
-ct = '705aba68 e0d4226b 996b83bd 03ba5c8a 203a90e8 305fbbf3 ee24bfbd 63d76012 3b64a8f7 a082d116 adc87478 e31720c9 51fd3daf 9e63062c 81c8ebc6 f3d521b4 96fe1ba9 d82e96af abc94d87 7350e211 bf24a47c ea6e70eb c3ee7493 840f6989 ca7e67ab 8849eeaa e22a039b b6957583 bd8c3cbe 38bb5138 8bae50e8 9b99672a 7e4a1c75 93abedf7 be232a97 6d9e2f4c 5d9e7c18 5cef6e03 186abb38 116f74da b7577e62 372ba6c0 74a0b526 ab45c655 c40932d0 08239959 a8ff2d86 a394d8cd a2fbf5e7 7fd06343 1d069ccf 1052a662 ad61a924 0cb38bea d901a967 fcfa75a1 06f8b95a 83548428 0257ff9d 13674926 72e42a01 d0348b64 f27edf1b 8e832056'
-pt = 'a0e55dbd ae94eaad 17841cc3 0f29da11 7e1fd891 d2158b20 2f307fdc c26d4db2 fbcc7c91 530329db 9a9797ed 6e0b3e8d 1df4cf19 6cb044f4 05959cf0 3df1370f a36ec34f b01d6ab0 7c80c3f3 5dea3f4e d47d576d b08dbf9c 2927d1d8 1d6be2fe af0fd1d4 da51c35d 1da1a1cc 4880f9c2 383fc924 452c681f dce1c95f 23dc7c09 c77db59c 748f4c06 e118620d d3633ea7 94a7f468 5db8200a 11b0e938 b5860bbc 74bb4615 ff7e1394 bf703351 9e6d03a7 45fc578b a15cecf5 5b217d44 c24246df 8a06160b 7f56f163 6beda2c4 4cf6a96e 93a016d4 958be422 64cd92a4 19003cc0 8d4c283d 42bc266b 61e9a239 cd0780e0 884bf147 3fcf34b8 257cf558 d82c92a2'
-m = "505f0e90 33cd626f 58f8af50"
+m = 'b6 0e 80 c7 a0'
+ct = '1b 0f b0 71 2d 48 cd 4b 36 d9 22 d2 fe e0 af 32 27 ae 99 e3 e2 24 1b 34 5b 26 8b 5d 3b 73 8e 96 23 a4 7e a3 c9 07 c3 d4 aa aa 75 06 13 4c 5f 45 94 a4 25 b3 a5 b4 21 5e dc 5c 1d 5e 93 ab 8a 09 80 a8 98 86 72 4c ad 6f 87 be 93 21 80 23 c4 76 91 27 45 43 1f 32 56 c9 dd 14 15 12 eb 01 69 29 6d f2 87 14 9a 7b b9 32 b3 04 47 82 f9 00 d3 c5 83 92 a9 d5 c6 7d 81 5d 61 15 19 88 1d b0 50 c4'
+pt = '1e 84 2e f0 74 b0 e1 9e 38 ea d4 67 0e 04 15 b7 65 ab 40 4c 0c 99 96 0b 1a 5a 15 03 d1 7a 31 b6 8e 90 c4 7b 60 7a 67 36 ce 38 1e 7e 8d bc f4 eb 2f fb 15 da 0d e4 89 31 8c f9 de db 55 e4 6d c8 ed b3 cb ba b3 02 39 c0 1d 54 16 53 36 6b ea b1 cb 8e c6 a4 f1 27 ee 53 58 04 09 65 af b0 0b 96 d8 57 b5 e6 da cd d3 87 73 d2 5e cf 63 3f 92 4e 25 d0 20 98 f9 7a 0e 2f 00 d8 0e 8d a0 0c bd a1'
 
 
 p = 131392754810655404750599606825290813558318352651721720001070421606400390356787805215417869142166065806868826161065186252745622055957480149789454996926858045499793438588498426522328395301741486337918602033604854432232407098115801317846046029919029221297166173858406857960184777378401441307278302860838939571639
@@ -131,9 +131,6 @@ q = 1554123140489075146318557422334948594060054052518343304605587173395449206647
 n = p*q
 e = 65537
 d = pow(e, -1, (p-1)*(q-1))
-
-print(isPrime(p, 1000))
-print(isPrime(q, 1000))
 
 pt = int("".join(pt.split()), 16)
 ct = int("".join(ct.split()), 16)

@@ -6,6 +6,8 @@
         "arith.h": "c",
         "time.h": "c",
         "stdlib.h": "c",
-        "api.h": "c"
+        "api.h": "c",
+        "assert.h": "c",
+        "string.h": "c"
     }
 }

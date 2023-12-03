@@ -293,8 +293,8 @@ void bi_mulc(word* dst, word x, word y) {
         y0 = y & (((word)1 << (sizeof(word) * 8 / 2)) - 1);
     }
     else if (DTYPE == 32) {
-        x0 = x & ((1U << (sizeof(word) * 8 / 2)) - 1);
-        y0 = y & ((1U << (sizeof(word) * 8 / 2)) - 1);
+        x0 = x & (((word)1 << (sizeof(word) * 8 / 2)) - 1);
+        y0 = y & (((word)1 << (sizeof(word) * 8 / 2)) - 1);
     }
     else if (DTYPE == 64) {
         x0 = x & ((1ULL << (sizeof(word) * 8 / 2)) - 1);
