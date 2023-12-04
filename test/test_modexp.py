@@ -35,7 +35,7 @@ try:
                 print()
                 cnt += 1
                     
-    print("{0:-<20} Success!".format("Modular Exponentiation ") if cnt == 0 else f"Failed in {cnt} Test Vectors")
+    print("{0:-<30} Success!".format("Modular Exponentiation ") if cnt == 0 else f"Failed in {cnt} Test Vectors")
 
 except FileNotFoundError:
     print(f"The file {file_path} does not exist.")

@@ -33,7 +33,7 @@ try:
 
     for script_path in script_paths:
         subprocess.run(f'python3 {script_path}', shell=True, check=True)
-        print(f"Python script '{script_path}' executed successfully\n")
+        #print(f"Python script '{script_path}' executed successfully\n")
 
 except subprocess.CalledProcessError as e:
     print(f"Error: {e}")
