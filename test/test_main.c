@@ -9,7 +9,7 @@
 #include "api.h"
 #endif
 
-#define ITERNUM 10
+#define ITERNUM 100
 #define MIN(a, b) a < b ? a : b;
 #define MAX(a, b) a > b ? a : b;
 
@@ -24,10 +24,7 @@ void fprint_format(FILE* fp, bigint* x, int idx){
     #endif
 }
 
-// tmpx = 7ed8c407 73c75ad1 62aafadd 2ddf0cf3 00bfc89b 23d99420 16d8e0f3 288fbec0 337ede46 2570c74a 49abc507 4e5e95f9 5ce559cf 4dd76ec9
-// x sign: 0
-// x len: 14
-// tmpr = 7ed8c407 73c75ad1 62aafadd 2ddf0cf3 00bfc89b 23d99420 16d8e0f2 e1035447 5a3e25af 93d80f5e 4888411a 9daa0646 4682d697 c939d84e
+
 
 int main(void) {
     srand(time(NULL));
@@ -39,7 +36,11 @@ int main(void) {
     word* xarr = NULL;
     word* yarr = NULL;
 
+    uint64_t start;
+    uint64_t end;
+    uint64_t cc = 0;
 
+    printf("\n\n=================Performance=================\n\n");
     //! add test*********************************************************
     FILE* fp_add = NULL;
     fp_add = fopen("test/test_add.txt", "w");
@@ -66,12 +67,10 @@ int main(void) {
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
+        start = cpucycles();
         bi_add(&z, x, y);
-
-
-        // char xsign = x->sign == NONNEGATIVE ? '+' : '-';
-        // char ysign = y->sign == NONNEGATIVE ? '+' : '-';
-        // char zsign = z->sign == NONNEGATIVE ? '+' : '-';
+        end = cpucycles();
+        cc += (end - start) / ITERNUM;
 
         fprintf(fp_add, "%s", "x: "); 
         for(int idx = x->wordlen - 1; idx >= 0; idx--){
@@ -94,9 +93,11 @@ int main(void) {
 
         free(xarr);
         free(yarr);
-        printf("add test [%d] finished\n", iter);
+        //printf("add test [%d] finished\n", iter);
     }
     fclose(fp_add);
+    printf("Addition Cycles: %lu\n", cc);
+    cc = 0;
 
     //! sub test*********************************************************
     FILE* fp_sub = NULL;
@@ -104,13 +105,8 @@ int main(void) {
     fp_sub = fopen("test/test_sub.txt", "w");
     assert(fp_sub != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
-
-        // printf("iter == %d\n\n", iter);
-
         int xlen = rand() % 100;
         int ylen = rand() % 100;
-        // int xlen = 14;
-        // int ylen = 14;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -128,13 +124,10 @@ int main(void) {
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
-        // word _xarr[14] = { 0x4dd76ec9, 0x5ce559cf, 0x4e5e95f9, 0x49abc507,0x2570c74a,0x337ede46,0x288fbec0,0x16d8e0f3,0x23d99420,0x00bfc89b,0x2ddf0cf3,0x62aafadd,0x73c75ad1, 0x7ed8c407 };
-        // word _yarr[14] = { 0xc939d84e, 0x4682d697, 0x9daa0646 ,0x4888411a, 0x93d80f5e, 0x5a3e25af, 0xe1035447, 0x16d8e0f2, 0x23d99420, 0x00bfc89b, 0x2ddf0cf3, 0x62aafadd, 0x73c75ad1, 0x7ed8c407};
-
-        // bi_set_by_array(&x, NONNEGATIVE, _xarr, 14);
-        // bi_set_by_array(&y, NONNEGATIVE, _yarr, 14);
-
+        start = cpucycles();
         bi_sub(&z, x, y);
+        end = cpucycles();
+        cc += (end - start) / ITERNUM;
 
         fprintf(fp_sub, "%s", "x: ");
         for(int idx = x->wordlen - 1; idx >= 0; idx--){
@@ -157,9 +150,11 @@ int main(void) {
 
         free(xarr);
         free(yarr);
-        printf("sub test [%d] finished\n", iter);
+        //printf("sub test [%d] finished\n", iter);
     }
     fclose(fp_sub);
+    printf("Subtraction Cycles: %lu\n", cc);
+    cc = 0;
 
     //! mul test*********************************************************
     FILE* fp_mul = NULL;
@@ -188,7 +183,12 @@ int main(void) {
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
+        start = cpucycles();
+
         bi_mul(&z, x, y, "textbook");
+
+        end = cpucycles();
+        cc += (end - start) / ITERNUM;
 
         fprintf(fp_mul, "%s", "x: ");
         for(int idx = x->wordlen - 1; idx >= 0; idx--){
@@ -211,9 +211,12 @@ int main(void) {
 
         free(xarr);
         free(yarr);
-        printf("mul test [%d] finished\n", iter);
+       // printf("mul test [%d] finished\n", iter);
     }
     fclose(fp_mul);
+    printf("Multiplication Cycles: %lu\n", cc);
+    cc = 0;
+
 
     //! shr bit test*********************************************************
     FILE* fp_shr_bit = NULL;
@@ -223,7 +226,6 @@ int main(void) {
 
         int xlen = rand() % 100;
         int ylen = rand() % 100;
-        // int ylen = 1;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -249,8 +251,12 @@ int main(void) {
         }fprintf(fp_shr_bit, "%s", "\n");
 
         int r = rand() % (x->wordlen + 1);
-        // int r = (rand() % 12 + 1) * 4;
+
+        start = cpucycles();
         bi_shr(&x, r);
+
+        end = cpucycles();
+        cc += (end - start) / ITERNUM;
 
         fprintf(fp_shr_bit, "%s", "y: ");
         fprintf(fp_shr_bit, "%d", r);
@@ -267,9 +273,11 @@ int main(void) {
 
         free(xarr);
         free(yarr);
-        printf("shr test [%d] finished\n", iter);
+        //printf("shr test [%d] finished\n", iter);
     }
     fclose(fp_shr_bit);
+    printf("Shift Right Cycles: %lu\n", cc);
+    cc = 0;
 
     //! shl test*********************************************************
     FILE* fp_shl_bit = NULL;
@@ -303,7 +311,13 @@ int main(void) {
         }fprintf(fp_shl_bit, "%s", "\n");
 
         int r = rand() % (x->wordlen + 1);
+        
+        start = cpucycles();
+
         bi_shl(&x, r);
+
+        end = cpucycles();
+        cc += (end - start) / ITERNUM;
 
         fprintf(fp_shl_bit, "%s", "y: ");
         fprintf(fp_shl_bit, "%d", r);
@@ -320,9 +334,11 @@ int main(void) {
 
         free(xarr);
         free(yarr);
-        printf("shl test [%d] finished\n", iter);
+        //printf("shl test [%d] finished\n", iter);
     }
     fclose(fp_shl_bit);
+    printf("Shift Left Cycles: %lu\n", cc);
+    cc = 0;
 
     //! sqr test*********************************************************
     FILE* fp_sqr = NULL;
@@ -342,7 +358,11 @@ int main(void) {
 
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
 
+        start = cpucycles();
         bi_sqr(&z, x, "textbook");
+
+        end = cpucycles();
+        cc += (end - start) / ITERNUM;
 
         fprintf(fp_sqr, "%s", "x: ");
         for(int idx = x->wordlen - 1; idx >= 0; idx--){
@@ -358,9 +378,11 @@ int main(void) {
         bi_delete(&z);
 
         free(xarr);
-        printf("sqr test [%d] finished\n", iter);
+        //printf("sqr test [%d] finished\n", iter);
     }
     fclose(fp_sqr);
+    printf("Squaring Cycles: %lu\n", cc);
+    cc = 0;
 
     //! Karatsuba test*********************************************************
     FILE* fp_krt = NULL;
@@ -369,8 +391,6 @@ int main(void) {
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = (rand() % 100) + 1;
         int ylen = (rand() % 100) + 1;
-        // int xlen = 2;
-        // int ylen = 2;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -388,13 +408,12 @@ int main(void) {
 
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
-
-        // printf("x = "); bi_show_hex_inorder(x);
-        // printf("y = "); bi_show_hex_inorder(y);
-
+        
+        start = cpucycles();
         karatsuba_mul(&z, x, y);
 
-        // printf("z = "); bi_show_hex_inorder(z);
+        end = cpucycles();
+        cc += (end - start) / ITERNUM;
 
         fprintf(fp_krt, "%s", "x: ");
         for(int idx = x->wordlen - 1; idx >= 0; idx--){
@@ -417,8 +436,9 @@ int main(void) {
         free(xarr);
     }
     fclose(fp_krt);
+    printf("Karatsuba Cycles: %lu\n", cc);
+    cc = 0;
 
-    
     //! div test*********************************************************
     FILE* fp_div = NULL;
     fp_div = fopen("test/test_div.txt", "w");
@@ -453,9 +473,13 @@ int main(void) {
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
+        start = cpucycles();
         if(bi_binary_longdiv(&q, &r, x, y) == -1){
             goto EXIT;
         }
+        
+        end = cpucycles();
+        cc += (end - start) / ITERNUM;
 
         fprintf(fp_div, "%s", "x: ");
         for(int idx = x->wordlen - 1; idx >= 0; idx--){
@@ -480,9 +504,11 @@ EXIT:
 
         free(xarr);
         free(yarr);
-        printf("div test [%d] finished\n", iter);
+        //printf("div test [%d] finished\n", iter);
     }
     fclose(fp_div);
+    printf("Division Cycles: %lu\n", cc);
+    cc = 0;
 
     //! barrett test*********************************************************
     FILE* fp_bar = NULL;
@@ -509,10 +535,11 @@ EXIT:
 
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
-
+        
+        start = cpucycles();
         bi_barrett_reduction(&r, x, y);
-        // printf("r = "); bi_show_hex_inorder(r);
-        // printf("wordlen of r = %d\n", r->wordlen);
+        end = cpucycles();
+        cc += (end - start) / ITERNUM;
 
         fprintf(fp_bar, "%s", "x: ");
         for(int idx = x->wordlen - 1; idx >= 0; idx--){
@@ -533,13 +560,13 @@ EXIT:
         bi_delete(&y);
         bi_delete(&r);
 
-
         free(xarr);
         free(yarr);
-        printf("bar test [%d] finished\n", iter);
+        //printf("bar test [%d] finished\n", iter);
     }
     fclose(fp_bar);
-
+    printf("Barrett Reduction Cycles: %lu\n", cc);
+    cc = 0;
 
     //! exp test*********************************************************
     FILE* fp_exp = NULL;
@@ -549,8 +576,6 @@ EXIT:
     for (int iter = 0; iter < ITERNUM; iter++) {
 
         int xlen = (rand() % 10) + 1;
-        // int xlen = 1;
-        // int ylen = rand() % 100;
         int ylen = 1;
 
         bi_new(&x, xlen);
@@ -562,18 +587,18 @@ EXIT:
 
         for(int i = 0; i < xlen; i++){
             xarr[i] = rand();
-            // xarr[i] = 0x12345678;
         }
         for(int i = 0; i < ylen; i++){
             yarr[i] = rand() % 10;
-            // yarr[i] = 5;
         }
 
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
-
+        
+        start = cpucycles();
         bi_LtR(&z, &x, y);
-        // bi_LtR_mod(&z, &x, y, mod);
+        end = cpucycles();
+        cc += (end - start) / ITERNUM;
         
         fprintf(fp_exp, "%s", "x: ");
         for(int idx = x->wordlen - 1; idx >= 0; idx--){
@@ -596,9 +621,11 @@ EXIT:
 
         free(xarr);
         free(yarr);
-        printf("exp test [%d] finished\n", iter);
+        //printf("exp test [%d] finished\n", iter);
     }
     fclose(fp_exp);
+    printf("Exponention Cycles: %lu\n", cc);
+    cc = 0;
 
     //! modexp test*********************************************************
     FILE* fp_modexp = NULL;
@@ -607,13 +634,10 @@ EXIT:
     bigint* mod = NULL;
 
     for (int iter = 0; iter < 1; iter++) {
-        // printf("exp %d\n", iter);
 
         int xlen = (rand() % 100) + 1;
-        // int xlen = 1;
         int modlen = xlen + 1;
         int ylen = rand() % 10;
-        // int ylen = 1;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -625,11 +649,9 @@ EXIT:
 
         for(int i = 0; i < xlen; i++){
             xarr[i] = rand();
-            // xarr[i] = 0x12345678;
         }
         for(int i = 0; i < ylen; i++){
             yarr[i] = rand();
-            // yarr[i] = 5;
         }
 
         mod->a[modlen - 1] = 0x01;      // mod = 1 << bitlen
@@ -639,9 +661,11 @@ EXIT:
 
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
-
-        // bi_LtR(&z, &x, y);
+        
+        start = cpucycles();
         bi_LtR_mod(&z, &x, y, mod);
+        end = cpucycles();
+        cc += (end - start) / ITERNUM;
         
         fprintf(fp_modexp, "%s", "x: ");
         for(int idx = x->wordlen - 1; idx >= 0; idx--){
@@ -670,10 +694,14 @@ EXIT:
 
         free(xarr);
         free(yarr);
-        printf("modexp test [%d] finished\n", iter);
+        //printf("modexp test [%d] finished\n", iter);
     }
     fclose(fp_modexp);
+    printf("Modular Exponention Cycles: %lu\n", cc);
+    cc = 0;
+    printf("\n==============================================\n\n");
 
+#if RSA_TEST
     //! rsa test*********************************************************
     for (int iter = 0; iter < ITERNUM; iter++) {
 
@@ -692,11 +720,7 @@ EXIT:
         bi_set_by_array(&m, NONNEGATIVE, marr, mlen);
 
         RSA_encrypt(&ct, m);
-
         RSA_decrypt(&pt, ct);
-        printf("m = "); bi_show_hex_inorder(m);
-        printf("ct = "); bi_show_hex_inorder(ct);
-        printf("pt = "); bi_show_hex_inorder(pt);
 
         if(RSA_verify(m, pt) == -1){
             printf("RSA failed at iter %d\n", iter);
@@ -708,8 +732,8 @@ EXIT:
         bi_delete(&y);
         bi_delete(&mod);
         bi_delete(&z);
-
     }
+#endif
 
     return 0;
 }

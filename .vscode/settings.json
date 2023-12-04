@@ -8,6 +8,7 @@
         "stdlib.h": "c",
         "api.h": "c",
         "assert.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "cycle.h": "c"
     }
 }
