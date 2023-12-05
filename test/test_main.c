@@ -13,15 +13,15 @@
 #define MIN(a, b) a < b ? a : b;
 #define MAX(a, b) a > b ? a : b;
 
-void fprint_format(FILE* fp, bigint* x, int idx){
-    
-    #if DTYPE == 8
-        fprintf(fp, "%02x ", x->a[idx]);
-    #elif DTYPE == 32
-        fprintf(fp, "%08x ", x->a[idx]);
-    #elif DTYPE == 64
-        fprintf(fp, "%016llx ", x->a[idx]);
-    #endif
+void fprint_format(FILE* fp, bigint* x, int idx) {
+
+#if DTYPE == 8
+    fprintf(fp, "%02x ", x->a[idx]);
+#elif DTYPE == 32
+    fprintf(fp, "%08x ", x->a[idx]);
+#elif DTYPE == 64
+    fprintf(fp, "%016llx ", x->a[idx]);
+#endif
 }
 
 
@@ -57,10 +57,10 @@ int main(void) {
         xarr = (word*)calloc(xlen, sizeof(word));
         yarr = (word*)calloc(ylen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
+        for (int i = 0; i < xlen; i++) {
             xarr[i] = rand();
         }
-        for(int i = 0; i < ylen; i++){
+        for (int i = 0; i < ylen; i++) {
             yarr[i] = rand();
         }
 
@@ -72,18 +72,18 @@ int main(void) {
         end = cpucycles();
         cc += (end - start) / ITERNUM;
 
-        fprintf(fp_add, "%s", "x: "); 
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        fprintf(fp_add, "%s", "x: ");
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_add, x, idx);
         }fprintf(fp_add, "%s", "\n");
 
         fprintf(fp_add, "%s", "y: ");
-        for(int idx = y->wordlen - 1; idx >= 0; idx--){
+        for (int idx = y->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_add, y, idx);
         }fprintf(fp_add, "%s", "\n");
 
         fprintf(fp_add, "%s", "z: ");
-        for(int idx = z->wordlen - 1; idx >= 0; idx--){
+        for (int idx = z->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_add, z, idx);
         }fprintf(fp_add, "%s", "\n\n");
 
@@ -115,10 +115,10 @@ int main(void) {
         xarr = (word*)calloc(xlen, sizeof(word));
         yarr = (word*)calloc(ylen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
+        for (int i = 0; i < xlen; i++) {
             xarr[i] = rand();
         }
-        for(int i = 0; i < ylen; i++){
+        for (int i = 0; i < ylen; i++) {
             yarr[i] = rand();
         }
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
@@ -130,17 +130,17 @@ int main(void) {
         cc += (end - start) / ITERNUM;
 
         fprintf(fp_sub, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_sub, x, idx);
         }fprintf(fp_sub, "%s", "\n");
 
         fprintf(fp_sub, "%s", "y: ");
-        for(int idx = y->wordlen - 1; idx >= 0; idx--){
+        for (int idx = y->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_sub, y, idx);
         }fprintf(fp_sub, "%s", "\n");
 
         fprintf(fp_sub, "%s", "z: ");
-        for(int idx = z->wordlen - 1; idx >= 0; idx--){
+        for (int idx = z->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_sub, z, idx);
         }fprintf(fp_sub, "%s", "\n\n");
 
@@ -160,7 +160,7 @@ int main(void) {
     FILE* fp_mul = NULL;
     fp_mul = fopen("test/test_mul.txt", "w");
     assert(fp_mul != NULL);
-    
+
     for (int iter = 0; iter < ITERNUM; iter++) {
 
         int xlen = rand() % 100;
@@ -173,10 +173,10 @@ int main(void) {
         xarr = (word*)calloc(xlen, sizeof(word));
         yarr = (word*)calloc(ylen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
+        for (int i = 0; i < xlen; i++) {
             xarr[i] = rand();
         }
-        for(int i = 0; i < ylen; i++){
+        for (int i = 0; i < ylen; i++) {
             yarr[i] = rand();
         }
 
@@ -191,17 +191,17 @@ int main(void) {
         cc += (end - start) / ITERNUM;
 
         fprintf(fp_mul, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_mul, x, idx);
         }fprintf(fp_mul, "%s", "\n");
 
         fprintf(fp_mul, "%s", "y: ");
-        for(int idx = y->wordlen - 1; idx >= 0; idx--){
+        for (int idx = y->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_mul, y, idx);
         }fprintf(fp_mul, "%s", "\n");
 
         fprintf(fp_mul, "%s", "z: ");
-        for(int idx = z->wordlen - 1; idx >= 0; idx--){
+        for (int idx = z->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_mul, z, idx);
         }fprintf(fp_mul, "%s", "\n\n");
 
@@ -211,7 +211,7 @@ int main(void) {
 
         free(xarr);
         free(yarr);
-       // printf("mul test [%d] finished\n", iter);
+        // printf("mul test [%d] finished\n", iter);
     }
     fclose(fp_mul);
     printf("Multiplication Cycles: %lu\n", cc);
@@ -234,10 +234,10 @@ int main(void) {
         xarr = (word*)calloc(xlen, sizeof(word));
         yarr = (word*)calloc(ylen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
+        for (int i = 0; i < xlen; i++) {
             xarr[i] = rand();
         }
-        for(int i = 0; i < ylen; i++){
+        for (int i = 0; i < ylen; i++) {
             yarr[i] = rand();
         }
 
@@ -246,7 +246,7 @@ int main(void) {
 
 
         fprintf(fp_shr_bit, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_shr_bit, x, idx);
         }fprintf(fp_shr_bit, "%s", "\n");
 
@@ -263,7 +263,7 @@ int main(void) {
         fprintf(fp_shr_bit, "%s", "\n");
 
         fprintf(fp_shr_bit, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_shr_bit, x, idx);
         }fprintf(fp_shr_bit, "%s", "\n\n");
 
@@ -294,10 +294,10 @@ int main(void) {
         xarr = (word*)calloc(xlen, sizeof(word));
         yarr = (word*)calloc(ylen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
+        for (int i = 0; i < xlen; i++) {
             xarr[i] = rand();
         }
-        for(int i = 0; i < ylen; i++){
+        for (int i = 0; i < ylen; i++) {
             yarr[i] = rand();
         }
 
@@ -306,12 +306,12 @@ int main(void) {
 
 
         fprintf(fp_shl_bit, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_shl_bit, x, idx);
         }fprintf(fp_shl_bit, "%s", "\n");
 
         int r = rand() % (x->wordlen + 1);
-        
+
         start = cpucycles();
 
         bi_shl(&x, r);
@@ -324,7 +324,7 @@ int main(void) {
         fprintf(fp_shl_bit, "%s", "\n");
 
         fprintf(fp_shl_bit, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_shl_bit, x, idx);
         }fprintf(fp_shl_bit, "%s", "\n\n");
 
@@ -352,7 +352,7 @@ int main(void) {
 
         xarr = (word*)calloc(xlen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
+        for (int i = 0; i < xlen; i++) {
             xarr[i] = rand();
         }
 
@@ -365,12 +365,12 @@ int main(void) {
         cc += (end - start) / ITERNUM;
 
         fprintf(fp_sqr, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_sqr, x, idx);
         }fprintf(fp_sqr, "%s", "\n");
 
         fprintf(fp_sqr, "%s", "z: ");
-        for(int idx = z->wordlen - 1; idx >= 0; idx--){
+        for (int idx = z->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_sqr, z, idx);
         }fprintf(fp_sqr, "%s", "\n\n");
 
@@ -399,16 +399,16 @@ int main(void) {
         xarr = (word*)calloc(xlen, sizeof(word));
         yarr = (word*)calloc(ylen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
+        for (int i = 0; i < xlen; i++) {
             xarr[i] = rand();
         }
-        for(int i = 0; i < ylen; i++){
+        for (int i = 0; i < ylen; i++) {
             yarr[i] = rand();
         }
 
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
-        
+
         start = cpucycles();
         karatsuba_mul(&z, x, y);
 
@@ -416,17 +416,17 @@ int main(void) {
         cc += (end - start) / ITERNUM;
 
         fprintf(fp_krt, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_krt, x, idx);
         }fprintf(fp_krt, "%s", "\n");
 
         fprintf(fp_krt, "%s", "y: ");
-        for(int idx = y->wordlen - 1; idx >= 0; idx--){
+        for (int idx = y->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_krt, y, idx);
         }fprintf(fp_krt, "%s", "\n");
 
         fprintf(fp_krt, "%s", "z: ");
-        for(int idx = z->wordlen - 1; idx >= 0; idx--){
+        for (int idx = z->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_krt, z, idx);
         }fprintf(fp_krt, "%s", "\n\n");
 
@@ -447,7 +447,7 @@ int main(void) {
 
         int tmp1 = (rand() % 10) + 1;
         int tmp2 = (rand() % 10) + 1;
-        if(tmp1 == tmp2){
+        if (tmp1 == tmp2) {
             tmp1++;
         }
 
@@ -463,10 +463,10 @@ int main(void) {
         xarr = (word*)calloc(xlen, sizeof(word));
         yarr = (word*)calloc(ylen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
+        for (int i = 0; i < xlen; i++) {
             xarr[i] = rand();
         }
-        for(int i = 0; i < ylen; i++){
+        for (int i = 0; i < ylen; i++) {
             yarr[i] = rand();
         }
 
@@ -474,29 +474,29 @@ int main(void) {
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
         start = cpucycles();
-        if(bi_binary_longdiv(&q, &r, x, y) == -1){
+        if (bi_binary_longdiv(&q, &r, x, y) == -1) {
             goto EXIT;
         }
-        
+
         end = cpucycles();
         cc += (end - start) / ITERNUM;
 
         fprintf(fp_div, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_div, x, idx);
         }fprintf(fp_div, "%s", "\n");
 
         fprintf(fp_div, "%s", "y: ");
-        for(int idx = y->wordlen - 1; idx >= 0; idx--){
+        for (int idx = y->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_div, y, idx);
         }fprintf(fp_div, "%s", "\n");
 
         fprintf(fp_div, "%s", "q: ");
-        for(int idx = q->wordlen - 1; idx >= 0; idx--){
+        for (int idx = q->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_div, q, idx);
         }fprintf(fp_div, "%s", "\n\n");
 
-EXIT:
+    EXIT:
         bi_delete(&x);
         bi_delete(&y);
         bi_delete(&q);
@@ -526,33 +526,33 @@ EXIT:
         xarr = (word*)calloc(xlen, sizeof(word));
         yarr = (word*)calloc(ylen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
+        for (int i = 0; i < xlen; i++) {
             xarr[i] = rand();
         }
-        for(int i = 0; i < ylen; i++){
+        for (int i = 0; i < ylen; i++) {
             yarr[i] = rand();
         }
 
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
-        
+
         start = cpucycles();
         bi_barrett_reduction(&r, x, y);
         end = cpucycles();
         cc += (end - start) / ITERNUM;
 
         fprintf(fp_bar, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_bar, x, idx);
         }fprintf(fp_bar, "%s", "\n");
 
         fprintf(fp_bar, "%s", "y: ");
-        for(int idx = y->wordlen - 1; idx >= 0; idx--){
+        for (int idx = y->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_bar, y, idx);
         }fprintf(fp_bar, "%s", "\n");
 
         fprintf(fp_bar, "%s", "r: ");
-        for(int idx = r->wordlen - 1; idx >= 0; idx--){
+        for (int idx = r->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_bar, r, idx);
         }fprintf(fp_bar, "%s", "\n\n");
 
@@ -585,33 +585,33 @@ EXIT:
         xarr = (word*)calloc(xlen, sizeof(word));
         yarr = (word*)calloc(ylen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
+        for (int i = 0; i < xlen; i++) {
             xarr[i] = rand();
         }
-        for(int i = 0; i < ylen; i++){
+        for (int i = 0; i < ylen; i++) {
             yarr[i] = rand() % 10;
         }
 
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
-        
+
         start = cpucycles();
         bi_LtR(&z, &x, y);
         end = cpucycles();
         cc += (end - start) / ITERNUM;
-        
+
         fprintf(fp_exp, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_exp, x, idx);
         }fprintf(fp_exp, "%s", "\n");
 
         fprintf(fp_exp, "%s", "y: ");
-        for(int idx = y->wordlen - 1; idx >= 0; idx--){
+        for (int idx = y->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_exp, y, idx);
         }fprintf(fp_exp, "%s", "\n");
 
         fprintf(fp_exp, "%s", "z: ");
-        for(int idx = z->wordlen - 1; idx >= 0; idx--){
+        for (int idx = z->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_exp, z, idx);
         }fprintf(fp_exp, "%s", "\n\n");
 
@@ -626,6 +626,64 @@ EXIT:
     fclose(fp_exp);
     printf("Exponention Cycles: %lu\n", cc);
     cc = 0;
+
+    // void bi_mul_improvedtextbook(bigint * *dest, bigint * src1, bigint * src2)
+
+    //! Improved multiplication test*********************************************************
+    FILE* fp_impvmul = NULL;
+    fp_impvmul = fopen("test/test_impvmul.txt", "w");
+    assert(fp_impvmul != NULL);
+    for (int iter = 0; iter < ITERNUM; iter++) {
+        int xlen = (rand() % 100) + 1;
+        int ylen = (rand() % 100) + 1;
+
+        bi_new(&x, xlen);
+        bi_new(&y, ylen);
+        bi_new(&z, xlen + ylen);
+
+        xarr = (word*)calloc(xlen, sizeof(word));
+        yarr = (word*)calloc(ylen, sizeof(word));
+
+        for (int i = 0; i < xlen; i++) {
+            xarr[i] = rand();
+        }
+        for (int i = 0; i < ylen; i++) {
+            yarr[i] = rand();
+        }
+
+        bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
+        bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
+
+        start = cpucycles();
+        bi_mul_improvedtextbook(&z, x, y);
+
+        end = cpucycles();
+        cc += (end - start) / ITERNUM;
+
+        fprintf(fp_impvmul, "%s", "x: ");
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
+            fprint_format(fp_impvmul, x, idx);
+        }fprintf(fp_impvmul, "%s", "\n");
+
+        fprintf(fp_impvmul, "%s", "y: ");
+        for (int idx = y->wordlen - 1; idx >= 0; idx--) {
+            fprint_format(fp_impvmul, y, idx);
+        }fprintf(fp_impvmul, "%s", "\n");
+
+        fprintf(fp_impvmul, "%s", "z: ");
+        for (int idx = z->wordlen - 1; idx >= 0; idx--) {
+            fprint_format(fp_impvmul, z, idx);
+        }fprintf(fp_impvmul, "%s", "\n\n");
+
+        bi_delete(&x);
+        bi_delete(&z);
+
+        free(xarr);
+    }
+    fclose(fp_impvmul);
+    printf("Improved Multiplication Cycles: %lu\n", cc);
+    cc = 0;
+
 
     //! modexp test*********************************************************
     FILE* fp_modexp = NULL;
@@ -647,10 +705,10 @@ EXIT:
         xarr = (word*)calloc(xlen, sizeof(word));
         yarr = (word*)calloc(ylen, sizeof(word));
 
-        for(int i = 0; i < xlen; i++){
+        for (int i = 0; i < xlen; i++) {
             xarr[i] = rand();
         }
-        for(int i = 0; i < ylen; i++){
+        for (int i = 0; i < ylen; i++) {
             yarr[i] = rand();
         }
 
@@ -661,29 +719,29 @@ EXIT:
 
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
-        
+
         start = cpucycles();
         bi_LtR_mod(&z, &x, y, mod);
         end = cpucycles();
         cc += (end - start) / ITERNUM;
-        
+
         fprintf(fp_modexp, "%s", "x: ");
-        for(int idx = x->wordlen - 1; idx >= 0; idx--){
+        for (int idx = x->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_modexp, x, idx);
         }fprintf(fp_modexp, "%s", "\n");
 
         fprintf(fp_modexp, "%s", "y: ");
-        for(int idx = y->wordlen - 1; idx >= 0; idx--){
+        for (int idx = y->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_modexp, y, idx);
         }fprintf(fp_modexp, "%s", "\n");
 
         fprintf(fp_modexp, "%s", "modulo: ");
-        for(int idx = mod->wordlen - 1; idx >= 0; idx--){
+        for (int idx = mod->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_modexp, mod, idx);
         }fprintf(fp_modexp, "%s", "\n");
 
         fprintf(fp_modexp, "%s", "z: ");
-        for(int idx = z->wordlen - 1; idx >= 0; idx--){
+        for (int idx = z->wordlen - 1; idx >= 0; idx--) {
             fprint_format(fp_modexp, z, idx);
         }fprintf(fp_modexp, "%s", "\n\n");
 
@@ -713,19 +771,20 @@ EXIT:
         bi_new(&m, mlen);
 
         word* marr = (word*)calloc(mlen, sizeof(word));
-        for(int i = 0; i < mlen; i++){
+        for (int i = 0; i < mlen; i++) {
             marr[i] = rand() + 1;       // except zero
-        }   
+        }
 
         bi_set_by_array(&m, NONNEGATIVE, marr, mlen);
 
         RSA_encrypt(&ct, m);
         RSA_decrypt(&pt, ct);
 
-        if(RSA_verify(m, pt) == -1){
+        if (RSA_verify(m, pt) == -1) {
             printf("RSA failed at iter %d\n", iter);
-        }else{
-            printf("rsa test [%d] finished\n", iter);   
+        }
+        else {
+            printf("rsa test [%d] finished\n", iter);
         }
 
         bi_delete(&x);
