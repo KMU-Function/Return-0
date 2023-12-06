@@ -761,7 +761,7 @@ int main(void) {
 
 #if RSA_TEST
     //! rsa test*********************************************************
-    for (int iter = 0; iter < ITERNUM; iter++) {
+    for (int iter = 0; iter < 1; iter++) {
 
         bigint* m = NULL;
         bigint* ct = NULL;

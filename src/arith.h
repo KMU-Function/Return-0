@@ -13,7 +13,6 @@ void bi_sqr(bigint** dst, bigint* x, const char* mulc);
 void karatsuba_mul(bigint** dest, bigint* src1, bigint* src2);
 void bi_mul_improvedtextbook(bigint** dest, bigint* src1, bigint* src2);
 
-
 int bi_binary_longdiv(bigint** q, bigint** r, bigint* a, bigint* b);
 int bi_barrett_reduction(bigint** r, bigint* x, bigint* m);
 

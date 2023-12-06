@@ -1,7 +1,7 @@
 #ifndef _API_H
 #define _API_H
 
-#define RSA_TEST 0
+#define RSA_TEST 1
 
 #include "bigint.h"
 #include "arith.h"
