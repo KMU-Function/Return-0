@@ -1,3 +1,8 @@
+/**
+ * @file rng.h
+ * @brief Header file for a simple random number generator interface.
+ */
+
 #ifndef PQCLEAN_RANDOMBYTES_H
 #define PQCLEAN_RANDOMBYTES_H
 
@@ -8,17 +13,17 @@ extern "C" {
 #include <stdint.h>
 
 #ifdef _WIN32
-/* Load size_t on windows */
+    /* Load size_t on windows */
 #include <crtdefs.h>
 #else
 #include <unistd.h>
 #endif /* _WIN32 */
 
-/*
- * Write `n` bytes of high quality random bytes to `buf`
- */
+    /*
+     * Write `n` bytes of high quality random bytes to `buf`
+     */
 #define randombytes     PQCLEAN_randombytes
-int randombytes(uint8_t *output, size_t n);
+    int randombytes(uint8_t* output, size_t n);
 
 #ifdef __cplusplus
 }

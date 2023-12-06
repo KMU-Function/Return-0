@@ -1,0 +1,121 @@
+\hypertarget{rsa_8c}{}\doxysection{src/rsa.c File Reference}
+\label{rsa_8c}\index{src/rsa.c@{src/rsa.c}}
+
+
+Source file for RSA cryptography function using big integer.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}rsa.\+h\char`\"{}}\newline
+Include dependency graph for rsa.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=219pt]{rsa_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{rsa_8c_afc0fee41c9bdf6b49b2a5ff5e5964313}{get\+\_\+\+RSA\+\_\+param}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$p, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$q, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$phi, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$e, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$d, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$n)
+\begin{DoxyCompactList}\small\item\em Caution\+: prime p and q are hard-\/coded. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{rsa_8c_a4932d7c4d36b7cf891fc0d4db4ecfe62}{RSA\+\_\+encrypt}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$ct, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$pt)
+\begin{DoxyCompactList}\small\item\em Encrypts a plaintext using RSA. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{rsa_8c_a147fef63ff723db4bf9a10d7d6d36a45}{RSA\+\_\+decrypt}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$pt, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$ct)
+\begin{DoxyCompactList}\small\item\em Decrypts a ciphertext using RSA. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{rsa_8c_ac223cfe91d1199fb81bdc6d13f550c75}{RSA\+\_\+verify}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$m, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$pt)
+\begin{DoxyCompactList}\small\item\em Verifies the result of RSA decryption. Compares the original plaintext with the decrypted plaintext to ensure correctness. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Source file for RSA cryptography function using big integer. 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rsa_8c_afc0fee41c9bdf6b49b2a5ff5e5964313}\label{rsa_8c_afc0fee41c9bdf6b49b2a5ff5e5964313}} 
+\index{rsa.c@{rsa.c}!get\_RSA\_param@{get\_RSA\_param}}
+\index{get\_RSA\_param@{get\_RSA\_param}!rsa.c@{rsa.c}}
+\doxysubsubsection{\texorpdfstring{get\_RSA\_param()}{get\_RSA\_param()}}
+{\footnotesize\ttfamily void get\+\_\+\+RSA\+\_\+param (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{p,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{q,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{phi,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{e,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{d,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{n }\end{DoxyParamCaption})}
+
+
+
+Caution\+: prime p and q are hard-\/coded. 
+
+Function to retrieve RSA parameters. 
+\begin{DoxyParams}{Parameters}
+{\em p} & Pointer to the prime number p. \\
+\hline
+{\em q} & Pointer to the prime number q. \\
+\hline
+{\em phi} & Pointer to the Euler\textquotesingle{}s totient function result (phi(n)). \\
+\hline
+{\em e} & Pointer to the public exponent e. \\
+\hline
+{\em d} & Pointer to the private exponent d. \\
+\hline
+{\em n} & Pointer to the modulus n. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{rsa_8c_a147fef63ff723db4bf9a10d7d6d36a45}\label{rsa_8c_a147fef63ff723db4bf9a10d7d6d36a45}} 
+\index{rsa.c@{rsa.c}!RSA\_decrypt@{RSA\_decrypt}}
+\index{RSA\_decrypt@{RSA\_decrypt}!rsa.c@{rsa.c}}
+\doxysubsubsection{\texorpdfstring{RSA\_decrypt()}{RSA\_decrypt()}}
+{\footnotesize\ttfamily int RSA\+\_\+decrypt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{pt,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{ct }\end{DoxyParamCaption})}
+
+
+
+Decrypts a ciphertext using RSA. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pt} & Pointer to the variable to store the decrypted plaintext. \\
+\hline
+{\em ct} & Pointer to the ciphertext. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if successful, -\/1 on failure. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{rsa_8c_a4932d7c4d36b7cf891fc0d4db4ecfe62}\label{rsa_8c_a4932d7c4d36b7cf891fc0d4db4ecfe62}} 
+\index{rsa.c@{rsa.c}!RSA\_encrypt@{RSA\_encrypt}}
+\index{RSA\_encrypt@{RSA\_encrypt}!rsa.c@{rsa.c}}
+\doxysubsubsection{\texorpdfstring{RSA\_encrypt()}{RSA\_encrypt()}}
+{\footnotesize\ttfamily int RSA\+\_\+encrypt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{ct,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{pt }\end{DoxyParamCaption})}
+
+
+
+Encrypts a plaintext using RSA. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ct} & Pointer to the variable to store the ciphertext. \\
+\hline
+{\em pt} & Pointer to the plaintext. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if successful, -\/1 on failure. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{rsa_8c_ac223cfe91d1199fb81bdc6d13f550c75}\label{rsa_8c_ac223cfe91d1199fb81bdc6d13f550c75}} 
+\index{rsa.c@{rsa.c}!RSA\_verify@{RSA\_verify}}
+\index{RSA\_verify@{RSA\_verify}!rsa.c@{rsa.c}}
+\doxysubsubsection{\texorpdfstring{RSA\_verify()}{RSA\_verify()}}
+{\footnotesize\ttfamily int RSA\+\_\+verify (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{m,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{pt }\end{DoxyParamCaption})}
+
+
+
+Verifies the result of RSA decryption. Compares the original plaintext with the decrypted plaintext to ensure correctness. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em m} & Pointer to the original plaintext. \\
+\hline
+{\em pt} & Pointer to the decrypted plaintext. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if verification is successful, -\/1 if verification fails. 
+\end{DoxyReturn}

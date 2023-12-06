@@ -1,6 +1,6 @@
 /**
  * @file rsa.h
- * @brief header file for RSA cryptography function using big integer.
+ * @brief Header file for RSA cryptography function using big integer.
  */
 
 #ifndef _RSA_H

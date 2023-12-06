@@ -1,0 +1,94 @@
+\hypertarget{array_8h}{}\doxysection{src/array.h File Reference}
+\label{array_8h}\index{src/array.h@{src/array.h}}
+
+
+Header file for big integer array basic operations.  
+
+
+{\ttfamily \#include \char`\"{}bigint.\+h\char`\"{}}\newline
+Include dependency graph for array.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=147pt]{array_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=234pt]{array_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{array_8h_af5f1a7811313230341b5f126b9548ff3}{init\+\_\+array}} (word $\ast$a, int wordlen)
+\begin{DoxyCompactList}\small\item\em Initialize an array with zero values. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{array_8h_a5c91c673efdb6ec4053735814eebdde4}{copy\+\_\+array}} (word $\ast$dst, word $\ast$src, int wordlen)
+\begin{DoxyCompactList}\small\item\em Copy elements from the source array to the destination array. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{array_8h_a7f66f0d69088df2fce0462ee8e1de0f2}{gen\+\_\+rand\+\_\+array}} (word $\ast$a, int wordlen)
+\begin{DoxyCompactList}\small\item\em Generate a random array with a specified word length using random data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Header file for big integer array basic operations. 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{array_8h_a5c91c673efdb6ec4053735814eebdde4}\label{array_8h_a5c91c673efdb6ec4053735814eebdde4}} 
+\index{array.h@{array.h}!copy\_array@{copy\_array}}
+\index{copy\_array@{copy\_array}!array.h@{array.h}}
+\doxysubsubsection{\texorpdfstring{copy\_array()}{copy\_array()}}
+{\footnotesize\ttfamily void copy\+\_\+array (\begin{DoxyParamCaption}\item[{word $\ast$}]{dst,  }\item[{word $\ast$}]{src,  }\item[{int}]{wordlen }\end{DoxyParamCaption})}
+
+
+
+Copy elements from the source array to the destination array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination array. \\
+\hline
+{\em src} & Pointer to the source array. \\
+\hline
+{\em wordlen} & The length of the arrays. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{array_8h_a7f66f0d69088df2fce0462ee8e1de0f2}\label{array_8h_a7f66f0d69088df2fce0462ee8e1de0f2}} 
+\index{array.h@{array.h}!gen\_rand\_array@{gen\_rand\_array}}
+\index{gen\_rand\_array@{gen\_rand\_array}!array.h@{array.h}}
+\doxysubsubsection{\texorpdfstring{gen\_rand\_array()}{gen\_rand\_array()}}
+{\footnotesize\ttfamily void gen\+\_\+rand\+\_\+array (\begin{DoxyParamCaption}\item[{word $\ast$}]{a,  }\item[{int}]{wordlen }\end{DoxyParamCaption})}
+
+
+
+Generate a random array with a specified word length using random data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Pointer to the array to store the random values. \\
+\hline
+{\em wordlen} & The length of the array.\\
+\hline
+\end{DoxyParams}
+This function generates random data using the {\ttfamily randombytes} function and copies it to the specified array. Ensure that the {\ttfamily randombytes} function is available and properly implemented in your code. \mbox{\Hypertarget{array_8h_af5f1a7811313230341b5f126b9548ff3}\label{array_8h_af5f1a7811313230341b5f126b9548ff3}} 
+\index{array.h@{array.h}!init\_array@{init\_array}}
+\index{init\_array@{init\_array}!array.h@{array.h}}
+\doxysubsubsection{\texorpdfstring{init\_array()}{init\_array()}}
+{\footnotesize\ttfamily void init\+\_\+array (\begin{DoxyParamCaption}\item[{word $\ast$}]{a,  }\item[{int}]{wordlen }\end{DoxyParamCaption})}
+
+
+
+Initialize an array with zero values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Pointer to the array to be initialized. \\
+\hline
+{\em wordlen} & The length of the array. \\
+\hline
+\end{DoxyParams}

@@ -1,6 +1,6 @@
 /**
  * @file array.c
- * @brief source file for big integer array basic operations.
+ * @brief Source file for big integer array basic operations.
  */
 
 #include <stdio.h>

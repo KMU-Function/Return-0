@@ -1,3 +1,8 @@
+/**
+ * @file cycle.h
+ * @brief Header file for cycle.c
+ */
+
 #ifndef _CYCLE_H
 #define _CYCLE_H
 

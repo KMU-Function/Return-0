@@ -1,0 +1,7 @@
+<map id="src/arith.h" name="src/arith.h">
+<area shape="rect" id="node1" title="Header file for big integer arithmetic operations." alt="" coords="38,5,125,32"/>
+<area shape="rect" id="node2" href="$api_8h.html" title="Header file for the API, including various modules like bigint, arithmetic, RSA, and cycle." alt="" coords="5,155,83,181"/>
+<area shape="rect" id="node3" href="$arith_8c.html" title="Source file for big integer arithmetic operations." alt="" coords="38,80,125,107"/>
+<area shape="rect" id="node4" href="$rsa_8h.html" title="Header file for RSA cryptography function using big integer." alt="" coords="149,80,227,107"/>
+<area shape="rect" id="node5" href="$rsa_8c.html" title="Source file for RSA cryptography function using big integer." alt="" coords="150,155,226,181"/>
+</map>

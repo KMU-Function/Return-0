@@ -1,6 +1,6 @@
 /**
  * @file array.h
- * @brief header file for big integer array basic operations.
+ * @brief Header file for big integer array basic operations.
  */
 
 #ifndef _ARRAY_H

@@ -1,6 +1,6 @@
 /**
  * @file rsa.c
- * @brief source file for RSA cryptography function using big integer.
+ * @brief Source file for RSA cryptography function using big integer.
  */
 
 #include <stdio.h>

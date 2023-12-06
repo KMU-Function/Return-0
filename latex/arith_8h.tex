@@ -1,0 +1,517 @@
+\hypertarget{arith_8h}{}\doxysection{src/arith.h File Reference}
+\label{arith_8h}\index{src/arith.h@{src/arith.h}}
+
+
+Header file for big integer arithmetic operations.  
+
+
+{\ttfamily \#include \char`\"{}bigint.\+h\char`\"{}}\newline
+Include dependency graph for arith.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=145pt]{arith_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=246pt]{arith_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+word \mbox{\hyperlink{arith_8h_aad2ceaf5b1d072a51dc5f8ffc2727b60}{bi\+\_\+addcc}} (word $\ast$dst, word x, word y, word c)
+\begin{DoxyCompactList}\small\item\em Calculate the addition of two words x, y considering carry. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{arith_8h_ac5eb736f217b00f50b448b105093cfd4}{bi\+\_\+addc}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$y)
+\begin{DoxyCompactList}\small\item\em Calculate the addition of two Big\+Integers x, y with the same sign. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{arith_8h_a64b6541d75f6efdb49d28a9e3e13bafc}{bi\+\_\+add}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$y)
+\begin{DoxyCompactList}\small\item\em Calculate the addition of two Big\+Integers x, y. \end{DoxyCompactList}\item 
+word \mbox{\hyperlink{arith_8h_aa54986222cd88dfc1a49ebd446d14bb1}{bi\+\_\+subcc}} (word $\ast$dst, word x, word y, word b)
+\begin{DoxyCompactList}\small\item\em Calculate subtraction of two words (x -\/ y) with borrow consideration. The result is stored at the destination pointed by dst. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{arith_8h_afcc6e40a024ce24e3e724dd076a3f76f}{bi\+\_\+subc}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$y)
+\begin{DoxyCompactList}\small\item\em Calculate subtraction of two positive Big\+Ints (x -\/ y) where 0 $<$ y $<$= x. The result is stored at the destination pointed by dst. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{arith_8h_ac04c6d68b962b092ae6394b36021e5bc}{bi\+\_\+sub}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$y)
+\begin{DoxyCompactList}\small\item\em Calculate subtraction of two Big\+Ints (x -\/ y). The result is stored at the destination pointed by dst. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arith_8h_a84518582b57fa74fd1b2e5dcf92f62f2}{bi\+\_\+mulc}} (word $\ast$dst, word x, word y)
+\begin{DoxyCompactList}\small\item\em Calculate multiplication of two words (x $\ast$ y) using a specialized algorithm. The result is stored at the destination pointed by dst. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{arith_8h_afcfe9d7a9e58784f42241424c8d3d87b}{bi\+\_\+mul\+\_\+textbook}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$y)
+\begin{DoxyCompactList}\small\item\em Calculate multiplication of two Big\+Ints (x $\ast$ y) using the textbook method. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arith_8h_ab570501cdc6d08c667efe12d753e70c9}{bi\+\_\+mul\+\_\+improvedtextbook}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$y)
+\begin{DoxyCompactList}\small\item\em Calculate multiplication of two Big\+Ints (x $\ast$ y) using an improved textbook method. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arith_8h_a4e7e43ab2d2753826134d3e928398b1f}{bi\+\_\+mul\+\_\+karatsuba}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$y)
+\begin{DoxyCompactList}\small\item\em Calculate multiplication of two Big\+Ints (x $\ast$ y) using the Karatsuba algorithm. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arith_8h_af7607f4a6aed69213518a9bc3c9067a1}{bi\+\_\+mul\+\_\+karatsuba\+\_\+core}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$y, uint64\+\_\+t len)
+\begin{DoxyCompactList}\small\item\em Core function for Karatsuba multiplication. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arith_8h_a69dacdd80b8a7aae4d716e592bcee61d}{bi\+\_\+mul}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$y, const char $\ast$mulc)
+\begin{DoxyCompactList}\small\item\em Calculate multiplication of two Big\+Ints (x $\ast$ y) with specified multiplication mode. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arith_8h_a8387d085cc6289239247d9a8301face4}{bi\+\_\+sqrc}} (word $\ast$dst, word x)
+\begin{DoxyCompactList}\small\item\em Calculate squaring of a word (x$^\wedge$2) using a specialized algorithm. The result is stored at the destination pointed by dst. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arith_8h_a1a07d8afc1ddac381b687afe0a50a966}{bi\+\_\+sqr\+\_\+textbook}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Calculate squaring of a Big\+Int (x$^\wedge$2) using the textbook method. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arith_8h_a320e316395dcb320f086f638fc116edb}{bi\+\_\+sqr}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, const char $\ast$mulc)
+\begin{DoxyCompactList}\small\item\em Calculate squaring of a Big\+Int (x$^\wedge$2) with specified squaring mode. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{arith_8h_ac18aa2bd304490ca26b6eb758b7501eb}{bi\+\_\+binary\+\_\+longdiv}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$q, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$r, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$a, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$b)
+\begin{DoxyCompactList}\small\item\em Perform binary long division to calculate the quotient and remainder of two Big\+Ints. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arith_8h_a258917816123ae6f9f9729ac22eeb3c0}{bi\+\_\+barrett\+\_\+compute\+\_\+t}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$t, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$y)
+\begin{DoxyCompactList}\small\item\em Compute the Barrett reduction pre-\/computed value (t) for a given modulus (y). \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{arith_8h_ae81eda49a07be461ce3fe66405dd4581}{bi\+\_\+barrett\+\_\+reduction\+\_\+core}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$r, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$m, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$t)
+\begin{DoxyCompactList}\small\item\em Perform the core steps of Barrett reduction. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{arith_8h_a61f8449ed256824e6a3cf8d29d5cdd10}{bi\+\_\+barrett\+\_\+reduction}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$r, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$m)
+\begin{DoxyCompactList}\small\item\em Perform Barrett reduction on a given dividend x with a specified modulus m. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arith_8h_aa1b496f14b22e2adbc3a85ad5418a00e}{bi\+\_\+\+LtR}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$n)
+\begin{DoxyCompactList}\small\item\em Calculate exponentiation of Big\+Int x$^\wedge$n using the Left-\/to-\/\+Right method. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{arith_8h_a9aa569c76a15348055d4473f524da2db}{bi\+\_\+\+Lt\+R\+\_\+mod}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$dst, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$n, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$modulo)
+\begin{DoxyCompactList}\small\item\em Calculate exponentiation of Big\+Int x$^\wedge$n with modulo using the Left-\/to-\/\+Right method. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Header file for big integer arithmetic operations. 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{arith_8h_a64b6541d75f6efdb49d28a9e3e13bafc}\label{arith_8h_a64b6541d75f6efdb49d28a9e3e13bafc}} 
+\index{arith.h@{arith.h}!bi\_add@{bi\_add}}
+\index{bi\_add@{bi\_add}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_add()}{bi\_add()}}
+{\footnotesize\ttfamily int bi\+\_\+add (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{y }\end{DoxyParamCaption})}
+
+
+
+Calculate the addition of two Big\+Integers x, y. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x + y will be stored. \\
+\hline
+{\em x} & First Big\+Int operand. \\
+\hline
+{\em y} & Second Big\+Int operand. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if the addition is successful, -\/1 otherwise. 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{arith_8c_ac5eb736f217b00f50b448b105093cfd4}{bi\+\_\+addc}}, \mbox{\hyperlink{arith_8c_aad2ceaf5b1d072a51dc5f8ffc2727b60}{bi\+\_\+addcc}} 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{arith_8h_ac5eb736f217b00f50b448b105093cfd4}\label{arith_8h_ac5eb736f217b00f50b448b105093cfd4}} 
+\index{arith.h@{arith.h}!bi\_addc@{bi\_addc}}
+\index{bi\_addc@{bi\_addc}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_addc()}{bi\_addc()}}
+{\footnotesize\ttfamily int bi\+\_\+addc (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{y }\end{DoxyParamCaption})}
+
+
+
+Calculate the addition of two Big\+Integers x, y with the same sign. 
+
+Assumes x and y are non-\/zero. 
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x + y will be stored. \\
+\hline
+{\em x} & First Big\+Int operand. \\
+\hline
+{\em y} & Second Big\+Int operand. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if the addition is successful, -\/1 otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{arith_8h_aad2ceaf5b1d072a51dc5f8ffc2727b60}\label{arith_8h_aad2ceaf5b1d072a51dc5f8ffc2727b60}} 
+\index{arith.h@{arith.h}!bi\_addcc@{bi\_addcc}}
+\index{bi\_addcc@{bi\_addcc}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_addcc()}{bi\_addcc()}}
+{\footnotesize\ttfamily word bi\+\_\+addcc (\begin{DoxyParamCaption}\item[{word $\ast$}]{dst,  }\item[{word}]{x,  }\item[{word}]{y,  }\item[{word}]{c }\end{DoxyParamCaption})}
+
+
+
+Calculate the addition of two words x, y considering carry. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x + y will be stored. \\
+\hline
+{\em x} & First word to be added. \\
+\hline
+{\em y} & Second word to be added. \\
+\hline
+{\em c} & Carry from the previous addition. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The next carry after the addition. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{arith_8h_a258917816123ae6f9f9729ac22eeb3c0}\label{arith_8h_a258917816123ae6f9f9729ac22eeb3c0}} 
+\index{arith.h@{arith.h}!bi\_barrett\_compute\_t@{bi\_barrett\_compute\_t}}
+\index{bi\_barrett\_compute\_t@{bi\_barrett\_compute\_t}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_barrett\_compute\_t()}{bi\_barrett\_compute\_t()}}
+{\footnotesize\ttfamily void bi\+\_\+barrett\+\_\+compute\+\_\+t (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{t,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{y }\end{DoxyParamCaption})}
+
+
+
+Compute the Barrett reduction pre-\/computed value (t) for a given modulus (y). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & Pointer to the destination where the Barrett reduction pre-\/computed value will be stored. \\
+\hline
+{\em y} & Modulus Big\+Int.\\
+\hline
+\end{DoxyParams}
+This function calculates the Barrett reduction pre-\/computed value (t) for the specified modulus (y). The result is stored in the specified pointer t. \mbox{\Hypertarget{arith_8h_a61f8449ed256824e6a3cf8d29d5cdd10}\label{arith_8h_a61f8449ed256824e6a3cf8d29d5cdd10}} 
+\index{arith.h@{arith.h}!bi\_barrett\_reduction@{bi\_barrett\_reduction}}
+\index{bi\_barrett\_reduction@{bi\_barrett\_reduction}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_barrett\_reduction()}{bi\_barrett\_reduction()}}
+{\footnotesize\ttfamily int bi\+\_\+barrett\+\_\+reduction (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{r,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{m }\end{DoxyParamCaption})}
+
+
+
+Perform Barrett reduction on a given dividend x with a specified modulus m. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em r} & Pointer to the destination where the result of the reduction will be stored. \\
+\hline
+{\em x} & Dividend Big\+Int. \\
+\hline
+{\em m} & Modulus Big\+Int. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, -\/1 if inputs are invalid or m is zero.
+\end{DoxyReturn}
+This function performs Barrett reduction on the dividend x with the specified modulus m. The result is stored in the specified pointer r. If m is zero, the function aborts. \mbox{\Hypertarget{arith_8h_ae81eda49a07be461ce3fe66405dd4581}\label{arith_8h_ae81eda49a07be461ce3fe66405dd4581}} 
+\index{arith.h@{arith.h}!bi\_barrett\_reduction\_core@{bi\_barrett\_reduction\_core}}
+\index{bi\_barrett\_reduction\_core@{bi\_barrett\_reduction\_core}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_barrett\_reduction\_core()}{bi\_barrett\_reduction\_core()}}
+{\footnotesize\ttfamily int bi\+\_\+barrett\+\_\+reduction\+\_\+core (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{r,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{m,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{t }\end{DoxyParamCaption})}
+
+
+
+Perform the core steps of Barrett reduction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em r} & Pointer to the destination where the result of the reduction will be stored. \\
+\hline
+{\em x} & Dividend Big\+Int. \\
+\hline
+{\em m} & Modulus Big\+Int. \\
+\hline
+{\em t} & Pre-\/computed value for Barrett reduction. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, -\/1 if inputs are invalid or x-\/$>$wordlen $>$ 2 $\ast$ m-\/$>$wordlen.
+\end{DoxyReturn}
+This function performs the core steps of Barrett reduction, calculating the remainder of x divided by m using the pre-\/computed value t. The result is stored in the specified pointer r. \mbox{\Hypertarget{arith_8h_ac18aa2bd304490ca26b6eb758b7501eb}\label{arith_8h_ac18aa2bd304490ca26b6eb758b7501eb}} 
+\index{arith.h@{arith.h}!bi\_binary\_longdiv@{bi\_binary\_longdiv}}
+\index{bi\_binary\_longdiv@{bi\_binary\_longdiv}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_binary\_longdiv()}{bi\_binary\_longdiv()}}
+{\footnotesize\ttfamily int bi\+\_\+binary\+\_\+longdiv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{q,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{r,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{b }\end{DoxyParamCaption})}
+
+
+
+Perform binary long division to calculate the quotient and remainder of two Big\+Ints. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em q} & Pointer to the destination where the quotient will be stored. \\
+\hline
+{\em r} & Pointer to the destination where the remainder will be stored. \\
+\hline
+{\em a} & Dividend Big\+Int. \\
+\hline
+{\em b} & Divisor Big\+Int. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, -\/1 if inputs are invalid or divisor is zero.
+\end{DoxyReturn}
+This function calculates the quotient and remainder of the division a / b using binary long division. The result is stored in the specified pointers q (quotient) and r (remainder). If either of the input Big\+Ints is NULL or if the divisor (b) is zero, the function returns -\/1. \mbox{\Hypertarget{arith_8h_aa1b496f14b22e2adbc3a85ad5418a00e}\label{arith_8h_aa1b496f14b22e2adbc3a85ad5418a00e}} 
+\index{arith.h@{arith.h}!bi\_LtR@{bi\_LtR}}
+\index{bi\_LtR@{bi\_LtR}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_LtR()}{bi\_LtR()}}
+{\footnotesize\ttfamily void bi\+\_\+\+LtR (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{n }\end{DoxyParamCaption})}
+
+
+
+Calculate exponentiation of Big\+Int x$^\wedge$n using the Left-\/to-\/\+Right method. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x$^\wedge$n will be stored. \\
+\hline
+{\em x} & Pointer to the base Big\+Int. \\
+\hline
+{\em n} & Exponent Big\+Int.\\
+\hline
+\end{DoxyParams}
+This function calculates the exponentiation of the base x to the power of n using the Left-\/to-\/\+Right method. The result is stored in the specified pointer dst. \mbox{\Hypertarget{arith_8h_a9aa569c76a15348055d4473f524da2db}\label{arith_8h_a9aa569c76a15348055d4473f524da2db}} 
+\index{arith.h@{arith.h}!bi\_LtR\_mod@{bi\_LtR\_mod}}
+\index{bi\_LtR\_mod@{bi\_LtR\_mod}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_LtR\_mod()}{bi\_LtR\_mod()}}
+{\footnotesize\ttfamily void bi\+\_\+\+Lt\+R\+\_\+mod (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{n,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{modulo }\end{DoxyParamCaption})}
+
+
+
+Calculate exponentiation of Big\+Int x$^\wedge$n with modulo using the Left-\/to-\/\+Right method. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x$^\wedge$n modulo modulo will be stored. \\
+\hline
+{\em x} & Pointer to the base Big\+Int. \\
+\hline
+{\em n} & Exponent Big\+Int. \\
+\hline
+{\em modulo} & Modulo Big\+Int.\\
+\hline
+\end{DoxyParams}
+This function calculates the exponentiation of the base x to the power of n with modulo using the Left-\/to-\/\+Right method. The result is stored in the specified pointer dst. If the intermediate results (\+\_\+tsqr and \+\_\+t) are greater than modulo, Barrett reduction is applied. If the word length of the intermediate result is not suitable for Barrett reduction, the function aborts. \mbox{\Hypertarget{arith_8h_a69dacdd80b8a7aae4d716e592bcee61d}\label{arith_8h_a69dacdd80b8a7aae4d716e592bcee61d}} 
+\index{arith.h@{arith.h}!bi\_mul@{bi\_mul}}
+\index{bi\_mul@{bi\_mul}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_mul()}{bi\_mul()}}
+{\footnotesize\ttfamily void bi\+\_\+mul (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{y,  }\item[{const char $\ast$}]{mulc }\end{DoxyParamCaption})}
+
+
+
+Calculate multiplication of two Big\+Ints (x $\ast$ y) with specified multiplication mode. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x $\ast$ y will be stored. \\
+\hline
+{\em x} & Pointer to the first Big\+Int operand. \\
+\hline
+{\em y} & Pointer to the second Big\+Int operand. \\
+\hline
+{\em mulc} & String specifying the multiplication mode (\char`\"{}textbook\char`\"{}, \char`\"{}improved\char`\"{}, \char`\"{}karatsuba\char`\"{}). \\
+\hline
+\end{DoxyParams}
+must do\mbox{\Hypertarget{arith_8h_ab570501cdc6d08c667efe12d753e70c9}\label{arith_8h_ab570501cdc6d08c667efe12d753e70c9}} 
+\index{arith.h@{arith.h}!bi\_mul\_improvedtextbook@{bi\_mul\_improvedtextbook}}
+\index{bi\_mul\_improvedtextbook@{bi\_mul\_improvedtextbook}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_mul\_improvedtextbook()}{bi\_mul\_improvedtextbook()}}
+{\footnotesize\ttfamily void bi\+\_\+mul\+\_\+improvedtextbook (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{y }\end{DoxyParamCaption})}
+
+
+
+Calculate multiplication of two Big\+Ints (x $\ast$ y) using an improved textbook method. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x $\ast$ y will be stored. \\
+\hline
+{\em x} & Pointer to the first positive Big\+Int operand. \\
+\hline
+{\em y} & Pointer to the second positive Big\+Int operand. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arith_8h_a4e7e43ab2d2753826134d3e928398b1f}\label{arith_8h_a4e7e43ab2d2753826134d3e928398b1f}} 
+\index{arith.h@{arith.h}!bi\_mul\_karatsuba@{bi\_mul\_karatsuba}}
+\index{bi\_mul\_karatsuba@{bi\_mul\_karatsuba}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_mul\_karatsuba()}{bi\_mul\_karatsuba()}}
+{\footnotesize\ttfamily void bi\+\_\+mul\+\_\+karatsuba (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{y }\end{DoxyParamCaption})}
+
+
+
+Calculate multiplication of two Big\+Ints (x $\ast$ y) using the Karatsuba algorithm. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x $\ast$ y will be stored. \\
+\hline
+{\em x} & Pointer to the first positive Big\+Int operand. \\
+\hline
+{\em y} & Pointer to the second positive Big\+Int operand. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arith_8h_af7607f4a6aed69213518a9bc3c9067a1}\label{arith_8h_af7607f4a6aed69213518a9bc3c9067a1}} 
+\index{arith.h@{arith.h}!bi\_mul\_karatsuba\_core@{bi\_mul\_karatsuba\_core}}
+\index{bi\_mul\_karatsuba\_core@{bi\_mul\_karatsuba\_core}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_mul\_karatsuba\_core()}{bi\_mul\_karatsuba\_core()}}
+{\footnotesize\ttfamily void bi\+\_\+mul\+\_\+karatsuba\+\_\+core (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{y,  }\item[{uint64\+\_\+t}]{len }\end{DoxyParamCaption})}
+
+
+
+Core function for Karatsuba multiplication. 
+
+Recursively performs Karatsuba multiplication for given operands. 
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result will be accumulated. \\
+\hline
+{\em x} & Pointer to the first positive Big\+Int operand. \\
+\hline
+{\em y} & Pointer to the second positive Big\+Int operand. \\
+\hline
+{\em len} & Length of the operands for the current recursion level. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arith_8h_afcfe9d7a9e58784f42241424c8d3d87b}\label{arith_8h_afcfe9d7a9e58784f42241424c8d3d87b}} 
+\index{arith.h@{arith.h}!bi\_mul\_textbook@{bi\_mul\_textbook}}
+\index{bi\_mul\_textbook@{bi\_mul\_textbook}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_mul\_textbook()}{bi\_mul\_textbook()}}
+{\footnotesize\ttfamily int bi\+\_\+mul\+\_\+textbook (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{y }\end{DoxyParamCaption})}
+
+
+
+Calculate multiplication of two Big\+Ints (x $\ast$ y) using the textbook method. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x $\ast$ y will be stored. \\
+\hline
+{\em x} & Pointer to the first positive Big\+Int operand. \\
+\hline
+{\em y} & Pointer to the second positive Big\+Int operand. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Always returns 0. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{arith_8h_a84518582b57fa74fd1b2e5dcf92f62f2}\label{arith_8h_a84518582b57fa74fd1b2e5dcf92f62f2}} 
+\index{arith.h@{arith.h}!bi\_mulc@{bi\_mulc}}
+\index{bi\_mulc@{bi\_mulc}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_mulc()}{bi\_mulc()}}
+{\footnotesize\ttfamily void bi\+\_\+mulc (\begin{DoxyParamCaption}\item[{word $\ast$}]{dst,  }\item[{word}]{x,  }\item[{word}]{y }\end{DoxyParamCaption})}
+
+
+
+Calculate multiplication of two words (x $\ast$ y) using a specialized algorithm. The result is stored at the destination pointed by dst. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x $\ast$ y will be stored. \\
+\hline
+{\em x} & The first word operand. \\
+\hline
+{\em y} & The second word operand. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arith_8h_a320e316395dcb320f086f638fc116edb}\label{arith_8h_a320e316395dcb320f086f638fc116edb}} 
+\index{arith.h@{arith.h}!bi\_sqr@{bi\_sqr}}
+\index{bi\_sqr@{bi\_sqr}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_sqr()}{bi\_sqr()}}
+{\footnotesize\ttfamily void bi\+\_\+sqr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{const char $\ast$}]{mulc }\end{DoxyParamCaption})}
+
+
+
+Calculate squaring of a Big\+Int (x$^\wedge$2) with specified squaring mode. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x$^\wedge$2 will be stored. \\
+\hline
+{\em x} & Pointer to the Big\+Int operand. \\
+\hline
+{\em mulc} & String specifying the squaring mode (\char`\"{}textbook\char`\"{}).\\
+\hline
+\end{DoxyParams}
+This function calculates the square of a Big\+Int based on the specified squaring mode. Currently, only the \char`\"{}textbook\char`\"{} mode is supported. \mbox{\Hypertarget{arith_8h_a1a07d8afc1ddac381b687afe0a50a966}\label{arith_8h_a1a07d8afc1ddac381b687afe0a50a966}} 
+\index{arith.h@{arith.h}!bi\_sqr\_textbook@{bi\_sqr\_textbook}}
+\index{bi\_sqr\_textbook@{bi\_sqr\_textbook}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_sqr\_textbook()}{bi\_sqr\_textbook()}}
+{\footnotesize\ttfamily void bi\+\_\+sqr\+\_\+textbook (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Calculate squaring of a Big\+Int (x$^\wedge$2) using the textbook method. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x$^\wedge$2 will be stored. \\
+\hline
+{\em x} & Pointer to the Big\+Int operand. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arith_8h_a8387d085cc6289239247d9a8301face4}\label{arith_8h_a8387d085cc6289239247d9a8301face4}} 
+\index{arith.h@{arith.h}!bi\_sqrc@{bi\_sqrc}}
+\index{bi\_sqrc@{bi\_sqrc}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_sqrc()}{bi\_sqrc()}}
+{\footnotesize\ttfamily void bi\+\_\+sqrc (\begin{DoxyParamCaption}\item[{word $\ast$}]{dst,  }\item[{word}]{x }\end{DoxyParamCaption})}
+
+
+
+Calculate squaring of a word (x$^\wedge$2) using a specialized algorithm. The result is stored at the destination pointed by dst. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x$^\wedge$2 will be stored. \\
+\hline
+{\em x} & The word operand. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{arith_8h_ac04c6d68b962b092ae6394b36021e5bc}\label{arith_8h_ac04c6d68b962b092ae6394b36021e5bc}} 
+\index{arith.h@{arith.h}!bi\_sub@{bi\_sub}}
+\index{bi\_sub@{bi\_sub}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_sub()}{bi\_sub()}}
+{\footnotesize\ttfamily int bi\+\_\+sub (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{y }\end{DoxyParamCaption})}
+
+
+
+Calculate subtraction of two Big\+Ints (x -\/ y). The result is stored at the destination pointed by dst. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x -\/ y will be stored. \\
+\hline
+{\em x} & Pointer to the first Big\+Int operand. \\
+\hline
+{\em y} & Pointer to the second Big\+Int operand. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if successful, -\/1 if an error occurs. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{arith_8h_afcc6e40a024ce24e3e724dd076a3f76f}\label{arith_8h_afcc6e40a024ce24e3e724dd076a3f76f}} 
+\index{arith.h@{arith.h}!bi\_subc@{bi\_subc}}
+\index{bi\_subc@{bi\_subc}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_subc()}{bi\_subc()}}
+{\footnotesize\ttfamily int bi\+\_\+subc (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{dst,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{y }\end{DoxyParamCaption})}
+
+
+
+Calculate subtraction of two positive Big\+Ints (x -\/ y) where 0 $<$ y $<$= x. The result is stored at the destination pointed by dst. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x -\/ y will be stored. \\
+\hline
+{\em x} & Pointer to the first positive Big\+Int operand. \\
+\hline
+{\em y} & Pointer to the second positive Big\+Int operand. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Always returns 1. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{arith_8h_aa54986222cd88dfc1a49ebd446d14bb1}\label{arith_8h_aa54986222cd88dfc1a49ebd446d14bb1}} 
+\index{arith.h@{arith.h}!bi\_subcc@{bi\_subcc}}
+\index{bi\_subcc@{bi\_subcc}!arith.h@{arith.h}}
+\doxysubsubsection{\texorpdfstring{bi\_subcc()}{bi\_subcc()}}
+{\footnotesize\ttfamily word bi\+\_\+subcc (\begin{DoxyParamCaption}\item[{word $\ast$}]{dst,  }\item[{word}]{x,  }\item[{word}]{y,  }\item[{word}]{b }\end{DoxyParamCaption})}
+
+
+
+Calculate subtraction of two words (x -\/ y) with borrow consideration. The result is stored at the destination pointed by dst. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dst} & Pointer to the destination where the result of x -\/ y will be stored. \\
+\hline
+{\em x} & The first word operand. \\
+\hline
+{\em y} & The second word operand. \\
+\hline
+{\em b} & The borrow from the previous subtraction. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The next borrow for the subsequent subtraction. 
+\end{DoxyReturn}

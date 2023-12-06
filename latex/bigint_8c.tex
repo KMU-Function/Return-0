@@ -1,0 +1,530 @@
+\hypertarget{bigint_8c}{}\doxysection{src/bigint.c File Reference}
+\label{bigint_8c}\index{src/bigint.c@{src/bigint.c}}
+
+
+Source file for big integer basic operations.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$memory.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$assert.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}bigint.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}array.\+h\char`\"{}}\newline
+Include dependency graph for bigint.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{bigint_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{bigint_8c_a013433fbe9c5af4eb60219cdabe6aa30}{bi\+\_\+delete}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x)
+\begin{DoxyCompactList}\small\item\em Deallocate memory associated with a Big\+Int and release resources. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_aca1703ea3275f676357fc096b061aafe}{bi\+\_\+new}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x, int wordlen)
+\begin{DoxyCompactList}\small\item\em Create a new Big\+Int with a specified word length. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{bigint_8c_ad64a747410c7443c97e697942df5e6d8}{bi\+\_\+set\+\_\+by\+\_\+array}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x, int sign, word $\ast$a, int wordlen)
+\begin{DoxyCompactList}\small\item\em Create Big\+Int x by array. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_a549e93f42a1ffe4f911d1f208aef99bc}{bi\+\_\+refine}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Refine Big\+Int x by removing trailing zero words. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_a90113b26ec1d00eb22e0c258e9e49e7f}{bi\+\_\+assign}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$y, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Assign the value of Big\+Int x to Big\+Int y (Y $<$-\/ X). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_a2b9e2405deef485d72374a988c1fada6}{bi\+\_\+expand}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, int new\+\_\+wordlen)
+\begin{DoxyCompactList}\small\item\em Expand the Big\+Int x with a new word length, padding with zeros. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_aa53a0393a3342ed30150ea494bc56fdf}{bi\+\_\+gen\+\_\+rand}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x, int sign, int wordlen)
+\begin{DoxyCompactList}\small\item\em Generate a random Big\+Int x with the specified sign and word length. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_a233d54d6b82d8fdf466d1af63e313558}{bi\+\_\+set\+\_\+one}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x)
+\begin{DoxyCompactList}\small\item\em Create a Big\+Int x and initialize its value to 0x1. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_a3bb878ba0533bc9e939b2976d00ba382}{bi\+\_\+set\+\_\+zero}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x)
+\begin{DoxyCompactList}\small\item\em Create a Big\+Int x and initialize its value to 0x0. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{bigint_8c_a8447d4e3d92e07816df6b3cc8d5e81e2}\label{bigint_8c_a8447d4e3d92e07816df6b3cc8d5e81e2}} 
+int \mbox{\hyperlink{bigint_8c_a8447d4e3d92e07816df6b3cc8d5e81e2}{bi\+\_\+is\+\_\+one}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Check if value of Big\+Int x is 0x1 return 1(true) if Big\+Int x is 0x1, 0(false) otherwise. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{bigint_8c_ac900775480adfc105b6ba2467b528432}{bi\+\_\+is\+\_\+zero}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Check if the value of Big\+Int x is equal to 0x0. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{bigint_8c_a3a85cfa1f04b1b319fae416e0516f9b9}{compare\+\_\+abs}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$y)
+\begin{DoxyCompactList}\small\item\em Compare the absolute values of positive Big\+Int x and y. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_aa3f39bb00d7f2ea24d2674995ebaca60}{bi\+\_\+flip\+\_\+sign}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Flip the sign bit of Big\+Int x. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{bigint_8c_aeae8c90a1b2c2e9904c18be35d0c6abd}{compare}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, \mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$y)
+\begin{DoxyCompactList}\small\item\em Compare the values of Big\+Int x and y. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{bigint_8c_a97ffdc7129f59d0b76ee7c9b2512abd9}{get\+\_\+wordlen}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Get the word length of a Big\+Int. This function retrieves the number of words used to represent the Big\+Int. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{bigint_8c_ab34f500084ca763abcb48c43a2b138f7}{get\+\_\+bitlen}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Get the bit length of a Big\+Int. This function calculates and returns the total number of bits used to represent the Big\+Int. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{bigint_8c_a8a4bf0e78c627545996987394e326554}{get\+\_\+ith\+\_\+bit}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x, int i)
+\begin{DoxyCompactList}\small\item\em Get the i-\/th bit of a Big\+Int. This function retrieves the value of the specified bit at position i. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{bigint_8c_ac1ab5609708690a8bf65fa59f157189d}{get\+\_\+sign}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Get the sign bit of a Big\+Int. This function retrieves the sign bit of the Big\+Int. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{bigint_8c_a24f9b9d80425f63a497a822f5d23189f}{get\+\_\+filpped\+\_\+sign}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Get the flipped sign bit of a Big\+Int. This function retrieves the opposite sign bit of the Big\+Int. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_a39daaa84166ff95f68754aacd1d248c2}{bi\+\_\+show\+\_\+hex}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Display the hexadecimal representation of a Big\+Int. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_a1e503fabe843df552279427c8dc69133}{bi\+\_\+show\+\_\+hex\+\_\+inorder}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$x)
+\begin{DoxyCompactList}\small\item\em Display the hexadecimal representation of a Big\+Int in reverse order. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_a513d7c8b87cd016e7707d82ab2078e81}{bi\+\_\+shift\+\_\+right\+\_\+word}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x, int bytelen)
+\begin{DoxyCompactList}\small\item\em Shift the Big\+Int to the right by a specified number of words. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_a2aad157a166078aa2aaea9283de02bb2}{bi\+\_\+shift\+\_\+left\+\_\+word}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x, int bytelen)
+\begin{DoxyCompactList}\small\item\em Shift the Big\+Int to the left by a specified number of words. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_af350e82bff9a04068875de7f50c28077}{bi\+\_\+shr}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x, int r)
+\begin{DoxyCompactList}\small\item\em Perform a bitwise shift to the right on a Big\+Int. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_a39d4e5e3ce4089e06e442d723badce0c}{bi\+\_\+shl}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x, int r)
+\begin{DoxyCompactList}\small\item\em Perform a bitwise shift to the left on a Big\+Int. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bigint_8c_a21df19047ac503d1b8a958ceb594f067}{bi\+\_\+set\+\_\+min\+\_\+words}} (\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$x, int sign, size\+\_\+t wordlen)
+\begin{DoxyCompactList}\small\item\em Set a Big\+Int to the minimum value with a specified word length. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Source file for big integer basic operations. 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{bigint_8c_a90113b26ec1d00eb22e0c258e9e49e7f}\label{bigint_8c_a90113b26ec1d00eb22e0c258e9e49e7f}} 
+\index{bigint.c@{bigint.c}!bi\_assign@{bi\_assign}}
+\index{bi\_assign@{bi\_assign}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_assign()}{bi\_assign()}}
+{\footnotesize\ttfamily void bi\+\_\+assign (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{y,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Assign the value of Big\+Int x to Big\+Int y (Y $<$-\/ X). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em y} & Pointer to the destination Big\+Int where the value of x will be assigned. \\
+\hline
+{\em x} & Big\+Int to be assigned to y. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_a013433fbe9c5af4eb60219cdabe6aa30}\label{bigint_8c_a013433fbe9c5af4eb60219cdabe6aa30}} 
+\index{bigint.c@{bigint.c}!bi\_delete@{bi\_delete}}
+\index{bi\_delete@{bi\_delete}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_delete()}{bi\_delete()}}
+{\footnotesize\ttfamily void bi\+\_\+delete (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Deallocate memory associated with a Big\+Int and release resources. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int pointer. After calling this function, the pointer will be set to NULL. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{bigint_8c_a2b9e2405deef485d72374a988c1fada6}\label{bigint_8c_a2b9e2405deef485d72374a988c1fada6}} 
+\index{bigint.c@{bigint.c}!bi\_expand@{bi\_expand}}
+\index{bi\_expand@{bi\_expand}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_expand()}{bi\_expand()}}
+{\footnotesize\ttfamily void bi\+\_\+expand (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{int}]{new\+\_\+wordlen }\end{DoxyParamCaption})}
+
+
+
+Expand the Big\+Int x with a new word length, padding with zeros. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int to be expanded. \\
+\hline
+{\em new\+\_\+wordlen} & New word length for the Big\+Int. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_aa3f39bb00d7f2ea24d2674995ebaca60}\label{bigint_8c_aa3f39bb00d7f2ea24d2674995ebaca60}} 
+\index{bigint.c@{bigint.c}!bi\_flip\_sign@{bi\_flip\_sign}}
+\index{bi\_flip\_sign@{bi\_flip\_sign}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_flip\_sign()}{bi\_flip\_sign()}}
+{\footnotesize\ttfamily void bi\+\_\+flip\+\_\+sign (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Flip the sign bit of Big\+Int x. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Big\+Int whose sign bit will be flipped. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_aa53a0393a3342ed30150ea494bc56fdf}\label{bigint_8c_aa53a0393a3342ed30150ea494bc56fdf}} 
+\index{bigint.c@{bigint.c}!bi\_gen\_rand@{bi\_gen\_rand}}
+\index{bi\_gen\_rand@{bi\_gen\_rand}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_gen\_rand()}{bi\_gen\_rand()}}
+{\footnotesize\ttfamily void bi\+\_\+gen\+\_\+rand (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x,  }\item[{int}]{sign,  }\item[{int}]{wordlen }\end{DoxyParamCaption})}
+
+
+
+Generate a random Big\+Int x with the specified sign and word length. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the destination Big\+Int where the random value will be stored. \\
+\hline
+{\em sign} & Sign of the Big\+Int (NONNEGATIVE or NEGATIVE). \\
+\hline
+{\em wordlen} & Word length of the Big\+Int. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_ac900775480adfc105b6ba2467b528432}\label{bigint_8c_ac900775480adfc105b6ba2467b528432}} 
+\index{bigint.c@{bigint.c}!bi\_is\_zero@{bi\_is\_zero}}
+\index{bi\_is\_zero@{bi\_is\_zero}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_is\_zero()}{bi\_is\_zero()}}
+{\footnotesize\ttfamily int bi\+\_\+is\+\_\+zero (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Check if the value of Big\+Int x is equal to 0x0. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Big\+Int to be checked. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 (true) if Big\+Int x is equal to 0x0, 0 (false) otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{bigint_8c_aca1703ea3275f676357fc096b061aafe}\label{bigint_8c_aca1703ea3275f676357fc096b061aafe}} 
+\index{bigint.c@{bigint.c}!bi\_new@{bi\_new}}
+\index{bi\_new@{bi\_new}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_new()}{bi\_new()}}
+{\footnotesize\ttfamily void bi\+\_\+new (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x,  }\item[{int}]{wordlen }\end{DoxyParamCaption})}
+
+
+
+Create a new Big\+Int with a specified word length. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int pointer where the new Big\+Int will be stored. \\
+\hline
+{\em wordlen} & The word length of the Big\+Int. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{bigint_8c_a549e93f42a1ffe4f911d1f208aef99bc}\label{bigint_8c_a549e93f42a1ffe4f911d1f208aef99bc}} 
+\index{bigint.c@{bigint.c}!bi\_refine@{bi\_refine}}
+\index{bi\_refine@{bi\_refine}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_refine()}{bi\_refine()}}
+{\footnotesize\ttfamily void bi\+\_\+refine (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Refine Big\+Int x by removing trailing zero words. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int to be refined. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_ad64a747410c7443c97e697942df5e6d8}\label{bigint_8c_ad64a747410c7443c97e697942df5e6d8}} 
+\index{bigint.c@{bigint.c}!bi\_set\_by\_array@{bi\_set\_by\_array}}
+\index{bi\_set\_by\_array@{bi\_set\_by\_array}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_set\_by\_array()}{bi\_set\_by\_array()}}
+{\footnotesize\ttfamily int bi\+\_\+set\+\_\+by\+\_\+array (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x,  }\item[{int}]{sign,  }\item[{word $\ast$}]{a,  }\item[{int}]{wordlen }\end{DoxyParamCaption})}
+
+
+
+Create Big\+Int x by array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int pointer. \\
+\hline
+{\em sign} & Sign of the Big\+Int. \\
+\hline
+{\em a} & Array containing the Big\+Int data. \\
+\hline
+{\em wordlen} & Word length of the Big\+Int. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{bigint_8c_a21df19047ac503d1b8a958ceb594f067}\label{bigint_8c_a21df19047ac503d1b8a958ceb594f067}} 
+\index{bigint.c@{bigint.c}!bi\_set\_min\_words@{bi\_set\_min\_words}}
+\index{bi\_set\_min\_words@{bi\_set\_min\_words}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_set\_min\_words()}{bi\_set\_min\_words()}}
+{\footnotesize\ttfamily void bi\+\_\+set\+\_\+min\+\_\+words (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x,  }\item[{int}]{sign,  }\item[{size\+\_\+t}]{wordlen }\end{DoxyParamCaption})}
+
+
+
+Set a Big\+Int to the minimum value with a specified word length. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int to be set. \\
+\hline
+{\em sign} & Sign of the Big\+Int (NONNEGATIVE or NEGATIVE). \\
+\hline
+{\em wordlen} & Word length of the Big\+Int. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_a233d54d6b82d8fdf466d1af63e313558}\label{bigint_8c_a233d54d6b82d8fdf466d1af63e313558}} 
+\index{bigint.c@{bigint.c}!bi\_set\_one@{bi\_set\_one}}
+\index{bi\_set\_one@{bi\_set\_one}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_set\_one()}{bi\_set\_one()}}
+{\footnotesize\ttfamily void bi\+\_\+set\+\_\+one (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Create a Big\+Int x and initialize its value to 0x1. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int to be created. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_a3bb878ba0533bc9e939b2976d00ba382}\label{bigint_8c_a3bb878ba0533bc9e939b2976d00ba382}} 
+\index{bigint.c@{bigint.c}!bi\_set\_zero@{bi\_set\_zero}}
+\index{bi\_set\_zero@{bi\_set\_zero}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_set\_zero()}{bi\_set\_zero()}}
+{\footnotesize\ttfamily void bi\+\_\+set\+\_\+zero (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Create a Big\+Int x and initialize its value to 0x0. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int to be created. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_a2aad157a166078aa2aaea9283de02bb2}\label{bigint_8c_a2aad157a166078aa2aaea9283de02bb2}} 
+\index{bigint.c@{bigint.c}!bi\_shift\_left\_word@{bi\_shift\_left\_word}}
+\index{bi\_shift\_left\_word@{bi\_shift\_left\_word}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_shift\_left\_word()}{bi\_shift\_left\_word()}}
+{\footnotesize\ttfamily void bi\+\_\+shift\+\_\+left\+\_\+word (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x,  }\item[{int}]{bytelen }\end{DoxyParamCaption})}
+
+
+
+Shift the Big\+Int to the left by a specified number of words. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int to be shifted. \\
+\hline
+{\em bytelen} & Number of words to shift the Big\+Int to the left. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_a513d7c8b87cd016e7707d82ab2078e81}\label{bigint_8c_a513d7c8b87cd016e7707d82ab2078e81}} 
+\index{bigint.c@{bigint.c}!bi\_shift\_right\_word@{bi\_shift\_right\_word}}
+\index{bi\_shift\_right\_word@{bi\_shift\_right\_word}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_shift\_right\_word()}{bi\_shift\_right\_word()}}
+{\footnotesize\ttfamily void bi\+\_\+shift\+\_\+right\+\_\+word (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x,  }\item[{int}]{bytelen }\end{DoxyParamCaption})}
+
+
+
+Shift the Big\+Int to the right by a specified number of words. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int to be shifted. \\
+\hline
+{\em bytelen} & Number of words to shift the Big\+Int to the right. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_a39d4e5e3ce4089e06e442d723badce0c}\label{bigint_8c_a39d4e5e3ce4089e06e442d723badce0c}} 
+\index{bigint.c@{bigint.c}!bi\_shl@{bi\_shl}}
+\index{bi\_shl@{bi\_shl}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_shl()}{bi\_shl()}}
+{\footnotesize\ttfamily void bi\+\_\+shl (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x,  }\item[{int}]{r }\end{DoxyParamCaption})}
+
+
+
+Perform a bitwise shift to the left on a Big\+Int. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int to be shifted. \\
+\hline
+{\em r} & Shift amount in bits. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_a39daaa84166ff95f68754aacd1d248c2}\label{bigint_8c_a39daaa84166ff95f68754aacd1d248c2}} 
+\index{bigint.c@{bigint.c}!bi\_show\_hex@{bi\_show\_hex}}
+\index{bi\_show\_hex@{bi\_show\_hex}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_show\_hex()}{bi\_show\_hex()}}
+{\footnotesize\ttfamily void bi\+\_\+show\+\_\+hex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Display the hexadecimal representation of a Big\+Int. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int to be displayed. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_a1e503fabe843df552279427c8dc69133}\label{bigint_8c_a1e503fabe843df552279427c8dc69133}} 
+\index{bigint.c@{bigint.c}!bi\_show\_hex\_inorder@{bi\_show\_hex\_inorder}}
+\index{bi\_show\_hex\_inorder@{bi\_show\_hex\_inorder}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_show\_hex\_inorder()}{bi\_show\_hex\_inorder()}}
+{\footnotesize\ttfamily void bi\+\_\+show\+\_\+hex\+\_\+inorder (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Display the hexadecimal representation of a Big\+Int in reverse order. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int to be displayed. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_af350e82bff9a04068875de7f50c28077}\label{bigint_8c_af350e82bff9a04068875de7f50c28077}} 
+\index{bigint.c@{bigint.c}!bi\_shr@{bi\_shr}}
+\index{bi\_shr@{bi\_shr}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{bi\_shr()}{bi\_shr()}}
+{\footnotesize\ttfamily void bi\+\_\+shr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$$\ast$}]{x,  }\item[{int}]{r }\end{DoxyParamCaption})}
+
+
+
+Perform a bitwise shift to the right on a Big\+Int. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int to be shifted. \\
+\hline
+{\em r} & Shift amount in bits. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{bigint_8c_aeae8c90a1b2c2e9904c18be35d0c6abd}\label{bigint_8c_aeae8c90a1b2c2e9904c18be35d0c6abd}} 
+\index{bigint.c@{bigint.c}!compare@{compare}}
+\index{compare@{compare}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{compare()}{compare()}}
+{\footnotesize\ttfamily int compare (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{y }\end{DoxyParamCaption})}
+
+
+
+Compare the values of Big\+Int x and y. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Big\+Int for comparison. \\
+\hline
+{\em y} & Big\+Int for comparison. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if x $>$ y, 0 if x = y, -\/1 if x $<$ y. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{bigint_8c_a3a85cfa1f04b1b319fae416e0516f9b9}\label{bigint_8c_a3a85cfa1f04b1b319fae416e0516f9b9}} 
+\index{bigint.c@{bigint.c}!compare\_abs@{compare\_abs}}
+\index{compare\_abs@{compare\_abs}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{compare\_abs()}{compare\_abs()}}
+{\footnotesize\ttfamily int compare\+\_\+abs (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{y }\end{DoxyParamCaption})}
+
+
+
+Compare the absolute values of positive Big\+Int x and y. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the first Big\+Int. \\
+\hline
+{\em y} & Pointer to the second Big\+Int. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if x $>$ y, 0 if x = y, -\/1 if x $<$ y. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{bigint_8c_ab34f500084ca763abcb48c43a2b138f7}\label{bigint_8c_ab34f500084ca763abcb48c43a2b138f7}} 
+\index{bigint.c@{bigint.c}!get\_bitlen@{get\_bitlen}}
+\index{get\_bitlen@{get\_bitlen}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{get\_bitlen()}{get\_bitlen()}}
+{\footnotesize\ttfamily int get\+\_\+bitlen (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Get the bit length of a Big\+Int. This function calculates and returns the total number of bits used to represent the Big\+Int. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The bit length of the Big\+Int. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{bigint_8c_a24f9b9d80425f63a497a822f5d23189f}\label{bigint_8c_a24f9b9d80425f63a497a822f5d23189f}} 
+\index{bigint.c@{bigint.c}!get\_filpped\_sign@{get\_filpped\_sign}}
+\index{get\_filpped\_sign@{get\_filpped\_sign}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{get\_filpped\_sign()}{get\_filpped\_sign()}}
+{\footnotesize\ttfamily int get\+\_\+filpped\+\_\+sign (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Get the flipped sign bit of a Big\+Int. This function retrieves the opposite sign bit of the Big\+Int. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The flipped sign bit (NEGATIVE if the original is NONNEGATIVE, and vice versa). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{bigint_8c_a8a4bf0e78c627545996987394e326554}\label{bigint_8c_a8a4bf0e78c627545996987394e326554}} 
+\index{bigint.c@{bigint.c}!get\_ith\_bit@{get\_ith\_bit}}
+\index{get\_ith\_bit@{get\_ith\_bit}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{get\_ith\_bit()}{get\_ith\_bit()}}
+{\footnotesize\ttfamily int get\+\_\+ith\+\_\+bit (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x,  }\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Get the i-\/th bit of a Big\+Int. This function retrieves the value of the specified bit at position i. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int. \\
+\hline
+{\em i} & Index of the bit to be extracted. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value of the i-\/th bit (0 or 1). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{bigint_8c_ac1ab5609708690a8bf65fa59f157189d}\label{bigint_8c_ac1ab5609708690a8bf65fa59f157189d}} 
+\index{bigint.c@{bigint.c}!get\_sign@{get\_sign}}
+\index{get\_sign@{get\_sign}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{get\_sign()}{get\_sign()}}
+{\footnotesize\ttfamily int get\+\_\+sign (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Get the sign bit of a Big\+Int. This function retrieves the sign bit of the Big\+Int. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The sign bit (NONNEGATIVE or NEGATIVE). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{bigint_8c_a97ffdc7129f59d0b76ee7c9b2512abd9}\label{bigint_8c_a97ffdc7129f59d0b76ee7c9b2512abd9}} 
+\index{bigint.c@{bigint.c}!get\_wordlen@{get\_wordlen}}
+\index{get\_wordlen@{get\_wordlen}!bigint.c@{bigint.c}}
+\doxysubsubsection{\texorpdfstring{get\_wordlen()}{get\_wordlen()}}
+{\footnotesize\ttfamily int get\+\_\+wordlen (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct__BIGINT}{bigint}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Get the word length of a Big\+Int. This function retrieves the number of words used to represent the Big\+Int. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Pointer to the Big\+Int. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The word length of the Big\+Int. 
+\end{DoxyReturn}

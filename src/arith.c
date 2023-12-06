@@ -1,6 +1,6 @@
 /**
  * @file arith.c
- * @brief source file for big integer arithmetic operations.
+ * @brief Source file for big integer arithmetic operations.
  */
 
 #include <stdio.h>

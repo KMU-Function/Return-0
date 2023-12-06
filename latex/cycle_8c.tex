@@ -1,0 +1,43 @@
+\hypertarget{cycle_8c}{}\doxysection{src/cycle.c File Reference}
+\label{cycle_8c}\index{src/cycle.c@{src/cycle.c}}
+
+
+Cycle measurement functions for CPU cycles on different platforms.  
+
+
+{\ttfamily \#include $<$x86intrin.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+Include dependency graph for cycle.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=220pt]{cycle_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint64\+\_\+t \mbox{\hyperlink{cycle_8c_a61618359364fec3a020d993fca782984}{cpucycles}} ()
+\begin{DoxyCompactList}\small\item\em Measure CPU cycles using the RDTSC instruction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Cycle measurement functions for CPU cycles on different platforms. 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{cycle_8c_a61618359364fec3a020d993fca782984}\label{cycle_8c_a61618359364fec3a020d993fca782984}} 
+\index{cycle.c@{cycle.c}!cpucycles@{cpucycles}}
+\index{cpucycles@{cpucycles}!cycle.c@{cycle.c}}
+\doxysubsubsection{\texorpdfstring{cpucycles()}{cpucycles()}}
+{\footnotesize\ttfamily uint64\+\_\+t cpucycles (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Measure CPU cycles using the RDTSC instruction. 
+
+\begin{DoxyReturn}{Returns}
+The number of CPU cycles. 
+\end{DoxyReturn}

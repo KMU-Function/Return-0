@@ -1,6 +1,6 @@
 /**
  * @file bigint.c
- * @brief source file for big integer basic operations.
+ * @brief Source file for big integer basic operations.
  */
 
 #include <stdio.h>

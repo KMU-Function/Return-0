@@ -1,6 +1,6 @@
 /**
- * @file bigint.c
- * @brief header file for big integer basic operations.
+ * @file bigint.h
+ * @brief Header file for big integer basic operations.
  */
 
 #ifndef _BIGINT_H
