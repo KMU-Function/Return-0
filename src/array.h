@@ -1,3 +1,8 @@
+/**
+ * @file array.h
+ * @brief header file for big integer array basic operations.
+ */
+
 #ifndef _ARRAY_H
 #define _ARRAY_H
 

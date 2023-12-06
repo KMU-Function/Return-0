@@ -1,3 +1,8 @@
+/**
+ * @file arith.c
+ * @brief source file for big integer arithmetic operations.
+ */
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -8,11 +13,14 @@
 #include "arith.h"
 
 
-/**
-* @brief Calculate addition of two word x, y
-* Consider carry
-* @param dst pointer of destination where the result of x + y will be stored
-*/
+ /**
+  * @brief Calculate the addition of two words x, y considering carry.
+  * @param dst Pointer to the destination where the result of x + y will be stored.
+  * @param x First word to be added.
+  * @param y Second word to be added.
+  * @param c Carry from the previous addition.
+  * @return The next carry after the addition.
+  */
 word bi_addcc(word* dst, word x, word y, word c) {
     word nc;     // next carry
 
@@ -25,10 +33,13 @@ word bi_addcc(word* dst, word x, word y, word c) {
 }
 
 /**
-* @brief Calculate addition of same signed two BigInt x, y
-* Assume x, y != 0
-* @param dst pointer of destination where the result of x + y will be stored
-*/
+ * @brief Calculate the addition of two BigIntegers x, y with the same sign.
+ * @details Assumes x and y are non-zero.
+ * @param dst Pointer to the destination where the result of x + y will be stored.
+ * @param x First BigInt operand.
+ * @param y Second BigInt operand.
+ * @return 1 if the addition is successful, -1 otherwise.
+ */
 int bi_addc(bigint** dst, bigint* x, bigint* y) {
     int c = 0;
     int j, n = x->wordlen, m = y->wordlen;      // n >= m
@@ -60,9 +71,13 @@ int bi_addc(bigint** dst, bigint* x, bigint* y) {
 }
 
 /**
-* @brief Calculate addition of two BigInt x, y
-* @param dst pointer of destination where the result of x + y will be stored
-*/
+ * @brief Calculate the addition of two BigIntegers x, y.
+ * @param dst Pointer to the destination where the result of x + y will be stored.
+ * @param x First BigInt operand.
+ * @param y Second BigInt operand.
+ * @return 1 if the addition is successful, -1 otherwise.
+ * @see bi_addc, bi_addcc
+ */
 int bi_add(bigint** dst, bigint* x, bigint* y) {
     bigint* absx = NULL;
     bigint* absy = NULL;
@@ -121,10 +136,14 @@ int bi_add(bigint** dst, bigint* x, bigint* y) {
 }
 
 /**
-* @brief Calculate subtraction of two word x, y
-* Consider burrow
-* @param dst pointer of destination where the result of x + y will be stored
-*/
+ * @brief Calculate subtraction of two words (x - y) with borrow consideration.
+ *        The result is stored at the destination pointed by dst.
+ * @param dst Pointer to the destination where the result of x - y will be stored.
+ * @param x The first word operand.
+ * @param y The second word operand.
+ * @param b The borrow from the previous subtraction.
+ * @return The next borrow for the subsequent subtraction.
+ */
 word bi_subcc(word* dst, word x, word y, word b) {
     word nb;     // next borrow
 
@@ -137,10 +156,13 @@ word bi_subcc(word* dst, word x, word y, word b) {
 }
 
 /**
-* @brief Calculate subtraction of two positive BigInt x, y
-* Assume 0 < y <= x
-* @param dst pointer of destination where the result of x - y will be stored
-*/
+ * @brief Calculate subtraction of two positive BigInts (x - y) where 0 < y <= x.
+ *        The result is stored at the destination pointed by dst.
+ * @param dst Pointer to the destination where the result of x - y will be stored.
+ * @param x Pointer to the first positive BigInt operand.
+ * @param y Pointer to the second positive BigInt operand.
+ * @return Always returns 1.
+ */
 int bi_subc(bigint** dst, bigint* x, bigint* y) {
     int b;
     size_t j, n = x->wordlen, m = y->wordlen;      // n >= m
@@ -171,9 +193,13 @@ int bi_subc(bigint** dst, bigint* x, bigint* y) {
 }
 
 /**
-* @brief Calculate subtraction of two BigInt x, y
-* @param dst pointer of destination where the result of x - y will be stored
-*/
+ * @brief Calculate subtraction of two BigInts (x - y).
+ *        The result is stored at the destination pointed by dst.
+ * @param dst Pointer to the destination where the result of x - y will be stored.
+ * @param x Pointer to the first BigInt operand.
+ * @param y Pointer to the second BigInt operand.
+ * @return 0 if successful, -1 if an error occurs.
+ */
 int bi_sub(bigint** dst, bigint* x, bigint* y) {
     int cmp;
     bigint* tmp_x = NULL, * tmp_y = NULL;
@@ -281,9 +307,12 @@ int bi_sub(bigint** dst, bigint* x, bigint* y) {
 }
 
 /**
-* @brief Calculate multiplication of two word x, y
-* @param dst pointer of destination where the result of x * y will be stored
-*/
+ * @brief Calculate multiplication of two words (x * y) using a specialized algorithm.
+ *        The result is stored at the destination pointed by dst.
+ * @param dst Pointer to the destination where the result of x * y will be stored.
+ * @param x The first word operand.
+ * @param y The second word operand.
+ */
 void bi_mulc(word* dst, word x, word y) {
     word x0;
     word y0;
@@ -322,10 +351,12 @@ void bi_mulc(word* dst, word x, word y) {
 }
 
 /**
-* @brief Calculate multiplication of two Bigint x, y
-* multiplication using textbook method
-* @param dst pointer of destination where the result of x * y will be stored
-*/
+ * @brief Calculate multiplication of two BigInts (x * y) using the textbook method.
+ * @param dst Pointer to the destination where the result of x * y will be stored.
+ * @param x Pointer to the first positive BigInt operand.
+ * @param y Pointer to the second positive BigInt operand.
+ * @return Always returns 0.
+ */
 int bi_mul_textbook(bigint** dst, bigint* x, bigint* y) {
     if (x->sign == NEGATIVE || y->sign == NEGATIVE) {
         abort();
@@ -354,10 +385,12 @@ int bi_mul_textbook(bigint** dst, bigint* x, bigint* y) {
 }
 
 /**
-* @brief Calculate multiplication of two BigInt x, y
-* @param mulc mode of multiplication
-* @param dst pointer of destination where the result of x * y will be stored
-*/
+ * @brief Calculate multiplication of two BigInts (x * y) with specified multiplication mode.
+ * @param dst Pointer to the destination where the result of x * y will be stored.
+ * @param x Pointer to the first BigInt operand.
+ * @param y Pointer to the second BigInt operand.
+ * @param mulc String specifying the multiplication mode ("textbook", "improved", "karatsuba").
+ */
 void bi_mul(bigint** dst, bigint* x, bigint* y, const char* mulc) {
     bigint* z_tmp = NULL;
 
@@ -417,12 +450,19 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char* mulc) {
     x_tmp->sign = NONNEGATIVE;
     y_tmp->sign = NONNEGATIVE;
 
-    //! 이거 안해주면 터지는데 why??
+    //! must do
     bi_new(&z_tmp, 1);
-    // z_tmp = NULL;
 
     if (strcmp(mulc, "textbook") == 0) {
         bi_mul_textbook(&z_tmp, x_tmp, y_tmp);
+        bi_assign(dst, z_tmp);
+    }
+    else if (strcmp(mulc, "improved") == 0) {
+        bi_mul_improvedtextbook(&z_tmp, x_tmp, y_tmp);
+        bi_assign(dst, z_tmp);
+    }
+    if (strcmp(mulc, "karatsuba") == 0) {
+        bi_mul_karatsuba(&z_tmp, x_tmp, y_tmp);
         bi_assign(dst, z_tmp);
     }
     else {
@@ -443,14 +483,20 @@ void bi_mul(bigint** dst, bigint* x, bigint* y, const char* mulc) {
     return;
 }
 
-void bi_mul_improvedtextbook(bigint** dest, bigint* src1, bigint* src2) {
-    uint64_t n = src1->wordlen;
-    uint64_t m = src2->wordlen;
+/**
+ * @brief Calculate multiplication of two BigInts (x * y) using an improved textbook method.
+ * @param dst Pointer to the destination where the result of x * y will be stored.
+ * @param x Pointer to the first positive BigInt operand.
+ * @param y Pointer to the second positive BigInt operand.
+ */
+void bi_mul_improvedtextbook(bigint** dst, bigint* x, bigint* y) {
+    uint64_t n = x->wordlen;
+    uint64_t m = y->wordlen;
 
     if (n % 2 == 1) {
-        src1->wordlen = n + 1;
-        src1->a = (word*)realloc(src1->a, sizeof(word) * (n + 1));
-        src1->a[n] = 0x00;
+        x->wordlen = n + 1;
+        x->a = (word*)realloc(x->a, sizeof(word) * (n + 1));
+        x->a[n] = 0x00;
         n += 1;
     }
 
@@ -460,21 +506,21 @@ void bi_mul_improvedtextbook(bigint** dest, bigint* src1, bigint* src2) {
     bi_new(&temp_int1, n + m);
     bi_new(&temp_int2, n + m);
     bi_new(&temp_result, n + m);
-    temp_int1->sign = (*dest)->sign;
-    temp_int2->sign = (*dest)->sign;
-    temp_result->sign = (*dest)->sign;
+    temp_int1->sign = (*dst)->sign;
+    temp_int2->sign = (*dst)->sign;
+    temp_result->sign = (*dst)->sign;
 
     bigint* _dst = NULL;
 
-    bi_set_zero(dest);
+    bi_set_zero(dst);
     for (uint64_t i = 0; i < m; i++) {
         memset(temp_int1->a, 0, sizeof(word) * temp_int1->wordlen);
         memset(temp_int2->a, 0, sizeof(word) * temp_int2->wordlen);
         for (uint64_t j = 0; j < (n / 2); j++) {
-            word A1 = src1->a[2 * j];
-            word B2 = src2->a[i];
-            word A3 = src1->a[2 * j + 1];
-            word B4 = src2->a[i];
+            word A1 = x->a[2 * j];
+            word B2 = y->a[i];
+            word A3 = x->a[2 * j + 1];
+            word B4 = y->a[i];
             bi_mulc(temp_int1->a + (2 * j + i), A1, B2);
             bi_mulc(temp_int2->a + (2 * j + 1 + i), A3, B4);
         }
@@ -486,25 +532,27 @@ void bi_mul_improvedtextbook(bigint** dest, bigint* src1, bigint* src2) {
 
         //T<-T<<i*sizeof(word)*8
         //C<- ADDC(C,T)
-        // bi_expand(*dest, temp_result);
-        (*dest)->wordlen > temp_result->wordlen ? bi_expand(temp_result, (*dest)->wordlen) : bi_expand((*dest), temp_result->wordlen);
-        // bi_add(dest, *dest, temp_result);
-        bi_add(&_dst, *dest, temp_result);
-        bi_assign(dest, _dst);
+        // bi_expand(*dst, temp_result);
+        (*dst)->wordlen > temp_result->wordlen ? bi_expand(temp_result, (*dst)->wordlen) : bi_expand((*dst), temp_result->wordlen);
+        // bi_add(dst, *dst, temp_result);
+        bi_add(&_dst, *dst, temp_result);
+        bi_assign(dst, _dst);
     }
-    bi_refine(src1);
-    bi_refine(*dest);
+    bi_refine(x);
+    bi_refine(*dst);
 
-    (*dest)->sign = src1->sign ^ src2->sign;
+    (*dst)->sign = x->sign ^ y->sign;
     bi_delete(&temp_result);
     bi_delete(&temp_int1);
     bi_delete(&temp_int2);
 }
 
 /**
-* @brief Calculate squaring of word x
-* @param dst pointer of destination where the result of x^2 will be stored
-*/
+ * @brief Calculate squaring of a word (x^2) using a specialized algorithm.
+ *        The result is stored at the destination pointed by dst.
+ * @param dst Pointer to the destination where the result of x^2 will be stored.
+ * @param x The word operand.
+ */
 void bi_sqrc(word* dst, word x) {
 
     word a0 = x & (((word)1 << (sizeof(word) * 8 / 2)) - 1);
@@ -528,10 +576,10 @@ void bi_sqrc(word* dst, word x) {
 }
 
 /**
-* @brief Calculate squaring of Bigint x
-* squaring using textbook method
-* @param dst pointer of destination where the result of x^2 will be stored
-*/
+ * @brief Calculate squaring of a BigInt (x^2) using the textbook method.
+ * @param dst Pointer to the destination where the result of x^2 will be stored.
+ * @param x Pointer to the BigInt operand.
+ */
 void bi_sqr_textbook(bigint** dst, bigint* x) {
     bigint* c1 = NULL;
     bigint* c2 = NULL;
@@ -571,10 +619,13 @@ void bi_sqr_textbook(bigint** dst, bigint* x) {
 }
 
 /**
-* @brief Calculate squaring of BigInt x^2
-* @param mulc mode of squaring
-* @param dst pointer of destination where the result of x^2 will be stored
-*/
+ * @brief Calculate squaring of a BigInt (x^2) with specified squaring mode.
+ * @param dst Pointer to the destination where the result of x^2 will be stored.
+ * @param x Pointer to the BigInt operand.
+ * @param mulc String specifying the squaring mode ("textbook").
+ * @details This function calculates the square of a BigInt based on the specified squaring mode.
+ *          Currently, only the "textbook" mode is supported.
+ */
 void bi_sqr(bigint** dst, bigint* x, const char* mulc) {
     bigint* dst_tmp = NULL;
 
@@ -619,13 +670,21 @@ void bi_sqr(bigint** dst, bigint* x, const char* mulc) {
 
 }
 
-void karatsuba_mul_core(bigint** dest, bigint* src1, bigint* src2, uint64_t len) {
+/**
+ * @brief Core function for Karatsuba multiplication.
+ * @details Recursively performs Karatsuba multiplication for given operands.
+ * @param dst Pointer to the destination where the result will be accumulated.
+ * @param x Pointer to the first positive BigInt operand.
+ * @param y Pointer to the second positive BigInt operand.
+ * @param len Length of the operands for the current recursion level.
+ */
+void bi_mul_karatsuba_core(bigint** dst, bigint* x, bigint* y, uint64_t len) {
 
     bigint* tmp = NULL;
 
     if (len == 1) {
-        bi_mul(&tmp, src1, src2, "textbook");
-        bi_assign(dest, tmp);
+        bi_mul(&tmp, x, y, "textbook");
+        bi_assign(dst, tmp);
         bi_delete(&tmp);
         return;
     }
@@ -643,15 +702,15 @@ void karatsuba_mul_core(bigint** dest, bigint* src1, bigint* src2, uint64_t len)
     bigint* A_A = NULL;
     bigint* B_B = NULL;
 
-    bi_new(&A_h, src1->wordlen - len);
+    bi_new(&A_h, x->wordlen - len);
     bi_new(&A_l, len);
-    bi_new(&B_h, src2->wordlen - len);
+    bi_new(&B_h, y->wordlen - len);
     bi_new(&B_l, len);
 
-    copy_array(A_h->a, src1->a + len, src1->wordlen - len);
-    copy_array(A_l->a, src1->a, len);
-    copy_array(B_h->a, src2->a + len, src2->wordlen - len);
-    copy_array(B_l->a, src2->a, len);
+    copy_array(A_h->a, x->a + len, x->wordlen - len);
+    copy_array(A_l->a, x->a, len);
+    copy_array(B_h->a, y->a + len, y->wordlen - len);
+    copy_array(B_l->a, y->a, len);
 
     bi_new(&A_A, A_h->wordlen + 1);
     bi_new(&B_B, B_h->wordlen + 1);
@@ -660,10 +719,10 @@ void karatsuba_mul_core(bigint** dest, bigint* src1, bigint* src2, uint64_t len)
     bi_new(&C, A_A->wordlen + B_B->wordlen);
     bi_new(&D, A_A->wordlen + B_B->wordlen);
 
-    uint64_t len_A = ((src1->wordlen - len) < (src2->wordlen - len)) ? (src1->wordlen - len) : (src2->wordlen - len);
+    uint64_t len_A = ((x->wordlen - len) < (y->wordlen - len)) ? (x->wordlen - len) : (y->wordlen - len);
 
-    karatsuba_mul_core(&A, A_h, B_h, len_A);
-    karatsuba_mul_core(&B, A_l, B_l, len);
+    bi_mul_karatsuba_core(&A, A_h, B_h, len_A);
+    bi_mul_karatsuba_core(&B, A_l, B_l, len);
 
     bi_add(&A_A, A_h, A_l);
     bi_refine(A_A);
@@ -672,7 +731,7 @@ void karatsuba_mul_core(bigint** dest, bigint* src1, bigint* src2, uint64_t len)
 
     uint64_t len_C = (A_A->wordlen < B_B->wordlen) ? A_A->wordlen : B_B->wordlen;
 
-    karatsuba_mul_core(&C, A_A, B_B, len_C);
+    bi_mul_karatsuba_core(&C, A_A, B_B, len_C);
 
     // bi_sub(&D, C, A);
     // bi_sub(&D, D, B);
@@ -685,11 +744,11 @@ void karatsuba_mul_core(bigint** dest, bigint* src1, bigint* src2, uint64_t len)
     bi_shl(&A, len * (8 * sizeof(word)));
     // printf("After shift = "); bi_show_hex_inorder(A);
 
-    // bi_add(dest, D, B);
-    // bi_add(dest, *dest, A);
+    // bi_add(dst, D, B);
+    // bi_add(dst, *dst, A);
     bi_add(&tmp, D, B);
-    bi_add(dest, tmp, A);
-    // bi_assign(dest, tmp);
+    bi_add(dst, tmp, A);
+    // bi_assign(dst, tmp);
 
     bi_delete(&tmp);
 
@@ -705,20 +764,31 @@ void karatsuba_mul_core(bigint** dest, bigint* src1, bigint* src2, uint64_t len)
     bi_delete(&B_l);
 }
 
-void karatsuba_mul(bigint** dest, bigint* src1, bigint* src2) {
-    uint64_t len = (src1->wordlen < src2->wordlen) ? src1->wordlen : src2->wordlen;
+/**
+ * @brief Calculate multiplication of two BigInts (x * y) using the Karatsuba algorithm.
+ * @param dst Pointer to the destination where the result of x * y will be stored.
+ * @param x Pointer to the first positive BigInt operand.
+ * @param y Pointer to the second positive BigInt operand.
+ */
+void bi_mul_karatsuba(bigint** dst, bigint* x, bigint* y) {
+    uint64_t len = (x->wordlen < y->wordlen) ? x->wordlen : y->wordlen;
     bigint* _dst = NULL;
-    karatsuba_mul_core(&_dst, src1, src2, len);
-    bi_assign(dest, _dst);
-    (*dest)->sign = src1->sign ^ src2->sign;
+    bi_mul_karatsuba_core(&_dst, x, y, len);
+    bi_assign(dst, _dst);
+    (*dst)->sign = x->sign ^ y->sign;
 }
 
 /**
-* @brief Calculate division of BigInt x
-* @param q number of quotient
-* @param r number of remainder
-* @param a ?
-*/
+ * @brief Perform binary long division to calculate the quotient and remainder of two BigInts.
+ * @param q Pointer to the destination where the quotient will be stored.
+ * @param r Pointer to the destination where the remainder will be stored.
+ * @param a Dividend BigInt.
+ * @param b Divisor BigInt.
+ * @return 0 on success, -1 if inputs are invalid or divisor is zero.
+ * @details This function calculates the quotient and remainder of the division a / b using binary long division.
+ *          The result is stored in the specified pointers q (quotient) and r (remainder).
+ *          If either of the input BigInts is NULL or if the divisor (b) is zero, the function returns -1.
+ */
 int bi_binary_longdiv(bigint** q, bigint** r, bigint* a, bigint* b) {
 
     if (a == NULL || b == NULL) {
@@ -767,7 +837,13 @@ int bi_binary_longdiv(bigint** q, bigint** r, bigint* a, bigint* b) {
     return 0;
 }
 
-
+/**
+ * @brief Compute the Barrett reduction pre-computed value (t) for a given modulus (y).
+ * @param t Pointer to the destination where the Barrett reduction pre-computed value will be stored.
+ * @param y Modulus BigInt.
+ * @details This function calculates the Barrett reduction pre-computed value (t) for the specified modulus (y).
+ *          The result is stored in the specified pointer t.
+ */
 void bi_barrett_compute_t(bigint** t, bigint* y) {
     bigint* r = NULL;
     size_t n = y->wordlen;
@@ -781,8 +857,16 @@ void bi_barrett_compute_t(bigint** t, bigint* y) {
     bi_delete(&r);
 }
 
-// r <- x mod m
-// t is pre-computed value
+/**
+ * @brief Perform the core steps of Barrett reduction.
+ * @param r Pointer to the destination where the result of the reduction will be stored.
+ * @param x Dividend BigInt.
+ * @param m Modulus BigInt.
+ * @param t Pre-computed value for Barrett reduction.
+ * @return 0 on success, -1 if inputs are invalid or x->wordlen > 2 * m->wordlen.
+ * @details This function performs the core steps of Barrett reduction, calculating the remainder of x divided by m
+ *          using the pre-computed value t. The result is stored in the specified pointer r.
+ */
 int bi_barrett_reduction_core(bigint** r, bigint* x, bigint* m, bigint* t) {
     if (x == NULL || m == NULL || t == NULL) {
         return -1;
@@ -818,6 +902,15 @@ int bi_barrett_reduction_core(bigint** r, bigint* x, bigint* m, bigint* t) {
     return 0;
 }
 
+/**
+ * @brief Perform Barrett reduction on a given dividend x with a specified modulus m.
+ * @param r Pointer to the destination where the result of the reduction will be stored.
+ * @param x Dividend BigInt.
+ * @param m Modulus BigInt.
+ * @return 0 on success, -1 if inputs are invalid or m is zero.
+ * @details This function performs Barrett reduction on the dividend x with the specified modulus m.
+ *          The result is stored in the specified pointer r. If m is zero, the function aborts.
+ */
 int bi_barrett_reduction(bigint** r, bigint* x, bigint* m) {
     bigint* t = NULL;
     if (bi_is_zero(m)) {
@@ -834,12 +927,14 @@ int bi_barrett_reduction(bigint** r, bigint* x, bigint* m) {
 }
 
 /**
-* @brief Calculate exponentiation of x^n
-* @param x number of base
-* @param n number of power
-* @param dst pointer of destination where the result of x^n will be stored
-*/
-void bi_LtR(bigint** z, bigint** x, bigint* n) {
+ * @brief Calculate exponentiation of BigInt x^n using the Left-to-Right method.
+ * @param dst Pointer to the destination where the result of x^n will be stored.
+ * @param x Pointer to the base BigInt.
+ * @param n Exponent BigInt.
+ * @details This function calculates the exponentiation of the base x to the power of n using the Left-to-Right method.
+ *          The result is stored in the specified pointer dst.
+ */
+void bi_LtR(bigint** dst, bigint** x, bigint* n) {
 
     bigint* _x = NULL;
     bi_assign(&_x, *x);  // _x <- x (temp)
@@ -866,7 +961,7 @@ void bi_LtR(bigint** z, bigint** x, bigint* n) {
             }
         }
     }
-    bi_assign(z, t);
+    bi_assign(dst, t);
 
     bi_delete(&_x);
     bi_delete(&t);
@@ -874,7 +969,18 @@ void bi_LtR(bigint** z, bigint** x, bigint* n) {
     bi_delete(&_tsqr);
 }
 
-void bi_LtR_mod(bigint** z, bigint** x, bigint* n, bigint* modulo) {
+/**
+ * @brief Calculate exponentiation of BigInt x^n with modulo using the Left-to-Right method.
+ * @param dst Pointer to the destination where the result of x^n modulo modulo will be stored.
+ * @param x Pointer to the base BigInt.
+ * @param n Exponent BigInt.
+ * @param modulo Modulo BigInt.
+ * @details This function calculates the exponentiation of the base x to the power of n with modulo using the Left-to-Right method.
+ *          The result is stored in the specified pointer dst.
+ *          If the intermediate results (_tsqr and _t) are greater than modulo, Barrett reduction is applied.
+ *          If the word length of the intermediate result is not suitable for Barrett reduction, the function aborts.
+ */
+void bi_LtR_mod(bigint** dst, bigint** x, bigint* n, bigint* modulo) {
 
     bigint* _x = NULL;
     bi_assign(&_x, *x);  // _x <- x (temp)
@@ -926,7 +1032,7 @@ void bi_LtR_mod(bigint** z, bigint** x, bigint* n, bigint* modulo) {
             }
         }
     }
-    bi_assign(z, t);
+    bi_assign(dst, t);
 
     bi_delete(&_x);
     bi_delete(&t);

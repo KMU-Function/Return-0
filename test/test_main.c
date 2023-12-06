@@ -410,7 +410,7 @@ int main(void) {
         bi_set_by_array(&y, NONNEGATIVE, yarr, ylen);
 
         start = cpucycles();
-        karatsuba_mul(&z, x, y);
+        bi_mul_karatsuba(&z, x, y);
 
         end = cpucycles();
         cc += (end - start) / ITERNUM;
