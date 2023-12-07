@@ -46,11 +46,12 @@
   * @return Always returns 0 on unsupported platforms.
   */
 unsigned long long cpucycles(void) {
-    return 0;
+  return 0;
 }
 
 #else
 #include <x86intrin.h>
+#include <stdint.h>
 #define CYCLE_MEASURE
 
  /**
@@ -58,7 +59,7 @@ unsigned long long cpucycles(void) {
   * @return The number of CPU cycles.
   */
 uint64_t cpucycles() {
-    return __rdtsc();
+  return __rdtsc();
 }
 
 #endif

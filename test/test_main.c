@@ -7,6 +7,8 @@
 #include <time.h>
 #include <assert.h>
 
+#include <inttypes.h>
+
 #if defined(__linux__) || defined(__APPLE__)
 #include "../src/api.h"
 #elif defined(_WIN32)
@@ -101,7 +103,7 @@ int main(void) {
         //printf("add test [%d] finished\n", iter);
     }
     fclose(fp_add);
-    printf("Addition Cycles: %llu\n", cc);
+    printf("Addition Cycles: %" PRIu64 "\n", cc);
     cc = 0;
 
     //! sub test*********************************************************
@@ -158,7 +160,7 @@ int main(void) {
         //printf("sub test [%d] finished\n", iter);
     }
     fclose(fp_sub);
-    printf("Subtraction Cycles: %llu\n", cc);
+    printf("Subtraction Cycles: %" PRIu64 "\n", cc);
     cc = 0;
 
     //! mul test*********************************************************
@@ -220,7 +222,7 @@ int main(void) {
         // printf("mul test [%d] finished\n", iter);
     }
     fclose(fp_mul);
-    printf("Multiplication Cycles: %llu\n", cc);
+    printf("Multiplication Cycles: %" PRIu64 "\n", cc);
     cc = 0;
 
 
@@ -283,7 +285,7 @@ int main(void) {
         //printf("shr test [%d] finished\n", iter);
     }
     fclose(fp_shr_bit);
-    printf("Shift Right Cycles: %llu\n", cc);
+    printf("Shift Right Cycles: %" PRIu64 "\n", cc);
     cc = 0;
 
     //! shl test*********************************************************
@@ -345,7 +347,7 @@ int main(void) {
         //printf("shl test [%d] finished\n", iter);
     }
     fclose(fp_shl_bit);
-    printf("Shift Left Cycles: %llu\n", cc);
+    printf("Shift Left Cycles: %" PRIu64 "\n", cc);
     cc = 0;
 
     //! sqr test*********************************************************
@@ -390,7 +392,7 @@ int main(void) {
         //printf("sqr test [%d] finished\n", iter);
     }
     fclose(fp_sqr);
-    printf("Squaring Cycles: %llu\n", cc);
+    printf("Squaring Cycles: %" PRIu64 "\n", cc);
     cc = 0;
 
     //! Karatsuba test*********************************************************
@@ -447,7 +449,7 @@ int main(void) {
         free(yarr);
     }
     fclose(fp_krt);
-    printf("Karatsuba Cycles: %llu\n", cc);
+    printf("Karatsuba Cycles: %" PRIu64 "\n", cc);
     cc = 0;
 
     //! div test*********************************************************
@@ -519,7 +521,7 @@ int main(void) {
         //printf("div test [%d] finished\n", iter);
     }
     fclose(fp_div);
-    printf("Division Cycles: %llu\n", cc);
+    printf("Division Cycles: %" PRIu64 "\n", cc);
     cc = 0;
 
     //! barrett test*********************************************************
@@ -578,7 +580,8 @@ int main(void) {
         //printf("bar test [%d] finished\n", iter);
     }
     fclose(fp_bar);
-    printf("Barrett Reduction Cycles: %llu\n", cc);
+    // printf("Barrett Reduction Cycles: %" PRIu64 "\n", cc);
+    printf("Barrett Reduction Cycles: %" PRIu64 "\n", cc);
     cc = 0;
 
     //! exp test*********************************************************
@@ -638,7 +641,7 @@ int main(void) {
         //printf("exp test [%d] finished\n", iter);
     }
     fclose(fp_exp);
-    printf("Exponention Cycles: %llu\n", cc);
+    printf("Exponention Cycles: %" PRIu64 "\n", cc);
     cc = 0;
 
     // void bi_mul_improvedtextbook(bigint * *dest, bigint * src1, bigint * src2)
@@ -697,7 +700,7 @@ int main(void) {
         free(yarr);
     }
     fclose(fp_impvmul);
-    printf("Improved Multiplication Cycles: %llu\n", cc);
+    printf("Improved Multiplication Cycles: %" PRIu64 "\n", cc);
     cc = 0;
 
 
@@ -773,7 +776,7 @@ int main(void) {
         //printf("modexp test [%d] finished\n", iter);
     }
     fclose(fp_modexp);
-    printf("Modular Exponention Cycles: %llu\n", cc);
+    printf("Modular Exponention Cycles: %" PRIu64 "\n", cc);
     cc = 0;
     printf("\n==============================================\n\n");
 
@@ -790,7 +793,7 @@ int main(void) {
 
         word* marr = (word*)calloc(mlen, sizeof(word));
         for (int i = 0; i < mlen; i++) {
-            marr[i] = rand() + 1;     
+            marr[i] = rand() + 1;
         }
 
         bi_set_by_array(&m, NONNEGATIVE, marr, mlen);
