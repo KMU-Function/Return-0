@@ -683,7 +683,7 @@ void bi_mul_karatsuba_core(bigint** dst, bigint* x, bigint* y, uint64_t len) {
     bigint* tmp = NULL;
 
     if (len == 1) {
-        bi_mul(&tmp, x, y, "textbook");
+        bi_mul_textbook(&tmp, x, y);
         bi_assign(dst, tmp);
         bi_delete(&tmp);
         return;
@@ -885,9 +885,9 @@ int bi_barrett_reduction_core(bigint** r, bigint* x, bigint* m, bigint* t) {
 
     bi_assign(&tmp_x, x);
     bi_shr(&tmp_x, (sizeof(word) * 8) * (n - 1));    // qhat = A >> w(n-1)
-    bi_mul(&qhat, tmp_x, t, "textbook");             // qhat = qhat * t
+    bi_mul_textbook(&qhat, tmp_x, t);             // qhat = qhat * t
     bi_shr(&qhat, (sizeof(word) * 8) * (n + 1));     // qhat = qhat >> w(n+1)
-    bi_mul(&tmp_r, m, qhat, "textbook");             // R = N * qhat
+    bi_mul_textbook(&tmp_r, m, qhat);             // R = N * qhat
     bi_assign(&tmp_x, x);
     bi_sub(r, tmp_x, tmp_r);
 
@@ -952,11 +952,11 @@ void bi_LtR(bigint** dst, bigint** x, bigint* n) {
 
     for (int i = n->wordlen - 1; i >= 0; i--) {
         for (int j = (sizeof(word) * 8) - 1; j >= 0; j--) {
-            bi_sqr(&_tsqr, t, "textbook");
+            bi_sqr_textbook(&_tsqr, t);
             bi_assign(&t, _tsqr);  // t <- t^2          
             _n = (n->a[i] >> j) & 0x01;
             if (_n == 1) {      // n_i = 1            
-                bi_mul(&_t, t, _x, "textbook");
+                bi_mul_textbook(&_t, t, _x);
                 bi_assign(&t, _t);     // t <- t * x             
             }
         }
@@ -998,7 +998,7 @@ void bi_LtR_mod(bigint** dst, bigint** x, bigint* n, bigint* modulo) {
 
     for (int i = n->wordlen - 1; i >= 0; i--) {
         for (int j = (sizeof(word) * 8) - 1; j >= 0; j--) {
-            bi_sqr(&_tsqr, t, "textbook");
+            bi_sqr_textbook(&_tsqr, t);
 
             if (compare(_tsqr, modulo) == 1) {     // _tsqr > modulo  --> do reduction
                 if (_tsqr->wordlen > (modulo->wordlen * 2)) {   // not suitable to barret reduction
@@ -1015,7 +1015,7 @@ void bi_LtR_mod(bigint** dst, bigint** x, bigint* n, bigint* modulo) {
             }
             _n = (n->a[i] >> j) & 0x01;
             if (_n == 1) {      // n_i = 1            
-                bi_mul(&_t, t, _x, "textbook");
+                bi_mul_improvedtextbook(&_t, t, _x);
                 if (compare(_t, modulo) == 1) {     // _t > modulo  --> do reduction
                     if (_t->wordlen > (modulo->wordlen * 2)) {  // not suitable to barret reduction
                         printf("_t wordlen = %d, modulo wordlen = %d\n", _t->wordlen, modulo->wordlen);

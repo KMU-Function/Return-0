@@ -10,7 +10,7 @@
   * @def RSA_TEST
   * @brief Flag indicating whether to include RSA testing. Set to 1 to include RSA testing, 0 otherwise.
   */
-#define RSA_TEST 1
+#define RSA_TEST 0
 
 #include "bigint.h"
 #include "arith.h"

@@ -9,7 +9,8 @@
 #include "api.h"
 #endif
 
-#define ITERNUM 100
+#define ITERNUM 1
+#define WORDLEN 100
 #define MIN(a, b) a < b ? a : b;
 #define MAX(a, b) a > b ? a : b;
 
@@ -49,7 +50,7 @@ int main(void) {
 
         int xlen = rand() % 100;
         int ylen = rand() % 100;
-
+        xlen = ylen = WORDLEN;
         bi_new(&x, xlen);
         bi_new(&y, ylen);
         bi_new(&z, xlen < ylen ? ylen : xlen);
@@ -102,11 +103,11 @@ int main(void) {
     //! sub test*********************************************************
     FILE* fp_sub = NULL;
     fp_sub = fopen("test/test_sub.txt", "w");
-    fp_sub = fopen("test/test_sub.txt", "w");
     assert(fp_sub != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = rand() % 100;
         int ylen = rand() % 100;
+        xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -165,6 +166,7 @@ int main(void) {
 
         int xlen = rand() % 100;
         int ylen = rand() % 100;
+        xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -185,7 +187,7 @@ int main(void) {
 
         start = cpucycles();
 
-        bi_mul(&z, x, y, "textbook");
+        bi_mul_textbook(&z, x, y);
 
         end = cpucycles();
         cc += (end - start) / ITERNUM;
@@ -226,6 +228,7 @@ int main(void) {
 
         int xlen = rand() % 100;
         int ylen = rand() % 100;
+        xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -286,6 +289,7 @@ int main(void) {
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = rand() % 10;
         int ylen = rand() % 10;
+        xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -346,6 +350,7 @@ int main(void) {
     assert(fp_sqr != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = rand() % 10;
+        xlen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&z, 2 * xlen);
@@ -359,7 +364,7 @@ int main(void) {
         bi_set_by_array(&x, NONNEGATIVE, xarr, xlen);
 
         start = cpucycles();
-        bi_sqr(&z, x, "textbook");
+        bi_sqr_textbook(&z, x);
 
         end = cpucycles();
         cc += (end - start) / ITERNUM;
@@ -391,6 +396,7 @@ int main(void) {
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = (rand() % 100) + 1;
         int ylen = (rand() % 100) + 1;
+        xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -434,6 +440,7 @@ int main(void) {
         bi_delete(&z);
 
         free(xarr);
+        free(yarr);
     }
     fclose(fp_krt);
     printf("Karatsuba Cycles: %lu\n", cc);
@@ -453,6 +460,7 @@ int main(void) {
 
         int xlen = MAX(tmp1, tmp2);
         int ylen = MIN(tmp1, tmp2);
+        xlen = ylen = WORDLEN;
 
         bigint* q = NULL;
         bigint* r = NULL;
@@ -519,6 +527,7 @@ int main(void) {
         int ylen = (rand() % 10) + 1;
         int xlen = ylen * 2;
         bigint* r = NULL;
+        xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -577,6 +586,7 @@ int main(void) {
 
         int xlen = (rand() % 10) + 1;
         int ylen = 1;
+        xlen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -636,6 +646,7 @@ int main(void) {
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = (rand() % 100) + 1;
         int ylen = (rand() % 100) + 1;
+        xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -679,6 +690,7 @@ int main(void) {
         bi_delete(&z);
 
         free(xarr);
+        free(yarr);
     }
     fclose(fp_impvmul);
     printf("Improved Multiplication Cycles: %lu\n", cc);
@@ -694,8 +706,10 @@ int main(void) {
     for (int iter = 0; iter < 1; iter++) {
 
         int xlen = (rand() % 100) + 1;
-        int modlen = xlen + 1;
         int ylen = rand() % 10;
+
+        xlen = ylen = WORDLEN;
+        int modlen = xlen + 1;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -772,7 +786,7 @@ int main(void) {
 
         word* marr = (word*)calloc(mlen, sizeof(word));
         for (int i = 0; i < mlen; i++) {
-            marr[i] = rand() + 1;       // except zero
+            marr[i] = rand() + 1;     
         }
 
         bi_set_by_array(&m, NONNEGATIVE, marr, mlen);

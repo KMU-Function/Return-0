@@ -215,7 +215,7 @@ int bi_is_zero(bigint* x) {
     else if (x->sign != NONNEGATIVE || x->a[0] != 0)
         return 0;
 
-    for (int i = x->wordlen; i >= 0; i--) {
+    for (int i = x->wordlen - 1; i >= 0; i--) {
         if (x->a[i] != 0)
             return 0;
     }
