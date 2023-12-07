@@ -44,6 +44,7 @@ int bi_addc(bigint** dst, bigint* x, bigint* y) {
     int c = 0;
     int j, n = x->wordlen, m = y->wordlen;      // n >= m
 
+    // Allocate memory for the destination BigInt
     bi_new(dst, n + 1);
 
     bigint* tmp_y = NULL;
@@ -59,13 +60,16 @@ int bi_addc(bigint** dst, bigint* x, bigint* y) {
         }
     }
 
+    // Perform addition with carry propagation
     for (j = 0; j < n; j++) {
         c = bi_addcc(&((*dst)->a[j]), x->a[j], tmp_y->a[j], c);
     }
 
+    // Handle the last carry
     (*dst)->a[n] = c;
     bi_refine(*dst);
 
+    // Clean up temporary variable
     bi_delete(&tmp_y);
     return 1;
 }
@@ -277,7 +281,7 @@ int bi_sub(bigint** dst, bigint* x, bigint* y) {
         bi_delete(&tmp_y);
         return 0;
     }
-    /* x > 0 and y < 0 : add(x, |y|) */
+    // x > 0 and y < 0 : add(x, |y|)
     else if ((x->sign == NONNEGATIVE) && (y->sign == NEGATIVE)) {
         bi_assign(&tmp_y, y);
         tmp_y->sign = NONNEGATIVE;
@@ -289,7 +293,7 @@ int bi_sub(bigint** dst, bigint* x, bigint* y) {
         bi_delete(&tmp_y);
         return 0;
     }
-    /* x < 0 and y > 0 : -add(|x|, y) */
+    // x < 0 and y > 0 : -add(|x|, y) 
     else {
         bi_assign(&tmp_x, x);
         tmp_x->sign = NONNEGATIVE;
@@ -772,13 +776,22 @@ void bi_mul_karatsuba_core(bigint** dst, bigint* x, bigint* y, uint64_t len) {
  * @param dst Pointer to the destination where the result of x * y will be stored.
  * @param x Pointer to the first positive BigInt operand.
  * @param y Pointer to the second positive BigInt operand.
+ * @details The algorithm switches to a conventional multiplication method
+ *          when the length of the operands (`len`) is below a certain flag.
+ *          The flag is determined by the minimum word length of the two operands.
  */
 void bi_mul_karatsuba(bigint** dst, bigint* x, bigint* y) {
+    // Determine the minimum word length of the operands
     uint64_t len = (x->wordlen < y->wordlen) ? x->wordlen : y->wordlen;
+    // Temporary variable to store the result of Karatsuba multiplication
     bigint* _dst = NULL;
+    // Call the core Karatsuba multiplication function
     bi_mul_karatsuba_core(&_dst, x, y, len);
+    // Assign the result to the destination
     bi_assign(dst, _dst);
+    // Determine the sign of the result
     (*dst)->sign = x->sign ^ y->sign;
+    // Clean up temporary variable
     bi_delete(&_dst);
 }
 
@@ -887,14 +900,18 @@ int bi_barrett_reduction_core(bigint** r, bigint* x, bigint* m, bigint* t) {
     bigint* qhat = NULL;
     bigint* tmp_x = NULL;
 
+    // Calculate qhat = (x >> w(n-1)) * t >> w(n+1)
     bi_assign(&tmp_x, x);
     bi_shr(&tmp_x, (sizeof(word) * 8) * (n - 1));    // qhat = A >> w(n-1)
     bi_mul_textbook(&qhat, tmp_x, t);             // qhat = qhat * t
     bi_shr(&qhat, (sizeof(word) * 8) * (n + 1));     // qhat = qhat >> w(n+1)
+
+    // Calculate tmp_r = x - (m * qhat)
     bi_mul_textbook(&tmp_r, m, qhat);             // R = N * qhat
     bi_assign(&tmp_x, x);
     bi_sub(r, tmp_x, tmp_r);
 
+    // Repeat until r is less than m
     while (compare(*r, m) >= 0) {
         bi_sub(&tmp_r, *r, m);
         bi_assign(r, tmp_r);
@@ -917,14 +934,18 @@ int bi_barrett_reduction_core(bigint** r, bigint* x, bigint* m, bigint* t) {
  */
 int bi_barrett_reduction(bigint** r, bigint* x, bigint* m) {
     bigint* t = NULL;
+    // Abort if m is zero
     if (bi_is_zero(m)) {
         abort();
     }
+    // If m is one, the result is zero
     if (bi_is_one(m)) {
         bi_set_zero(r);
         return 0;
     }
+    // Compute the Barrett reduction pre-computed value (t)
     bi_barrett_compute_t(&t, m);
+    // Perform the core steps of Barrett reduction
     bi_barrett_reduction_core(r, x, m, t);
     bi_delete(&t);
     return 0;

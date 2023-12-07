@@ -328,10 +328,10 @@ Calculate multiplication of two Big\+Ints (x $\ast$ y) using the Karatsuba algor
 \hline
 {\em x} & Pointer to the first positive Big\+Int operand. \\
 \hline
-{\em y} & Pointer to the second positive Big\+Int operand. \\
+{\em y} & Pointer to the second positive Big\+Int operand.\\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{arith_8c_af7607f4a6aed69213518a9bc3c9067a1}\label{arith_8c_af7607f4a6aed69213518a9bc3c9067a1}} 
+The algorithm switches to a conventional multiplication method when the length of the operands ({\ttfamily len}) is below a certain flag. The flag is determined by the minimum word length of the two operands. \mbox{\Hypertarget{arith_8c_af7607f4a6aed69213518a9bc3c9067a1}\label{arith_8c_af7607f4a6aed69213518a9bc3c9067a1}} 
 \index{arith.c@{arith.c}!bi\_mul\_karatsuba\_core@{bi\_mul\_karatsuba\_core}}
 \index{bi\_mul\_karatsuba\_core@{bi\_mul\_karatsuba\_core}!arith.c@{arith.c}}
 \doxysubsubsection{\texorpdfstring{bi\_mul\_karatsuba\_core()}{bi\_mul\_karatsuba\_core()}}

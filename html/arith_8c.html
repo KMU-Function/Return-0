@@ -733,10 +733,11 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">dst</td><td>Pointer to the destination where the result of x * y will be stored. </td></tr>
     <tr><td class="paramname">x</td><td>Pointer to the first positive BigInt operand. </td></tr>
-    <tr><td class="paramname">y</td><td>Pointer to the second positive BigInt operand. </td></tr>
+    <tr><td class="paramname">y</td><td>Pointer to the second positive BigInt operand.</td></tr>
   </table>
   </dd>
 </dl>
+<p>The algorithm switches to a conventional multiplication method when the length of the operands (<code>len</code>) is below a certain flag. The flag is determined by the minimum word length of the two operands. </p>
 
 </div>
 </div>

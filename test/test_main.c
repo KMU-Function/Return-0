@@ -61,7 +61,7 @@ int main(void) {
 
         int xlen = rand() % 100;
         int ylen = rand() % 100;
-        xlen = ylen = WORDLEN;
+        // xlen = ylen = WORDLEN;
         bi_new(&x, xlen);
         bi_new(&y, ylen);
         bi_new(&z, xlen < ylen ? ylen : xlen);
@@ -122,7 +122,7 @@ int main(void) {
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = rand() % 100;
         int ylen = rand() % 100;
-        xlen = ylen = WORDLEN;
+        // xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -185,7 +185,7 @@ int main(void) {
 
         int xlen = rand() % 100;
         int ylen = rand() % 100;
-        xlen = ylen = WORDLEN;
+        // xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -251,7 +251,7 @@ int main(void) {
 
         int xlen = rand() % 100;
         int ylen = rand() % 100;
-        xlen = ylen = WORDLEN;
+        // xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -316,7 +316,7 @@ int main(void) {
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = rand() % 10;
         int ylen = rand() % 10;
-        xlen = ylen = WORDLEN;
+        // xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -431,7 +431,7 @@ int main(void) {
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = (rand() % 100) + 1;
         int ylen = (rand() % 100) + 1;
-        xlen = ylen = WORDLEN;
+        // xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -499,7 +499,7 @@ int main(void) {
 
         int xlen = MAX(tmp1, tmp2);
         int ylen = MIN(tmp1, tmp2);
-        xlen = ylen = WORDLEN;
+        // xlen = ylen = WORDLEN;
 
         bigint* q = NULL;
         bigint* r = NULL;
@@ -570,7 +570,7 @@ int main(void) {
         int ylen = (rand() % 10) + 1;
         int xlen = ylen * 2;
         bigint* r = NULL;
-        xlen = ylen = WORDLEN;
+        // xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -698,7 +698,7 @@ int main(void) {
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = (rand() % 100) + 1;
         int ylen = (rand() % 100) + 1;
-        xlen = ylen = WORDLEN;
+        // xlen = ylen = WORDLEN;
 
         bi_new(&x, xlen);
         bi_new(&y, ylen);
@@ -764,7 +764,7 @@ int main(void) {
         int xlen = (rand() % 100) + 1;
         int ylen = rand() % 10;
 
-        xlen = ylen = WORDLEN;
+        // xlen = ylen = WORDLEN;
         int modlen = xlen + 1;
 
         bi_new(&x, xlen);
@@ -857,10 +857,11 @@ int main(void) {
             printf("rsa test [%d] finished\n", iter);
         }
 
-        bi_delete(&x);
-        bi_delete(&y);
-        bi_delete(&mod);
-        bi_delete(&z);
+        bi_delete(&m);
+        bi_delete(&ct);
+        // bi_delete(&mod);
+        bi_delete(&pt);
+        free(marr);
     }
 #endif
 
