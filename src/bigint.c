@@ -460,6 +460,12 @@ void bi_shr(bigint** x, int r) {
     int word_shift = r / (8 * sizeof(word)); // Offset in words
     int bit_offset = r % (8 * sizeof(word));  // Offset in bits
 
+    // check x become zero
+    if((*x)->wordlen - word_shift <= 0){
+        bi_set_zero(x);
+        return;
+    }
+
     // Create a temporary bigint to hold the shifted value.
     bigint* temp = NULL;
     bi_new(&temp, (*x)->wordlen - word_shift);

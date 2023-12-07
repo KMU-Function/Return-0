@@ -10,7 +10,7 @@
 #endif
 
 #define ITERNUM 1
-#define WORDLEN 100
+#define WORDLEN 10
 #define MIN(a, b) a < b ? a : b;
 #define MAX(a, b) a > b ? a : b;
 
@@ -701,9 +701,9 @@ int main(void) {
     FILE* fp_modexp = NULL;
     fp_modexp = fopen("test/test_modexp.txt", "w");
     assert(fp_modexp != NULL);
-    bigint* mod = NULL;
 
     for (int iter = 0; iter < 1; iter++) {
+        bigint* mod = NULL;
 
         int xlen = (rand() % 100) + 1;
         int ylen = rand() % 10;

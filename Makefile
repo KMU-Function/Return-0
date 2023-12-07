@@ -16,7 +16,7 @@ OBJ_FILES = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRC_FILES))
 TEST_OBJ_FILES = $(patsubst $(TEST_DIR)/%.c,$(BUILD_DIR)/%.o,$(TEST_SRC_FILES))
 
 # define DTYPE and ZEROIZE value
-DTYPE := 32 	# default DTYPE is 32-bit
+DTYPE := 32  	# default DTYPE is 32-bit
 ZEROIZE := 0 	# default ZEROIZE is 0
 
 # add DTYPE and ZEROIZE into CFLAGS

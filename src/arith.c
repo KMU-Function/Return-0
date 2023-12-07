@@ -545,6 +545,7 @@ void bi_mul_improvedtextbook(bigint** dst, bigint* x, bigint* y) {
     bi_delete(&temp_result);
     bi_delete(&temp_int1);
     bi_delete(&temp_int2);
+    bi_delete(&_dst);
 }
 
 /**
@@ -681,6 +682,7 @@ void bi_sqr(bigint** dst, bigint* x, const char* mulc) {
 void bi_mul_karatsuba_core(bigint** dst, bigint* x, bigint* y, uint64_t len) {
 
     bigint* tmp = NULL;
+    bigint* tmp2 = NULL;
 
     if (len == 1) {
         bi_mul_textbook(&tmp, x, y);
@@ -747,10 +749,11 @@ void bi_mul_karatsuba_core(bigint** dst, bigint* x, bigint* y, uint64_t len) {
     // bi_add(dst, D, B);
     // bi_add(dst, *dst, A);
     bi_add(&tmp, D, B);
-    bi_add(dst, tmp, A);
-    // bi_assign(dst, tmp);
+    bi_add(&tmp2, tmp, A);
+    bi_assign(dst, tmp2);
 
     bi_delete(&tmp);
+    bi_delete(&tmp2);
 
     bi_delete(&A);
     bi_delete(&B);
@@ -776,6 +779,7 @@ void bi_mul_karatsuba(bigint** dst, bigint* x, bigint* y) {
     bi_mul_karatsuba_core(&_dst, x, y, len);
     bi_assign(dst, _dst);
     (*dst)->sign = x->sign ^ y->sign;
+    bi_delete(&_dst);
 }
 
 /**
