@@ -1,4 +1,4 @@
-#ifdef MSC_VER
+#ifdef _MSC_VER
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
@@ -50,7 +50,12 @@ int main(void) {
     printf("\n\n=================Performance=================\n\n");
     //! add test*********************************************************
     FILE* fp_add = NULL;
+
+#ifdef _MSC_VER
+    fp_add = fopen("test_add.txt", "w");
+#else
     fp_add = fopen("test/test_add.txt", "w");
+#endif
     assert(fp_add != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
 
@@ -108,7 +113,11 @@ int main(void) {
 
     //! sub test*********************************************************
     FILE* fp_sub = NULL;
+#ifdef _MSC_VER
+    fp_sub = fopen("test_sub.txt", "w");
+#else
     fp_sub = fopen("test/test_sub.txt", "w");
+#endif
     assert(fp_sub != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = rand() % 100;
@@ -165,7 +174,11 @@ int main(void) {
 
     //! mul test*********************************************************
     FILE* fp_mul = NULL;
+#ifdef _MSC_VER
+    fp_mul = fopen("test_mul.txt", "w");
+#else
     fp_mul = fopen("test/test_mul.txt", "w");
+#endif
     assert(fp_mul != NULL);
 
     for (int iter = 0; iter < ITERNUM; iter++) {
@@ -228,7 +241,11 @@ int main(void) {
 
     //! shr bit test*********************************************************
     FILE* fp_shr_bit = NULL;
+#ifdef _MSC_VER
+    fp_shr_bit = fopen("test_shr.txt", "w");
+#else
     fp_shr_bit = fopen("test/test_shr.txt", "w");
+#endif
     assert(fp_shr_bit != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
 
@@ -290,7 +307,11 @@ int main(void) {
 
     //! shl test*********************************************************
     FILE* fp_shl_bit = NULL;
+#ifdef _MSC_VER
+    fp_shl_bit = fopen("test_shl.txt", "w");
+#else
     fp_shl_bit = fopen("test/test_shl.txt", "w");
+#endif
     assert(fp_shl_bit != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = rand() % 10;
@@ -352,7 +373,11 @@ int main(void) {
 
     //! sqr test*********************************************************
     FILE* fp_sqr = NULL;
+#ifdef _MSC_VER
+    fp_sqr = fopen("test_sqr.txt", "w");
+#else
     fp_sqr = fopen("test/test_sqr.txt", "w");
+#endif
     assert(fp_sqr != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = rand() % 10;
@@ -397,7 +422,11 @@ int main(void) {
 
     //! Karatsuba test*********************************************************
     FILE* fp_krt = NULL;
+#ifdef _MSC_VER
+    fp_krt = fopen("test_kst.txt", "w");
+#else
     fp_krt = fopen("test/test_kst.txt", "w");
+#endif
     assert(fp_krt != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = (rand() % 100) + 1;
@@ -454,7 +483,11 @@ int main(void) {
 
     //! div test*********************************************************
     FILE* fp_div = NULL;
+#ifdef _MSC_VER
+    fp_div = fopen("test_div.txt", "w");
+#else
     fp_div = fopen("test/test_div.txt", "w");
+#endif
     assert(fp_div != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
 
@@ -526,7 +559,11 @@ int main(void) {
 
     //! barrett test*********************************************************
     FILE* fp_bar = NULL;
+#ifdef _MSC_VER
+    fp_bar = fopen("test_bar.txt", "w");
+#else
     fp_bar = fopen("test/test_bar.txt", "w");
+#endif
     assert(fp_bar != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
 
@@ -586,7 +623,11 @@ int main(void) {
 
     //! exp test*********************************************************
     FILE* fp_exp = NULL;
+#ifdef _MSC_VER
+    fp_exp = fopen("test_exp.txt", "w");
+#else
     fp_exp = fopen("test/test_exp.txt", "w");
+#endif
     assert(fp_exp != NULL);
 
     for (int iter = 0; iter < ITERNUM; iter++) {
@@ -648,7 +689,11 @@ int main(void) {
 
     //! Improved multiplication test*********************************************************
     FILE* fp_impvmul = NULL;
+#ifdef _MSC_VER
+    fp_impvmul = fopen("test_impvmul.txt", "w");
+#else
     fp_impvmul = fopen("test/test_impvmul.txt", "w");
+#endif
     assert(fp_impvmul != NULL);
     for (int iter = 0; iter < ITERNUM; iter++) {
         int xlen = (rand() % 100) + 1;
@@ -706,7 +751,11 @@ int main(void) {
 
     //! modexp test*********************************************************
     FILE* fp_modexp = NULL;
+#ifdef _MSC_VER
+    fp_modexp = fopen("test_modexp.txt", "w");
+#else
     fp_modexp = fopen("test/test_modexp.txt", "w");
+#endif
     assert(fp_modexp != NULL);
 
     for (int iter = 0; iter < 1; iter++) {
