@@ -101,7 +101,7 @@ int main(void) {
         //printf("add test [%d] finished\n", iter);
     }
     fclose(fp_add);
-    printf("Addition Cycles: %lu\n", cc);
+    printf("Addition Cycles: %llu\n", cc);
     cc = 0;
 
     //! sub test*********************************************************
@@ -158,7 +158,7 @@ int main(void) {
         //printf("sub test [%d] finished\n", iter);
     }
     fclose(fp_sub);
-    printf("Subtraction Cycles: %lu\n", cc);
+    printf("Subtraction Cycles: %llu\n", cc);
     cc = 0;
 
     //! mul test*********************************************************
@@ -220,7 +220,7 @@ int main(void) {
         // printf("mul test [%d] finished\n", iter);
     }
     fclose(fp_mul);
-    printf("Multiplication Cycles: %lu\n", cc);
+    printf("Multiplication Cycles: %llu\n", cc);
     cc = 0;
 
 
@@ -283,7 +283,7 @@ int main(void) {
         //printf("shr test [%d] finished\n", iter);
     }
     fclose(fp_shr_bit);
-    printf("Shift Right Cycles: %lu\n", cc);
+    printf("Shift Right Cycles: %llu\n", cc);
     cc = 0;
 
     //! shl test*********************************************************
@@ -345,7 +345,7 @@ int main(void) {
         //printf("shl test [%d] finished\n", iter);
     }
     fclose(fp_shl_bit);
-    printf("Shift Left Cycles: %lu\n", cc);
+    printf("Shift Left Cycles: %llu\n", cc);
     cc = 0;
 
     //! sqr test*********************************************************
@@ -390,7 +390,7 @@ int main(void) {
         //printf("sqr test [%d] finished\n", iter);
     }
     fclose(fp_sqr);
-    printf("Squaring Cycles: %lu\n", cc);
+    printf("Squaring Cycles: %llu\n", cc);
     cc = 0;
 
     //! Karatsuba test*********************************************************
@@ -447,7 +447,7 @@ int main(void) {
         free(yarr);
     }
     fclose(fp_krt);
-    printf("Karatsuba Cycles: %lu\n", cc);
+    printf("Karatsuba Cycles: %llu\n", cc);
     cc = 0;
 
     //! div test*********************************************************
@@ -519,7 +519,7 @@ int main(void) {
         //printf("div test [%d] finished\n", iter);
     }
     fclose(fp_div);
-    printf("Division Cycles: %lu\n", cc);
+    printf("Division Cycles: %llu\n", cc);
     cc = 0;
 
     //! barrett test*********************************************************
@@ -578,7 +578,7 @@ int main(void) {
         //printf("bar test [%d] finished\n", iter);
     }
     fclose(fp_bar);
-    printf("Barrett Reduction Cycles: %lu\n", cc);
+    printf("Barrett Reduction Cycles: %llu\n", cc);
     cc = 0;
 
     //! exp test*********************************************************
@@ -638,7 +638,7 @@ int main(void) {
         //printf("exp test [%d] finished\n", iter);
     }
     fclose(fp_exp);
-    printf("Exponention Cycles: %lu\n", cc);
+    printf("Exponention Cycles: %llu\n", cc);
     cc = 0;
 
     // void bi_mul_improvedtextbook(bigint * *dest, bigint * src1, bigint * src2)
@@ -697,7 +697,7 @@ int main(void) {
         free(yarr);
     }
     fclose(fp_impvmul);
-    printf("Improved Multiplication Cycles: %lu\n", cc);
+    printf("Improved Multiplication Cycles: %llu\n", cc);
     cc = 0;
 
 
@@ -773,7 +773,7 @@ int main(void) {
         //printf("modexp test [%d] finished\n", iter);
     }
     fclose(fp_modexp);
-    printf("Modular Exponention Cycles: %lu\n", cc);
+    printf("Modular Exponention Cycles: %llu\n", cc);
     cc = 0;
     printf("\n==============================================\n\n");
 

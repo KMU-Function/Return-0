@@ -8,6 +8,6 @@
 
 #include <stdint.h>
 
-uint64_t cpucycles();
+uint64_t cpucycles(void);
 
 #endif
