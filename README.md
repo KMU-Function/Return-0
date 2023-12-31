@@ -10,7 +10,7 @@ Welcome to Return-0, a warm and user-friendly big integer library crafted with c
 
 - **Karatsuba Multiplication:** Optimize your multiplication tasks with the efficient Karatsuba algorithm.
 
-- **Bitwise Shifting:** Seamlessly shift your big integers to the left or right.
+- **Bit Shifting:** Seamlessly shift your big integers to the left or right.
 
 - **Barrett Reduction:** Benefit from the Barrett reduction algorithm for efficient modular reduction.
 
